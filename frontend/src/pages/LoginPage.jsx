@@ -107,7 +107,7 @@ const pingInterval = useRef(null)
 useEffect(() => {
   const wakeUp = async () => {
     try {
-      await fetch('https://bitbyte-e-commerce.onrender.com/api/ping/')
+      await fetch('https://bitbyte-backend-f66f.onrender.com/api/ping/')
       setServerReady(true)          // ✅ mark server as ready
       clearInterval(pingInterval.current)
     } catch {
