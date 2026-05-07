@@ -45,6 +45,8 @@ const [orderWeight, setOrderWeight]         = useState('')
 const [orderCount, setOrderCount]           = useState(1)
 const [orderSubmitting, setOrderSubmitting] = useState(false)
 const [orderMsg, setOrderMsg]               = useState('')
+const [msg, setMsg]         = useState('')
+const [msgType, setMsgType] = useState('')
 const canvasRef = useRef(null)
 
   const bg      = dark ? '#020617' : '#f8fafc'
@@ -134,6 +136,18 @@ draw() {
     init(); animate()
     return () => { window.removeEventListener('resize',handleResize); window.removeEventListener('mousemove',handleMouseMove); cancelAnimationFrame(animationFrameId) }
   }, [dark])
+
+ const WEIGHTS = [
+  { label: '50 mg',  grams: 0.05 },
+  { label: '100 mg', grams: 0.10 },
+  { label: '150 mg', grams: 0.15 },
+  { label: '200 mg', grams: 0.20 },
+  { label: '500 mg', grams: 0.50 },
+  { label: '1 gm',   grams: 1    },
+  { label: '2 gm',   grams: 2    },
+  { label: '4 gm',   grams: 4    },
+  { label: '8 gm',   grams: 8    },
+]
 
 const PROFILE_FIELDS = [
   ['initial', 'Initial'],
@@ -370,6 +384,9 @@ useEffect(() => {
 #sd-wish-popup{scrollbar-color:rgba(167,139,250,0.5) rgba(167,139,250,0.03)}
 @keyframes sdWishIn{from{opacity:0;transform:translate(-50%,calc(-100% + 8px)) scale(0.95)}to{opacity:1;transform:translate(-50%,calc(-100% - 10px)) scale(1)}}
         .cu-fade{animation:fadeIn .45s ease both}
+        input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; appearance: textfield; }
       `}</style>
 
       <canvas ref={canvasRef} style={{ position:'fixed', top:0, left:0, pointerEvents:'none', zIndex:1, opacity:0.45 }} />
@@ -858,7 +875,7 @@ useEffect(() => {
               type="number"
               min="1"
               value={orderCount}
-              onChange={e => setOrderCount(Math.max(1, parseInt(e.target.value) || 1))}
+              onChange={e => setOrderCount(e.target.value)}
               style={{ width:'100%', background:inpBg, border:`1px solid ${inpBorder}`, borderRadius:'10px', padding:'12px 14px', color:text, fontSize:'14px', outline:'none', boxSizing:'border-box' }}
             />
           </div>
@@ -960,18 +977,6 @@ useEffect(() => {
 )}
 
 {(() => {
-// Component level la add pannunga (PROFILE_FIELDS ku mela)
-const WEIGHTS = [
-  { label: '50 mg',  grams: 0.05 },
-  { label: '100 mg', grams: 0.10 },
-  { label: '150 mg', grams: 0.15 },
-  { label: '200 mg', grams: 0.20 },
-  { label: '500 mg', grams: 0.50 },
-  { label: '1 gm',   grams: 1    },
-  { label: '2 gm',   grams: 2    },
-  { label: '4 gm',   grams: 4    },
-  { label: '8 gm',   grams: 8    },
-]
   return (
     <div style={{ background: cardBg, border: cardBorder, borderRadius: '20px', padding: '28px 32px', marginBottom: '24px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
@@ -1076,23 +1081,23 @@ const WEIGHTS = [
                 {/* Gold 22K - Place Order */}
                 <td style={{ padding: '10px 16px', textAlign: 'center' }}>
                   <button
-                    onClick={() => { setOrderMetal('gold_22k'); setOrderWeight(''); setOrderCount(1); setOrderMsg(''); setOrderPopup(true) }}
+                    onClick={() => { setOrderMetal('gold_22k'); setOrderWeight(''); setOrderCount(''); setOrderMsg(''); setOrderPopup(true) }}
                     style={{ padding: '8px 18px', background: 'linear-gradient(90deg,#f59e0b,#fbbf24)', border: 'none', borderRadius: '20px', color: '#000', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}
-                  >🛒 Order 22K</button>
+                  >🛒 Place Order</button>
                 </td>
                 {/* Gold 24K - Place Order */}
                 <td style={{ padding: '10px 16px', textAlign: 'center' }}>
                   <button
-                    onClick={() => { setOrderMetal('gold_24k'); setOrderWeight(''); setOrderCount(1); setOrderMsg(''); setOrderPopup(true) }}
+                    onClick={() => { setOrderMetal('gold_24k'); setOrderWeight(''); setOrderCount(''); setOrderMsg(''); setOrderPopup(true) }}
                     style={{ padding: '8px 18px', background: 'linear-gradient(90deg,#d97706,#ffd700)', border: 'none', borderRadius: '20px', color: '#000', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}
-                  >🛒 Order 24K</button>
+                  >🛒 Place Order</button>
                 </td>
                 {/* Silver 999 - Place Order */}
                 <td style={{ padding: '10px 16px', textAlign: 'center' }}>
                   <button
-                    onClick={() => { setOrderMetal('silver_999'); setOrderWeight(''); setOrderCount(1); setOrderMsg(''); setOrderPopup(true) }}
+                    onClick={() => { setOrderMetal('silver_999'); setOrderWeight(''); setOrderCount(''); setOrderMsg(''); setOrderPopup(true) }}
                     style={{ padding: '8px 18px', background: 'linear-gradient(90deg,#9ca3af,#e5e7eb)', border: 'none', borderRadius: '20px', color: '#000', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}
-                  >🛒 Order Silver</button>
+                  >🛒 Place Order</button>
                 </td>
               </tr>
             </tfoot>
