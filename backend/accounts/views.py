@@ -381,8 +381,8 @@ class FullHierarchyView(APIView):
                 admins = [current_admin]
             except AdminProfile.DoesNotExist:
                 admins = []
-            else:
-                admins = AdminProfile.objects.all()
+        else:
+            admins = AdminProfile.objects.all()
 
         tree = []
 

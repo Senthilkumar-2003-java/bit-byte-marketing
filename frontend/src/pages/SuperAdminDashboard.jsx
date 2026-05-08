@@ -1228,9 +1228,8 @@ const buildHierarchyOrders = (period) => {
 
   console.log(`[OrderPopup] period=${period} custOrders=`, custOrders)
 
-console.log('hierarchyData keys:', Object.keys(hierarchyData))
-console.log('first admin sample:', JSON.stringify(hierarchyData.admins?.[0], null, 2))
-const admins = (hierarchyData.admins || []).map(admin => {    let adminTotal = 0
+  const admins = (hierarchyData.admins || []).map(admin => {
+    let adminTotal = 0
     const dealers = (admin.dealers || []).map(dealer => {
       let dealerTotal = 0
       const subDealers = (dealer.sub_dealers || []).map(sd => {
