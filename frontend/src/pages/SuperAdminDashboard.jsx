@@ -715,30 +715,42 @@ export default function SuperAdminDashboard() {
   const [repliedIds, setRepliedIds] = useState(new Set())
   const [annReplies, setAnnReplies] = useState({})
   const [replyPopupAnnId, setReplyPopupAnnId] = useState(null)
-const [metalPrices, setMetalPrices] = useState({ gold24k: null, gold22k: null, silver: null })
-const [metalLoading, setMetalLoading] = useState(false)
-const [usdToInr, setUsdToInr] = useState(null)
+  const [metalPrices, setMetalPrices] = useState({ gold24k: null, gold22k: null, silver: null })
+  const [metalLoading, setMetalLoading] = useState(false)
+  const [usdToInr, setUsdToInr] = useState(null)
 
-// NEW — Rate entry popup
-const [showRatePopup, setShowRatePopup] = useState(false)
-const [rateForm, setRateForm] = useState({
-  date: new Date().toISOString().split('T')[0],
-  gold_22k: '',
-  gold_24k: '',
-  silver_999: '',
-})
-const [rateMsg, setRateMsg] = useState('')
-const [rateSaving, setRateSaving] = useState(false)
-const [dbRateDate, setDbRateDate] = useState(null) 
-const [orderStats, setOrderStats] = useState({
-  today: { gold_22k:{count:0,grams:0,amount:0}, gold_24k:{count:0,grams:0,amount:0}, silver_999:{count:0,grams:0,amount:0} },
-  week:  { gold_22k:{count:0,grams:0,amount:0}, gold_24k:{count:0,grams:0,amount:0}, silver_999:{count:0,grams:0,amount:0} },
-  month: { gold_22k:{count:0,grams:0,amount:0}, gold_24k:{count:0,grams:0,amount:0}, silver_999:{count:0,grams:0,amount:0} },
-})
+  // NEW — Rate entry popup
+  const [showRatePopup, setShowRatePopup] = useState(false)
+  const [rateForm, setRateForm] = useState({
+    date: new Date().toISOString().split('T')[0],
+    gold_22k: '',
+    gold_24k: '',
+    silver_999: '',
+  })
+  const [rateMsg, setRateMsg] = useState('')
+  const [rateSaving, setRateSaving] = useState(false)
+  const [dbRateDate, setDbRateDate] = useState(null)
+  const [orderStats, setOrderStats] = useState({
+    today: { gold_22k: { count: 0, grams: 0, amount: 0 }, gold_24k: { count: 0, grams: 0, amount: 0 }, silver_999: { count: 0, grams: 0, amount: 0 } },
+    week: { gold_22k: { count: 0, grams: 0, amount: 0 }, gold_24k: { count: 0, grams: 0, amount: 0 }, silver_999: { count: 0, grams: 0, amount: 0 } },
+    month: { gold_22k: { count: 0, grams: 0, amount: 0 }, gold_24k: { count: 0, grams: 0, amount: 0 }, silver_999: { count: 0, grams: 0, amount: 0 } },
+  })
 
-const [orderDetails, setOrderDetails] = useState({ today: {}, week: {}, month: {} })
-const [orderPopupState, setOrderPopupState] = useState({ visible: false, period: null, left: 0, top: 0 })
-const orderHideTimer = useRef(null)
+  const [orderDetails, setOrderDetails] = useState({
+    today: { gold_22k: {}, gold_24k: {}, silver_999: {} },
+    week: { gold_22k: {}, gold_24k: {}, silver_999: {} },
+    month: { gold_22k: {}, gold_24k: {}, silver_999: {} },
+  })
+
+  const [orderPopupState, setOrderPopupState] = useState({
+    visible: false,
+    period: null,
+    metalKey: null,
+    left: 0,
+    top: 0,
+  })
+
+  const orderHideTimer = useRef(null)
 
   const canvasRef = useRef(null)
 
@@ -834,7 +846,7 @@ const orderHideTimer = useRef(null)
     class Planet {
       constructor(index, total) {
         this.distFactor = 0.12 + (index / total) * 0.75
-       this.radius = 12 + Math.random() * 25
+        this.radius = 12 + Math.random() * 25
         this.speed = (0.003 / (index + 1)) * 0.35
         this.angle = Math.random() * Math.PI * 2
         const hues = [200, 30, 180, 5, 280, 150, 45, 210, 330, 20]
@@ -1053,129 +1065,142 @@ const orderHideTimer = useRef(null)
     setHierarchyLoading(false)
   }
 
-const fetchMetalPrices = async () => {
-  setMetalLoading(true)
-  try {
-    const res = await api.get('/metal-rates/')
-    const d = res.data
-    setMetalPrices({
-      gold22k: parseFloat(d.gold_22k),
-      gold24k: parseFloat(d.gold_24k),
-      silver:  parseFloat(d.silver_999),
-    })
-    setDbRateDate(d.date)
-  } catch (e) {
-    // No rate entered yet — leave as null
-    setMetalPrices({ gold22k: null, gold24k: null, silver: null })
-    setDbRateDate(null)
-  }
-  setMetalLoading(false)
-}
-
-const formatWeight = (grams) => {
-  if (grams < 1) {
-    return `${(grams * 1000).toFixed(2)} mg`
-  }
-  return `${grams.toFixed(2)} gm`
-}
-
-const fetchOrderStats = async () => {
-  try {
-    const res = await api.get('/metal-orders/')
-    const orders = res.data
-
-    const now = new Date()
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay()
-    const weekStart = new Date(now)
-    weekStart.setDate(now.getDate() - dayOfWeek + 1)
-    weekStart.setHours(0, 0, 0, 0)
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-
-    const empty = () => ({ count: 0, grams: 0, amount: 0 })
-    const stats = {
-      today: { gold_22k: empty(), gold_24k: empty(), silver_999: empty() },
-      week:  { gold_22k: empty(), gold_24k: empty(), silver_999: empty() },
-      month: { gold_22k: empty(), gold_24k: empty(), silver_999: empty() },
+  const fetchMetalPrices = async () => {
+    setMetalLoading(true)
+    try {
+      const res = await api.get('/metal-rates/')
+      const d = res.data
+      setMetalPrices({
+        gold22k: parseFloat(d.gold_22k),
+        gold24k: parseFloat(d.gold_24k),
+        silver: parseFloat(d.silver_999),
+      })
+      setDbRateDate(d.date)
+    } catch (e) {
+      // No rate entered yet — leave as null
+      setMetalPrices({ gold22k: null, gold24k: null, silver: null })
+      setDbRateDate(null)
     }
-
-    // ── NEW: per-customer breakdown ──────────────────────────────────
-    const details = { today: {}, week: {}, month: {} }
-
-    orders.forEach(order => {
-      const d = new Date(order.created_at)
-      const m = order.metal_type
-      if (!stats.today[m]) return
-      const grams  = parseFloat(order.weight_grams) * parseInt(order.count)
-      const amount = parseFloat(order.total_amount)
-      const cnt    = parseInt(order.count)
-      const custId = order.customer_id
-
-      const inMonth = d >= monthStart
-      const inWeek  = d >= weekStart
-      const inToday = d >= todayStart
-
-      if (inMonth) {
-        stats.month[m].count += cnt; stats.month[m].grams += grams; stats.month[m].amount += amount
-        if (custId) {
-          if (!details.month[custId]) details.month[custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
-          details.month[custId].count += cnt; details.month[custId].amount += amount
-        }
-      }
-      if (inWeek) {
-        stats.week[m].count += cnt; stats.week[m].grams += grams; stats.week[m].amount += amount
-        if (custId) {
-          if (!details.week[custId]) details.week[custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
-          details.week[custId].count += cnt; details.week[custId].amount += amount
-        }
-      }
-      if (inToday) {
-        stats.today[m].count += cnt; stats.today[m].grams += grams; stats.today[m].amount += amount
-        if (custId) {
-          if (!details.today[custId]) details.today[custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
-          details.today[custId].count += cnt; details.today[custId].amount += amount
-        }
-      }
-    })
-
-    setOrderStats(stats)
-    setOrderDetails(details) // ── NEW
-  } catch (e) {
-    console.error('fetchOrderStats error:', e)
+    setMetalLoading(false)
   }
-}
+
+  const formatWeight = (grams) => {
+    if (grams < 1) {
+      return `${(grams * 1000).toFixed(2)} mg`
+    }
+    return `${grams.toFixed(2)} gm`
+  }
+
+  const fetchOrderStats = async () => {
+    try {
+      const res = await api.get('/metal-orders/')
+      const orders = res.data
+
+      const now = new Date()
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay()
+      const weekStart = new Date(now)
+      weekStart.setDate(now.getDate() - dayOfWeek + 1)
+      weekStart.setHours(0, 0, 0, 0)
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+
+      const empty = () => ({ count: 0, grams: 0, amount: 0 })
+      const stats = {
+        today: { gold_22k: empty(), gold_24k: empty(), silver_999: empty() },
+        week: { gold_22k: empty(), gold_24k: empty(), silver_999: empty() },
+        month: { gold_22k: empty(), gold_24k: empty(), silver_999: empty() },
+      }
+
+      // ── NEW: per-customer breakdown ──────────────────────────────────
+      const details = {
+        today: { gold_22k: {}, gold_24k: {}, silver_999: {} },
+        week: { gold_22k: {}, gold_24k: {}, silver_999: {} },
+        month: { gold_22k: {}, gold_24k: {}, silver_999: {} },
+      }
+
+      orders.forEach(order => {
+        const d = new Date(order.created_at)
+        const m = order.metal_type
+        if (!stats.today[m]) return
+        const grams = parseFloat(order.weight_grams) * parseInt(order.count)
+        const amount = parseFloat(order.total_amount)
+        const cnt = parseInt(order.count)
+        const custId = order.customer_id
+
+        const inMonth = d >= monthStart
+        const inWeek = d >= weekStart
+        const inToday = d >= todayStart
+
+        if (inMonth) {
+          stats.month[m].count += cnt; stats.month[m].grams += grams; stats.month[m].amount += amount
+          if (custId) {
+            if (!details.month[m][custId]) {
+              details.month[m][custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
+            }
+            details.month[m][custId].count += cnt
+            details.month[m][custId].amount += amount
+          }
+        }
+        if (inWeek) {
+          stats.week[m].count += cnt; stats.week[m].grams += grams; stats.week[m].amount += amount
+          if (custId) {
+            if (!details.week[m][custId]) {
+              details.week[m][custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
+            }
+            details.week[m][custId].count += cnt
+            details.week[m][custId].amount += amount
+          }
+        }
+        if (inToday) {
+          stats.today[m].count += cnt; stats.today[m].grams += grams; stats.today[m].amount += amount
+          if (custId) {
+            if (!details.today[m][custId]) {
+              details.today[m][custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
+            }
+            details.today[m][custId].count += cnt
+            details.today[m][custId].amount += amount
+          }
+        }
+      })
+
+      setOrderStats(stats)
+      setOrderDetails(details) // ── NEW
+    } catch (e) {
+      console.error('fetchOrderStats error:', e)
+    }
+  }
 
 
-// useEffect(() => {
-//   fetchAdmins()
-//   fetchAnnouncementCount()
-//   fetchMyAnnouncements()
-//   fetchProfileRequests()
-//   fetchAllMembers()
-//   fetchMetalPrices()
-//   fetchOrderStats()
-//   const interval = setInterval(() => {
-//     fetchAdmins()
-//     fetchAnnouncementCount()
-//     fetchMyAnnouncements()
-//     fetchProfileRequests()
-//     fetchAllMembers()
-//     fetchMetalPrices()
-//     fetchOrderStats()
-//   }, 30000)
-//   return () => clearInterval(interval)
-// }, [])
+  // useEffect(() => {
+  //   fetchAdmins()
+  //   fetchAnnouncementCount()
+  //   fetchMyAnnouncements()
+  //   fetchProfileRequests()
+  //   fetchAllMembers()
+  //   fetchMetalPrices()
+  //   fetchOrderStats()
+  //   const interval = setInterval(() => {
+  //     fetchAdmins()
+  //     fetchAnnouncementCount()
+  //     fetchMyAnnouncements()
+  //     fetchProfileRequests()
+  //     fetchAllMembers()
+  //     fetchMetalPrices()
+  //     fetchOrderStats()
+  //   }, 30000)
+  //   return () => clearInterval(interval)
+  // }, [])
 
-useEffect(() => {
-  fetchAdmins()
-  fetchAnnouncementCount()
-  fetchMyAnnouncements()
-  fetchProfileRequests()
-  fetchAllMembers()
-  fetchMetalPrices()
-  fetchOrderStats()
-  fetchHierarchy()
-}, [])
+  useEffect(() => {
+    fetchAdmins()
+    fetchAnnouncementCount()
+    fetchMyAnnouncements()
+    fetchProfileRequests()
+    fetchAllMembers()
+    fetchMetalPrices()
+    fetchOrderStats()
+    fetchHierarchy()
+  }, [])
 
 
   const handleOpenHierarchy = () => {
@@ -1194,78 +1219,80 @@ useEffect(() => {
     setForm({ ...form, [name]: value })
   }
 
-const handleSubmit = async e => {
-  e.preventDefault()
-  try {
-    const cleanedForm = {
-      ...form,
-      dob: form.dob || null,
-      anniversary_date: form.anniversary_date || null,
-      admin_name: undefined,
-      admin_id: undefined,
-      admin_contact_no: undefined,
+  const handleSubmit = async e => {
+    e.preventDefault()
+    try {
+      const cleanedForm = {
+        ...form,
+        dob: form.dob || null,
+        anniversary_date: form.anniversary_date || null,
+        admin_name: undefined,
+        admin_id: undefined,
+        admin_contact_no: undefined,
+      }
+
+      console.log('📤 SENDING:', JSON.stringify(cleanedForm, null, 2))  // ← ADD
+
+      await api.post('/admins/', cleanedForm)
+      setMsg('✅ Admin created successfully!')
+      setShowForm(false)
+      fetchAdmins()
+    } catch (err) {
+      console.log('❌ ERROR RESPONSE:', err.response?.data)  // ← ADD
+      setMsg('❌ Error: ' + JSON.stringify(err.response?.data))
     }
-
-    console.log('📤 SENDING:', JSON.stringify(cleanedForm, null, 2))  // ← ADD
-
-    await api.post('/admins/', cleanedForm)
-    setMsg('✅ Admin created successfully!')
-    setShowForm(false)
-    fetchAdmins()
-  } catch (err) {
-    console.log('❌ ERROR RESPONSE:', err.response?.data)  // ← ADD
-    setMsg('❌ Error: ' + JSON.stringify(err.response?.data))
   }
-}
 
-// ── ORDER HIERARCHY BUILDER ─────────────────────────────────────────────────
-const buildHierarchyOrders = (period) => {
+  // ── ORDER HIERARCHY BUILDER ─────────────────────────────────────────────────
+const buildHierarchyOrders = (period, metalKey) => {
   if (!hierarchyData) return null
-  const custOrders = orderDetails[period] || {}
-  const superAdminEmail = localStorage.getItem('email') || ''
-  let superTotal = 0
-  const matchedIds = new Set()   // ← track which customer_ids exist in hierarchy
+  const custOrders = orderDetails[period]?.[metalKey] || {}
+    const superAdminEmail = localStorage.getItem('email') || ''
+    let superTotal = 0
+    const matchedIds = new Set()   // ← track which customer_ids exist in hierarchy
 
-  console.log(`[OrderPopup] period=${period} custOrders=`, custOrders)
+    console.log(`[OrderPopup] period=${period} custOrders=`, custOrders)
 
-  const admins = (hierarchyData.admins || []).map(admin => {
-    let adminTotal = 0
-    const dealers = (admin.dealers || []).map(dealer => {
-      let dealerTotal = 0
-      const subDealers = (dealer.sub_dealers || []).map(sd => {
-        let sdTotal = 0
-        const promotors = (sd.promotors || []).map(pr => {
-          let prTotal = 0
-          console.log('PR customers:', pr.customers)
-          console.log('PR full data:', JSON.stringify(pr, null, 2))  // ADD THIS LINE
-          const customers = (pr.customers || pr.customer || []).map(c => {
-            const o = custOrders[c.customer_id] || { count: 0, amount: 0 }
-            if (o.count > 0) matchedIds.add(c.customer_id)  // ← mark as matched
-            prTotal += o.count
-            return { ...c, orderCount: o.count, orderAmount: o.amount }
-          }).filter(c => c.orderCount > 0)
-          sdTotal += prTotal
-          return { ...pr, customers, orderCount: prTotal }
-        }).filter(pr => pr.orderCount > 0)
-        dealerTotal += sdTotal
-        return { ...sd, promotors, orderCount: sdTotal }
-      }).filter(sd => sd.orderCount > 0)
-      adminTotal += dealerTotal
-      return { ...dealer, subDealers, orderCount: dealerTotal }
-    }).filter(d => d.orderCount > 0)
-    superTotal += adminTotal
-    return { ...admin, dealers, orderCount: adminTotal }
-  }).filter(a => a.orderCount > 0)
+    console.log('hierarchyData keys:', Object.keys(hierarchyData))
+    console.log('first admin sample:', JSON.stringify(hierarchyData.admins?.[0], null, 2))
+    const admins = (hierarchyData.admins || []).map(admin => {
+      let adminTotal = 0
+      const dealers = (admin.dealers || []).map(dealer => {
+        let dealerTotal = 0
+        const subDealers = (dealer.sub_dealers || []).map(sd => {
+          let sdTotal = 0
+          const promotors = (sd.promotors || []).map(pr => {
+            let prTotal = 0
+            console.log('PR customers:', pr.customers)
+            console.log('PR full data:', JSON.stringify(pr, null, 2))  // ADD THIS LINE
+            const customers = (pr.customers || pr.customer || []).map(c => {
+              const o = custOrders[c.customer_id] || { count: 0, amount: 0 }
+              if (o.count > 0) matchedIds.add(c.customer_id)  // ← mark as matched
+              prTotal += o.count
+              return { ...c, orderCount: o.count, orderAmount: o.amount }
+            }).filter(c => c.orderCount > 0)
+            sdTotal += prTotal
+            return { ...pr, customers, orderCount: prTotal }
+          }).filter(pr => pr.orderCount > 0)
+          dealerTotal += sdTotal
+          return { ...sd, promotors, orderCount: sdTotal }
+        }).filter(sd => sd.orderCount > 0)
+        adminTotal += dealerTotal
+        return { ...dealer, subDealers, orderCount: dealerTotal }
+      }).filter(d => d.orderCount > 0)
+      superTotal += adminTotal
+      return { ...admin, dealers, orderCount: adminTotal }
+    }).filter(a => a.orderCount > 0)
 
-  // ── Customers whose orders exist but are NOT in any hierarchy chain ──
-  const unlinked = Object.values(custOrders).filter(o => !matchedIds.has(o.customer_id))
-  const unlinkedTotal = unlinked.reduce((s, o) => s + o.count, 0)
-  superTotal += unlinkedTotal
+    // ── Customers whose orders exist but are NOT in any hierarchy chain ──
+    const unlinked = Object.values(custOrders).filter(o => !matchedIds.has(o.customer_id))
+    const unlinkedTotal = unlinked.reduce((s, o) => s + o.count, 0)
+    superTotal += unlinkedTotal
 
-  console.log(`[OrderPopup] admins=${admins.length}, unlinked=${unlinked.length}, superTotal=${superTotal}`)
+    console.log(`[OrderPopup] admins=${admins.length}, unlinked=${unlinked.length}, superTotal=${superTotal}`)
 
-  return { superAdminEmail, superTotal, admins, unlinked, unlinkedTotal }
-}
+    return { superAdminEmail, superTotal, admins, unlinked, unlinkedTotal }
+  }
 
 
   const s = {
@@ -1330,40 +1357,40 @@ const buildHierarchyOrders = (period) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
 
           {/* 💰 Rate Entry Button */}
-<div
-  onClick={() => {
-    setShowRatePopup(true)
-    setRateMsg('')
-    // Pre-fill form with today's date
-    setRateForm(prev => ({
-      ...prev,
-      date: new Date().toISOString().split('T')[0],
-    }))
-  }}
-  title="Enter Today's Metal Rates"
-  style={{
-    cursor: 'pointer',
-    padding: '6px 12px',
-    borderRadius: '10px',
-    border: '1px solid rgba(255,215,0,0.45)',
-    background: 'rgba(255,215,0,0.1)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    transition: 'all 0.25s ease',
-  }}
-  onMouseEnter={e => {
-    e.currentTarget.style.background = 'rgba(255,215,0,0.25)'
-    e.currentTarget.style.transform = 'translateY(-1px)'
-  }}
-  onMouseLeave={e => {
-    e.currentTarget.style.background = 'rgba(255,215,0,0.1)'
-    e.currentTarget.style.transform = 'translateY(0)'
-  }}
->
-  <span style={{ fontSize: '16px', lineHeight: 1 }}>💰</span>
-  <span style={{ fontSize: '11px', fontWeight: 700, color: '#ffd700' }}>Rate</span>
-</div>
+          <div
+            onClick={() => {
+              setShowRatePopup(true)
+              setRateMsg('')
+              // Pre-fill form with today's date
+              setRateForm(prev => ({
+                ...prev,
+                date: new Date().toISOString().split('T')[0],
+              }))
+            }}
+            title="Enter Today's Metal Rates"
+            style={{
+              cursor: 'pointer',
+              padding: '6px 12px',
+              borderRadius: '10px',
+              border: '1px solid rgba(255,215,0,0.45)',
+              background: 'rgba(255,215,0,0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.25s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'rgba(255,215,0,0.25)'
+              e.currentTarget.style.transform = 'translateY(-1px)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'rgba(255,215,0,0.1)'
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
+          >
+            <span style={{ fontSize: '16px', lineHeight: 1 }}>💰</span>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#ffd700' }}>Rate</span>
+          </div>
 
 
           <div
@@ -1528,306 +1555,380 @@ const buildHierarchyOrders = (period) => {
           </div>
         )}
 
-{/* ── GOLD & SILVER PRICE TABLE — HORIZONTAL LAYOUT ── */}
-<div style={{
-  display: 'flex',
-  gap: '0',
-  background: cardBg,
+        {/* ── GOLD & SILVER PRICE TABLE — HORIZONTAL LAYOUT ── */}
+        <div style={{
+          display: 'flex',
+          gap: '0',
+          background: cardBg,
+          border: cardBorder,
+          borderRadius: '20px',
+          marginBottom: '24px',
+          overflow: 'hidden',
+          minHeight: '420px',
+        }}>
+
+          {/* ── LEFT 20% : Sales Summary ── */}
+          <div style={{
+            width: '20%',
+            minWidth: '160px',
+            borderRight: `1px solid ${border}`,
+            padding: '20px 14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+          }}>
+            <div style={{
+              color: '#a5f3fc', fontSize: '10px', fontWeight: 800,
+              letterSpacing: '1.5px', textTransform: 'uppercase',
+              paddingBottom: '10px', borderBottom: `1px solid ${border}`,
+            }}>
+              📊 Order Summary
+            </div>
+
+            {[
+              { label: 'Today Order', color: '#22d3ee', data: orderStats.today, periodKey: 'today' },
+              { label: 'This Week Order', color: '#4ade80', data: orderStats.week, periodKey: 'week' },
+              { label: 'This Month Order', color: '#a78bfa', data: orderStats.month, periodKey: 'month' },
+            ].map(s => {
+              const total22k = s.data.gold_22k
+              const total24k = s.data.gold_24k
+              const totalSilver = s.data.silver_999
+              return (
+                <div key={s.label} style={{
+  background: dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
   border: cardBorder,
-  borderRadius: '20px',
-  marginBottom: '24px',
-  overflow: 'hidden',
-  minHeight: '420px',
-  }}>
-
-  {/* ── LEFT 20% : Sales Summary ── */}
-  <div style={{
-    width: '20%',
-    minWidth: '160px',
-    borderRight: `1px solid ${border}`,
-    padding: '20px 14px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  }}>
-<div style={{
-  color: '#a5f3fc', fontSize: '10px', fontWeight: 800,
-  letterSpacing: '1.5px', textTransform: 'uppercase',
-  paddingBottom: '10px', borderBottom: `1px solid ${border}`,
+  borderRadius: '10px',
+  padding: '10px',
 }}>
-  📊 Order Summary
-</div>
+                  <div style={{ fontSize: '9px', color: s.color, fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>
+                    {s.label}
+                  </div>
 
-{[
-  { label: 'Today Order',      color: '#22d3ee', data: orderStats.today, periodKey: 'today' },
-  { label: 'This Week Order',  color: '#4ade80', data: orderStats.week,  periodKey: 'week'  },
-  { label: 'This Month Order', color: '#a78bfa', data: orderStats.month, periodKey: 'month' },
-].map(s => {
-  const total22k    = s.data.gold_22k
-  const total24k    = s.data.gold_24k
-  const totalSilver = s.data.silver_999
-  return (
-    <div key={s.label} style={{
-      background: dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
-      border: cardBorder, borderRadius: '10px', padding: '10px',
-      cursor: 'default',
-    }}
-    onMouseEnter={e => {
-      clearTimeout(orderHideTimer.current)
-      const rect = e.currentTarget.getBoundingClientRect()
-      let left = rect.right + 14
-      let top  = rect.top
-      if (left + 300 > window.innerWidth) left = rect.left - 314
-      if (top + 500  > window.innerHeight) top = window.innerHeight - 510
-      setOrderPopupState({ visible: true, period: s.periodKey, left, top })
-    }}
-    onMouseLeave={() => {
-      orderHideTimer.current = setTimeout(
-        () => setOrderPopupState(p => ({ ...p, visible: false })), 300
-      )
-    }}
-    >
-            <div style={{ fontSize: '9px', color: s.color, fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>
-        {s.label}
-      </div>
+                  {/* 22K */}
+                  <div
+  onMouseEnter={e => {
+    clearTimeout(orderHideTimer.current)
+    const rect = e.currentTarget.getBoundingClientRect()
+    setOrderPopupState({
+      visible: true,
+      period: s.periodKey,
+      metalKey: 'gold_22k',
+      left: rect.right + 14,
+      top: rect.top,
+    })
+  }}
+  onMouseLeave={() => {
+    orderHideTimer.current = setTimeout(
+      () => setOrderPopupState(p => ({ ...p, visible: false })),
+      300
+    )
+  }}
+  style={{ marginBottom: '6px', paddingBottom: '6px', borderBottom: `1px solid ${border}`, cursor: 'pointer' }}
+>
+                    <div style={{ fontSize: '8px', color: '#fbbf24', fontWeight: 700, marginBottom: '3px' }}>🏅 22K</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Orders</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#fbbf24' }}>{total22k.count}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Grams</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#fbbf24' }}>{formatWeight(total22k.grams)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Value</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#fbbf24' }}>₹{total22k.amount.toFixed(0)}</span>
+                    </div>
+                  </div>
 
-      {/* 22K */}
-      <div style={{ marginBottom: '6px', paddingBottom: '6px', borderBottom: `1px solid ${border}` }}>
-        <div style={{ fontSize: '8px', color: '#fbbf24', fontWeight: 700, marginBottom: '3px' }}>🏅 22K</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Orders</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#fbbf24' }}>{total22k.count}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Grams</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#fbbf24' }}>{formatWeight(total22k.grams)}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Value</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#fbbf24' }}>₹{total22k.amount.toFixed(0)}</span>
-        </div>
-      </div>
+                  {/* 24K */}
+                  <div
+  onMouseEnter={e => {
+    clearTimeout(orderHideTimer.current)
+    const rect = e.currentTarget.getBoundingClientRect()
+    setOrderPopupState({
+      visible: true,
+      period: s.periodKey,
+      metalKey: 'gold_24k',
+      left: rect.right + 14,
+      top: rect.top,
+    })
+  }}
+  onMouseLeave={() => {
+    orderHideTimer.current = setTimeout(
+      () => setOrderPopupState(p => ({ ...p, visible: false })),
+      300
+    )
+  }}
+  style={{ marginBottom: '6px', paddingBottom: '6px', borderBottom: `1px solid ${border}`, cursor: 'pointer' }}
+>
+                    <div style={{ fontSize: '8px', color: '#ffd700', fontWeight: 700, marginBottom: '3px' }}>🥇 24K</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Orders</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#ffd700' }}>{total24k.count}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Grams</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#ffd700' }}>{formatWeight(total24k.grams)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Value</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#ffd700' }}>₹{total24k.amount.toFixed(0)}</span>
+                    </div>
+                  </div>
 
-      {/* 24K */}
-      <div style={{ marginBottom: '6px', paddingBottom: '6px', borderBottom: `1px solid ${border}` }}>
-        <div style={{ fontSize: '8px', color: '#ffd700', fontWeight: 700, marginBottom: '3px' }}>🥇 24K</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Orders</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#ffd700' }}>{total24k.count}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Grams</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#ffd700' }}>{formatWeight(total24k.grams)}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Value</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#ffd700' }}>₹{total24k.amount.toFixed(0)}</span>
-        </div>
-      </div>
+                  {/* Silver */}
+                  <div
+  onMouseEnter={e => {
+    clearTimeout(orderHideTimer.current)
+    const rect = e.currentTarget.getBoundingClientRect()
+    setOrderPopupState({
+      visible: true,
+      period: s.periodKey,
+      metalKey: 'silver_999',
+      left: rect.right + 14,
+      top: rect.top,
+    })
+  }}
+  onMouseLeave={() => {
+    orderHideTimer.current = setTimeout(
+      () => setOrderPopupState(p => ({ ...p, visible: false })),
+      300
+    )
+  }}
+  style={{ cursor: 'pointer' }}
+>
+  <div style={{ fontSize: '8px', color: '#c0c0c0', fontWeight: 700, marginBottom: '3px' }}>🥈 Silver</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Orders</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#c0c0c0' }}>{totalSilver.count}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Grams</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#c0c0c0' }}>{formatWeight(totalSilver.grams)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '9px', color: subtext }}>Value</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#c0c0c0' }}>₹{totalSilver.amount.toFixed(0)}</span>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
 
-      {/* Silver */}
-      <div>
-        <div style={{ fontSize: '8px', color: '#c0c0c0', fontWeight: 700, marginBottom: '3px' }}>🥈 Silver</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Orders</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#c0c0c0' }}>{totalSilver.count}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Grams</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#c0c0c0' }}>{formatWeight(totalSilver.grams)}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '9px', color: subtext }}>Value</span>
-          <span style={{ fontSize: '10px', fontWeight: 700, color: '#c0c0c0' }}>₹{totalSilver.amount.toFixed(0)}</span>
-        </div>
-      </div>
-    </div>
-  )
-})}
-
-    <div style={{ marginTop: 'auto', paddingTop: '8px', borderTop: `1px solid ${border}`, textAlign: 'center' }}>
-      <div style={{ fontSize: '9px', color: '#334155' }}>Live • Auto refresh</div>
-      <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', margin: '6px auto 0', boxShadow: '0 0 8px rgba(74,222,128,0.8)' }} />
-    </div>
-  </div>
-
-  {/* ── CENTER 60% : Gold & Silver Table ── */}
-  <div style={{ width: '60%', padding: '20px 18px', overflowX: 'auto' }}>
-    {/* Header */}
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <span style={{ fontSize: '20px' }}>⚖️</span>
-        <div>
-          <div style={{ color: '#a5f3fc', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            Today's Gold & Silver Rates
+            <div style={{ marginTop: 'auto', paddingTop: '8px', borderTop: `1px solid ${border}`, textAlign: 'center' }}>
+              <div style={{ fontSize: '9px', color: '#334155' }}>Live • Auto refresh</div>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', margin: '6px auto 0', boxShadow: '0 0 8px rgba(74,222,128,0.8)' }} />
+            </div>
           </div>
-          <div style={{ color: subtext, fontSize: '10px', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <span>📍 Chennai, India</span>
-            <span style={{ opacity: 0.4 }}>•</span>
-            <span>₹ per gram</span>
-            <span style={{ opacity: 0.4 }}>•</span>
-            {dbRateDate ? (
-              <span style={{ color: '#4ade80', fontSize: '9px', fontWeight: 700 }}>
-                📅 {new Date(dbRateDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
-              </span>
-            ) : (
-              <span style={{ color: '#f87171', fontSize: '9px', fontWeight: 700 }}>No rate entered yet</span>
-            )}
-          </div>
-        </div>
-      </div>
-      {/* <button
+
+          {/* ── CENTER 60% : Gold & Silver Table ── */}
+          <div style={{ width: '60%', padding: '20px 18px', overflowX: 'auto' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '20px' }}>⚖️</span>
+                <div>
+                  <div style={{ color: '#a5f3fc', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    Today's Gold & Silver Rates
+                  </div>
+                  <div style={{ color: subtext, fontSize: '10px', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <span>📍 Chennai, India</span>
+                    <span style={{ opacity: 0.4 }}>•</span>
+                    <span>₹ per gram</span>
+                    <span style={{ opacity: 0.4 }}>•</span>
+                    {dbRateDate ? (
+                      <span style={{ color: '#4ade80', fontSize: '9px', fontWeight: 700 }}>
+                        📅 {new Date(dbRateDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
+                      </span>
+                    ) : (
+                      <span style={{ color: '#f87171', fontSize: '9px', fontWeight: 700 }}>No rate entered yet</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {/* <button
         onClick={fetchMetalPrices}
         style={{ padding: '6px 14px', background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.3)', borderRadius: '8px', color: '#22d3ee', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
       >
         🔄 Refresh
       </button> */}
-    </div>
+            </div>
 
-    {metalLoading ? (
-      <div style={{ textAlign: 'center', padding: '30px', color: subtext }}>Loading prices...</div>
-    ) : (() => {
-      const WEIGHTS = [
-        { label: '50 mg', grams: 0.05 },
-        { label: '100 mg', grams: 0.10 },
-        { label: '150 mg', grams: 0.15 },
-        { label: '200 mg', grams: 0.20 },
-        { label: '500 mg', grams: 0.50 },
-        { label: '1 gm', grams: 1 },
-        { label: '2 gm', grams: 2 },
-        { label: '4 gm', grams: 4 },
-        { label: '8 gm', grams: 8 },
-      ]
-      return (
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-          <thead>
-            <tr style={{ borderBottom: `1px solid ${inpBorder}` }}>
-              <th style={{ padding: '10px 12px', textAlign: 'left', color: subtext, fontSize: '11px', fontWeight: 600 }}>Weight</th>
-              <th style={{ padding: '10px 12px', textAlign: 'center' }}>
-                <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.5)', borderRadius: '10px', padding: '5px 12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <span style={{ fontSize: '13px' }}>🏅</span>
-                    <span style={{ color: '#fbbf24', fontWeight: 800, fontSize: '11px' }}>GOLD 22K</span>
-                  </div>
-                  {metalPrices.gold22k && <span style={{ color: '#fbbf24', fontSize: '9px', opacity: 0.8 }}>₹{metalPrices.gold22k.toFixed(2)}/gm</span>}
-                </div>
-              </th>
-              <th style={{ padding: '10px 12px', textAlign: 'center' }}>
-                <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.5)', borderRadius: '10px', padding: '5px 12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <span style={{ fontSize: '13px' }}>🥇</span>
-                    <span style={{ color: '#ffd700', fontWeight: 800, fontSize: '11px' }}>GOLD 24K</span>
-                  </div>
-                  {metalPrices.gold24k && <span style={{ color: '#ffd700', fontSize: '9px', opacity: 0.8 }}>₹{metalPrices.gold24k.toFixed(2)}/gm</span>}
-                </div>
-              </th>
-              <th style={{ padding: '10px 12px', textAlign: 'center' }}>
-                <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'rgba(192,192,192,0.1)', border: '1px solid rgba(192,192,192,0.4)', borderRadius: '10px', padding: '5px 12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <span style={{ fontSize: '13px' }}>🥈</span>
-                    <span style={{ color: '#c0c0c0', fontWeight: 800, fontSize: '11px' }}>SILVER 999</span>
-                  </div>
-                  {metalPrices.silver && <span style={{ color: '#c0c0c0', fontSize: '9px', opacity: 0.8 }}>₹{metalPrices.silver.toFixed(2)}/gm</span>}
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {WEIGHTS.map((w, i) => (
-              <tr key={w.label} style={{ borderBottom: `1px solid ${border}`, background: i % 2 === 0 ? 'transparent' : (dark ? 'rgba(255,255,255,0.01)' : 'rgba(0,0,0,0.01)') }}>
-                <td style={{ padding: '10px 12px' }}>
-                  <span style={{ background: dark ? 'rgba(165,243,252,0.08)' : 'rgba(37,99,235,0.07)', border: `1px solid ${dark ? 'rgba(165,243,252,0.2)' : 'rgba(37,99,235,0.2)'}`, borderRadius: '6px', padding: '3px 8px', color: dark ? '#a5f3fc' : '#2563eb', fontWeight: 700, fontSize: '12px' }}>
-                    {w.label}
-                  </span>
-                </td>
-                <td style={{ padding: '10px 12px', textAlign: 'center' }}>
-                  <span style={{ color: '#fbbf24', fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>
-                    {metalPrices.gold22k != null ? `₹${(w.grams * metalPrices.gold22k).toFixed(2)}` : '—'}
-                  </span>
-                </td>
-                <td style={{ padding: '10px 12px', textAlign: 'center' }}>
-                  <span style={{ color: '#ffd700', fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>
-                    {metalPrices.gold24k != null ? `₹${(w.grams * metalPrices.gold24k).toFixed(2)}` : '—'}
-                  </span>
-                </td>
-                <td style={{ padding: '10px 12px', textAlign: 'center' }}>
-                  <span style={{ color: '#c0c0c0', fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>
-                    {metalPrices.silver != null ? `₹${(w.grams * metalPrices.silver).toFixed(2)}` : '—'}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )
-    })()}
-  </div>
+            {metalLoading ? (
+              <div style={{ textAlign: 'center', padding: '30px', color: subtext }}>Loading prices...</div>
+            ) : (() => {
+              const WEIGHTS = [
+                { label: '50 mg', grams: 0.05 },
+                { label: '100 mg', grams: 0.10 },
+                { label: '150 mg', grams: 0.15 },
+                { label: '200 mg', grams: 0.20 },
+                { label: '500 mg', grams: 0.50 },
+                { label: '1 gm', grams: 1 },
+                { label: '2 gm', grams: 2 },
+                { label: '4 gm', grams: 4 },
+                { label: '8 gm', grams: 8 },
+              ]
+              return (
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                  <thead>
+                    <tr style={{ borderBottom: `1px solid ${inpBorder}` }}>
+                      <th style={{ padding: '10px 12px', textAlign: 'left', color: subtext, fontSize: '11px', fontWeight: 600 }}>Weight</th>
+                      <th style={{ padding: '10px 12px', textAlign: 'center' }}>
+                        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.5)', borderRadius: '10px', padding: '5px 12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <span style={{ fontSize: '13px' }}>🏅</span>
+                            <span style={{ color: '#fbbf24', fontWeight: 800, fontSize: '11px' }}>GOLD 22K</span>
+                          </div>
+                          {metalPrices.gold22k && <span style={{ color: '#fbbf24', fontSize: '9px', opacity: 0.8 }}>₹{metalPrices.gold22k.toFixed(2)}/gm</span>}
+                        </div>
+                      </th>
+                      <th style={{ padding: '10px 12px', textAlign: 'center' }}>
+                        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.5)', borderRadius: '10px', padding: '5px 12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <span style={{ fontSize: '13px' }}>🥇</span>
+                            <span style={{ color: '#ffd700', fontWeight: 800, fontSize: '11px' }}>GOLD 24K</span>
+                          </div>
+                          {metalPrices.gold24k && <span style={{ color: '#ffd700', fontSize: '9px', opacity: 0.8 }}>₹{metalPrices.gold24k.toFixed(2)}/gm</span>}
+                        </div>
+                      </th>
+                      <th style={{ padding: '10px 12px', textAlign: 'center' }}>
+                        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'rgba(192,192,192,0.1)', border: '1px solid rgba(192,192,192,0.4)', borderRadius: '10px', padding: '5px 12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <span style={{ fontSize: '13px' }}>🥈</span>
+                            <span style={{ color: '#c0c0c0', fontWeight: 800, fontSize: '11px' }}>SILVER 999</span>
+                          </div>
+                          {metalPrices.silver && <span style={{ color: '#c0c0c0', fontSize: '9px', opacity: 0.8 }}>₹{metalPrices.silver.toFixed(2)}/gm</span>}
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {WEIGHTS.map((w, i) => (
+                      <tr key={w.label} style={{ borderBottom: `1px solid ${border}`, background: i % 2 === 0 ? 'transparent' : (dark ? 'rgba(255,255,255,0.01)' : 'rgba(0,0,0,0.01)') }}>
+                        <td style={{ padding: '10px 12px' }}>
+                          <span style={{ background: dark ? 'rgba(165,243,252,0.08)' : 'rgba(37,99,235,0.07)', border: `1px solid ${dark ? 'rgba(165,243,252,0.2)' : 'rgba(37,99,235,0.2)'}`, borderRadius: '6px', padding: '3px 8px', color: dark ? '#a5f3fc' : '#2563eb', fontWeight: 700, fontSize: '12px' }}>
+                            {w.label}
+                          </span>
+                        </td>
+                        <td style={{ padding: '10px 12px', textAlign: 'center' }}>
+                          <span style={{ color: '#fbbf24', fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>
+                            {metalPrices.gold22k != null ? `₹${(w.grams * metalPrices.gold22k).toFixed(2)}` : '—'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '10px 12px', textAlign: 'center' }}>
+                          <span style={{ color: '#ffd700', fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>
+                            {metalPrices.gold24k != null ? `₹${(w.grams * metalPrices.gold24k).toFixed(2)}` : '—'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '10px 12px', textAlign: 'center' }}>
+                          <span style={{ color: '#c0c0c0', fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>
+                            {metalPrices.silver != null ? `₹${(w.grams * metalPrices.silver).toFixed(2)}` : '—'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )
+            })()}
+          </div>
 
-  {/* ── RIGHT 20% : Today's Sales Breakdown ── */}
-  <div style={{
-    width: '20%',
-    minWidth: '160px',
-    borderLeft: `1px solid ${border}`,
-    padding: '20px 14px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  }}>
-<div style={{
-  color: '#a5f3fc', fontSize: '10px', fontWeight: 800,
-  letterSpacing: '1.5px', textTransform: 'uppercase',
-  paddingBottom: '10px', borderBottom: `1px solid ${border}`,
-}}>
-  🏆 Today Orders
-</div>
+          {/* ── RIGHT 20% : Today's Sales Breakdown ── */}
+          <div style={{
+            width: '20%',
+            minWidth: '160px',
+            borderLeft: `1px solid ${border}`,
+            padding: '20px 14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+          }}>
+            <div style={{
+              color: '#a5f3fc', fontSize: '10px', fontWeight: 800,
+              letterSpacing: '1.5px', textTransform: 'uppercase',
+              paddingBottom: '10px', borderBottom: `1px solid ${border}`,
+            }}>
+              🏆 Today Orders
+            </div>
 
-{[
-  {
-    icon: '🏅', label: 'Gold 22K', color: '#fbbf24',
-    bg: 'rgba(251,191,36,0.06)', bd: 'rgba(251,191,36,0.25)',
-    data: orderStats.today.gold_22k,
-  },
-  {
-    icon: '🥇', label: 'Gold 24K', color: '#ffd700',
-    bg: 'rgba(255,215,0,0.06)', bd: 'rgba(255,215,0,0.25)',
-    data: orderStats.today.gold_24k,
-  },
-  {
-    icon: '🥈', label: 'Silver 999', color: '#c0c0c0',
-    bg: 'rgba(192,192,192,0.05)', bd: 'rgba(192,192,192,0.2)',
-    data: orderStats.today.silver_999,
-  },
-].map(s => (
-  <div key={s.label} style={{
+            {[
+              {
+                icon: '🏅', label: 'Gold 22K', color: '#fbbf24',
+                bg: 'rgba(251,191,36,0.06)', bd: 'rgba(251,191,36,0.25)',
+                data: orderStats.today.gold_22k,
+                metalKey: 'gold_22k'
+              },
+              {
+                icon: '🥇', label: 'Gold 24K', color: '#ffd700',
+                bg: 'rgba(255,215,0,0.06)', bd: 'rgba(255,215,0,0.25)',
+                data: orderStats.today.gold_24k,
+                metalKey: 'gold_24k'
+              },
+              {
+                icon: '🥈', label: 'Silver 999', color: '#c0c0c0',
+                bg: 'rgba(192,192,192,0.05)', bd: 'rgba(192,192,192,0.2)',
+                data: orderStats.today.silver_999,
+                metalKey: 'silver_999',
+              },
+            ].map(s => (
+              <div
+  key={s.label}
+  style={{
     background: s.bg, border: `1px solid ${s.bd}`,
     borderRadius: '10px', padding: '12px 10px',
-  }}>
-    <div style={{ fontSize: '14px', marginBottom: '5px' }}>{s.icon}</div>
-    <div style={{ fontSize: '9px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', color: s.color, marginBottom: '8px' }}>
-      {s.label}
-    </div>
-    {[
-      { key: 'Order', val: s.data.count },
-      { key: 'Grams', val: formatWeight(s.data.grams) },
-    ].map(r => (
-      <div key={r.key} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
-        <span style={{ fontSize: '9px', color: subtext }}>{r.key}</span>
-        <span style={{ fontSize: '11px', fontWeight: 700, fontFamily: 'monospace', color: s.color }}>{r.val}</span>
-      </div>
-    ))}
-    <div style={{ height: '1px', background: `rgba(255,255,255,0.05)`, margin: '6px 0' }} />
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <span style={{ fontSize: '9px', color: subtext }}>Total Amount</span>
-      <span style={{ fontSize: '12px', fontWeight: 800, fontFamily: 'monospace', color: s.color }}>₹{s.data.amount.toFixed(0)}</span>
-    </div>
-  </div>
-))}
-    <div style={{ marginTop: 'auto', paddingTop: '8px', borderTop: `1px solid ${border}`, textAlign: 'center' }}>
-      <div style={{ fontSize: '9px', color: '#334155' }}>BitByte Network</div>
-    </div>
-  </div>
+    cursor: 'default',
+  }}
+  onMouseEnter={e => {
+    clearTimeout(orderHideTimer.current)
+    const rect = e.currentTarget.getBoundingClientRect()
+    let left = rect.left - 314
+    let top = rect.top
 
-</div>
+    if (left < 10) left = rect.right + 14
+    if (top + 500 > window.innerHeight) top = window.innerHeight - 510
+
+    setOrderPopupState({
+      visible: true,
+      period: 'today',
+      metalKey: s.metalKey,
+      left,
+      top,
+    })
+  }}
+  onMouseLeave={() => {
+    orderHideTimer.current = setTimeout(
+      () => setOrderPopupState(p => ({ ...p, visible: false })),
+      300
+    )
+  }}
+>
+
+                <div style={{ fontSize: '14px', marginBottom: '5px' }}>{s.icon}</div>
+                <div style={{ fontSize: '9px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', color: s.color, marginBottom: '8px' }}>
+                  {s.label}
+                </div>
+                {[
+                  { key: 'Order', val: s.data.count },
+                  { key: 'Grams', val: formatWeight(s.data.grams) },
+                ].map(r => (
+                  <div key={r.key} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
+                    <span style={{ fontSize: '9px', color: subtext }}>{r.key}</span>
+                    <span style={{ fontSize: '11px', fontWeight: 700, fontFamily: 'monospace', color: s.color }}>{r.val}</span>
+                  </div>
+                ))}
+                <div style={{ height: '1px', background: `rgba(255,255,255,0.05)`, margin: '6px 0' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '9px', color: subtext }}>Total Amount</span>
+                  <span style={{ fontSize: '12px', fontWeight: 800, fontFamily: 'monospace', color: s.color }}>₹{s.data.amount.toFixed(0)}</span>
+                </div>
+              </div>
+            ))}
+            <div style={{ marginTop: 'auto', paddingTop: '8px', borderTop: `1px solid ${border}`, textAlign: 'center' }}>
+              <div style={{ fontSize: '9px', color: '#334155' }}>BitByte Network</div>
+            </div>
+          </div>
+
+        </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2 style={{ fontSize: '22px', fontWeight: 800, margin: 0 }}>Admin Management</h2>
@@ -1843,181 +1944,181 @@ const buildHierarchyOrders = (period) => {
           </div>
         </div>
 
-{/* ── RATE ENTRY POPUP ── */}
-{showRatePopup && (
-  <div
-    onClick={() => setShowRatePopup(false)}
-    style={{
-      position: 'fixed', inset: 0,
-      background: 'rgba(0,0,0,0.85)',
-      backdropFilter: 'blur(12px)',
-      zIndex: 1300,
-      display: 'flex', alignItems: 'center', justifyContent: 'center'
-    }}
-  >
-    <div
-      onClick={e => e.stopPropagation()}
-      style={{
-        background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc',
-        border: '1px solid rgba(255,215,0,0.35)',
-        borderRadius: '24px',
-        width: '95%', maxWidth: '460px',
-        padding: '32px',
-        boxShadow: '0 32px 80px rgba(0,0,0,0.7)',
-        animation: 'fadeIn 0.3s cubic-bezier(0.22,1,0.36,1)',
-      }}
-    >
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{
-            width: '42px', height: '42px', borderRadius: '12px',
-            background: 'rgba(255,215,0,0.15)', border: '1px solid rgba(255,215,0,0.4)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px'
-          }}>💰</div>
-          <div>
-            <div style={{ color: '#ffd700', fontWeight: 800, fontSize: '15px' }}>ENTER METAL RATES</div>
-            <div style={{ color: subtext, fontSize: '11px', marginTop: '2px' }}>
-              {dbRateDate ? `Current: ${dbRateDate}` : 'No rate entered yet'}
+        {/* ── RATE ENTRY POPUP ── */}
+        {showRatePopup && (
+          <div
+            onClick={() => setShowRatePopup(false)}
+            style={{
+              position: 'fixed', inset: 0,
+              background: 'rgba(0,0,0,0.85)',
+              backdropFilter: 'blur(12px)',
+              zIndex: 1300,
+              display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}
+          >
+            <div
+              onClick={e => e.stopPropagation()}
+              style={{
+                background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc',
+                border: '1px solid rgba(255,215,0,0.35)',
+                borderRadius: '24px',
+                width: '95%', maxWidth: '460px',
+                padding: '32px',
+                boxShadow: '0 32px 80px rgba(0,0,0,0.7)',
+                animation: 'fadeIn 0.3s cubic-bezier(0.22,1,0.36,1)',
+              }}
+            >
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '42px', height: '42px', borderRadius: '12px',
+                    background: 'rgba(255,215,0,0.15)', border: '1px solid rgba(255,215,0,0.4)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px'
+                  }}>💰</div>
+                  <div>
+                    <div style={{ color: '#ffd700', fontWeight: 800, fontSize: '15px' }}>ENTER METAL RATES</div>
+                    <div style={{ color: subtext, fontSize: '11px', marginTop: '2px' }}>
+                      {dbRateDate ? `Current: ${dbRateDate}` : 'No rate entered yet'}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowRatePopup(false)}
+                  style={{
+                    background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
+                    color: '#f87171', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', fontSize: '12px'
+                  }}
+                >✕ Close</button>
+              </div>
+
+              {rateMsg && (
+                <div style={{
+                  background: rateMsg.includes('✅') ? 'rgba(74,222,128,0.1)' : 'rgba(239,68,68,0.1)',
+                  border: `1px solid ${rateMsg.includes('✅') ? 'rgba(74,222,128,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                  color: rateMsg.includes('✅') ? '#4ade80' : '#f87171',
+                  borderRadius: '10px', padding: '12px 16px', fontSize: '13px', marginBottom: '18px'
+                }}>
+                  {rateMsg}
+                </div>
+              )}
+
+              {/* Date */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', color: subtext, fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                  📅 Date *
+                </label>
+                <input
+                  type="date"
+                  value={rateForm.date}
+                  onChange={e => setRateForm({ ...rateForm, date: e.target.value })}
+                  style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '10px', padding: '12px 16px', color: text, fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
+                  onFocus={e => e.target.style.borderColor = '#ffd700'}
+                  onBlur={e => e.target.style.borderColor = inpBorder}
+                />
+              </div>
+
+              {/* 22K */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', color: '#fbbf24', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                  🏅 Gold 22K — Rate per gram (₹) *
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 12800"
+                  value={rateForm.gold_22k}
+                  onChange={e => setRateForm({ ...rateForm, gold_22k: e.target.value })}
+                  style={{ width: '100%', background: inpBg, border: `1px solid rgba(251,191,36,0.4)`, borderRadius: '10px', padding: '12px 16px', color: '#fbbf24', fontSize: '15px', fontWeight: 700, outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }}
+                  onFocus={e => e.target.style.borderColor = '#fbbf24'}
+                  onBlur={e => e.target.style.borderColor = 'rgba(251,191,36,0.4)'}
+                />
+                {rateForm.gold_22k && (
+                  <div style={{ color: '#fbbf24', fontSize: '11px', marginTop: '5px', opacity: 0.7 }}>
+                    Preview 1gm = ₹{parseFloat(rateForm.gold_22k).toFixed(2)}
+                  </div>
+                )}
+              </div>
+
+              {/* 24K */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', color: '#ffd700', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                  🥇 Gold 24K — Rate per gram (₹) *
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 13900"
+                  value={rateForm.gold_24k}
+                  onChange={e => setRateForm({ ...rateForm, gold_24k: e.target.value })}
+                  style={{ width: '100%', background: inpBg, border: `1px solid rgba(255,215,0,0.4)`, borderRadius: '10px', padding: '12px 16px', color: '#ffd700', fontSize: '15px', fontWeight: 700, outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }}
+                  onFocus={e => e.target.style.borderColor = '#ffd700'}
+                  onBlur={e => e.target.style.borderColor = 'rgba(255,215,0,0.4)'}
+                />
+                {rateForm.gold_24k && (
+                  <div style={{ color: '#ffd700', fontSize: '11px', marginTop: '5px', opacity: 0.7 }}>
+                    Preview 1gm = ₹{parseFloat(rateForm.gold_24k).toFixed(2)}
+                  </div>
+                )}
+              </div>
+
+              {/* Silver */}
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{ display: 'block', color: '#c0c0c0', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                  🥈 Silver 999 — Rate per gram (₹) *
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 225"
+                  value={rateForm.silver_999}
+                  onChange={e => setRateForm({ ...rateForm, silver_999: e.target.value })}
+                  style={{ width: '100%', background: inpBg, border: `1px solid rgba(192,192,192,0.4)`, borderRadius: '10px', padding: '12px 16px', color: '#c0c0c0', fontSize: '15px', fontWeight: 700, outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }}
+                  onFocus={e => e.target.style.borderColor = '#c0c0c0'}
+                  onBlur={e => e.target.style.borderColor = 'rgba(192,192,192,0.4)'}
+                />
+                {rateForm.silver_999 && (
+                  <div style={{ color: '#c0c0c0', fontSize: '11px', marginTop: '5px', opacity: 0.7 }}>
+                    Preview 1gm = ₹{parseFloat(rateForm.silver_999).toFixed(2)}
+                  </div>
+                )}
+              </div>
+
+              {/* Save Button */}
+              <button
+                disabled={rateSaving}
+                onClick={async () => {
+                  if (!rateForm.date || !rateForm.gold_22k || !rateForm.gold_24k || !rateForm.silver_999) {
+                    setRateMsg('❌ All fields are required.')
+                    return
+                  }
+                  setRateSaving(true)
+                  try {
+                    await api.post('/metal-rates/', {
+                      date: rateForm.date,
+                      gold_22k: rateForm.gold_22k,
+                      gold_24k: rateForm.gold_24k,
+                      silver_999: rateForm.silver_999,
+                    })
+                    setRateMsg('✅ Rate saved successfully!')
+                    fetchMetalPrices()   // refresh the table
+                    setTimeout(() => setShowRatePopup(false), 1400)
+                  } catch (err) {
+                    setRateMsg('❌ Failed: ' + JSON.stringify(err.response?.data))
+                  }
+                  setRateSaving(false)
+                }}
+                style={{
+                  width: '100%', padding: '14px',
+                  background: rateSaving ? 'rgba(255,215,0,0.3)' : 'linear-gradient(90deg,#fbbf24,#ffd700)',
+                  border: 'none', borderRadius: '12px',
+                  fontWeight: 800, color: rateSaving ? '#ffd700' : '#431407',
+                  fontSize: '15px', cursor: rateSaving ? 'not-allowed' : 'pointer',
+                  letterSpacing: '0.5px', transition: 'all 0.3s ease'
+                }}
+              >
+                {rateSaving ? '⏳ Saving...' : '💾 Save Rate'}
+              </button>
             </div>
           </div>
-        </div>
-        <button
-          onClick={() => setShowRatePopup(false)}
-          style={{
-            background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
-            color: '#f87171', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', fontSize: '12px'
-          }}
-        >✕ Close</button>
-      </div>
-
-      {rateMsg && (
-        <div style={{
-          background: rateMsg.includes('✅') ? 'rgba(74,222,128,0.1)' : 'rgba(239,68,68,0.1)',
-          border: `1px solid ${rateMsg.includes('✅') ? 'rgba(74,222,128,0.3)' : 'rgba(239,68,68,0.3)'}`,
-          color: rateMsg.includes('✅') ? '#4ade80' : '#f87171',
-          borderRadius: '10px', padding: '12px 16px', fontSize: '13px', marginBottom: '18px'
-        }}>
-          {rateMsg}
-        </div>
-      )}
-
-      {/* Date */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', color: subtext, fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
-          📅 Date *
-        </label>
-        <input
-          type="date"
-          value={rateForm.date}
-          onChange={e => setRateForm({ ...rateForm, date: e.target.value })}
-          style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '10px', padding: '12px 16px', color: text, fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
-          onFocus={e => e.target.style.borderColor = '#ffd700'}
-          onBlur={e => e.target.style.borderColor = inpBorder}
-        />
-      </div>
-
-      {/* 22K */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', color: '#fbbf24', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
-          🏅 Gold 22K — Rate per gram (₹) *
-        </label>
-        <input
-          type="number"
-          placeholder="e.g. 12800"
-          value={rateForm.gold_22k}
-          onChange={e => setRateForm({ ...rateForm, gold_22k: e.target.value })}
-          style={{ width: '100%', background: inpBg, border: `1px solid rgba(251,191,36,0.4)`, borderRadius: '10px', padding: '12px 16px', color: '#fbbf24', fontSize: '15px', fontWeight: 700, outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }}
-          onFocus={e => e.target.style.borderColor = '#fbbf24'}
-          onBlur={e => e.target.style.borderColor = 'rgba(251,191,36,0.4)'}
-        />
-        {rateForm.gold_22k && (
-          <div style={{ color: '#fbbf24', fontSize: '11px', marginTop: '5px', opacity: 0.7 }}>
-            Preview 1gm = ₹{parseFloat(rateForm.gold_22k).toFixed(2)}
-          </div>
         )}
-      </div>
-
-      {/* 24K */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', color: '#ffd700', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
-          🥇 Gold 24K — Rate per gram (₹) *
-        </label>
-        <input
-          type="number"
-          placeholder="e.g. 13900"
-          value={rateForm.gold_24k}
-          onChange={e => setRateForm({ ...rateForm, gold_24k: e.target.value })}
-          style={{ width: '100%', background: inpBg, border: `1px solid rgba(255,215,0,0.4)`, borderRadius: '10px', padding: '12px 16px', color: '#ffd700', fontSize: '15px', fontWeight: 700, outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }}
-          onFocus={e => e.target.style.borderColor = '#ffd700'}
-          onBlur={e => e.target.style.borderColor = 'rgba(255,215,0,0.4)'}
-        />
-        {rateForm.gold_24k && (
-          <div style={{ color: '#ffd700', fontSize: '11px', marginTop: '5px', opacity: 0.7 }}>
-            Preview 1gm = ₹{parseFloat(rateForm.gold_24k).toFixed(2)}
-          </div>
-        )}
-      </div>
-
-      {/* Silver */}
-      <div style={{ marginBottom: '24px' }}>
-        <label style={{ display: 'block', color: '#c0c0c0', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
-          🥈 Silver 999 — Rate per gram (₹) *
-        </label>
-        <input
-          type="number"
-          placeholder="e.g. 225"
-          value={rateForm.silver_999}
-          onChange={e => setRateForm({ ...rateForm, silver_999: e.target.value })}
-          style={{ width: '100%', background: inpBg, border: `1px solid rgba(192,192,192,0.4)`, borderRadius: '10px', padding: '12px 16px', color: '#c0c0c0', fontSize: '15px', fontWeight: 700, outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }}
-          onFocus={e => e.target.style.borderColor = '#c0c0c0'}
-          onBlur={e => e.target.style.borderColor = 'rgba(192,192,192,0.4)'}
-        />
-        {rateForm.silver_999 && (
-          <div style={{ color: '#c0c0c0', fontSize: '11px', marginTop: '5px', opacity: 0.7 }}>
-            Preview 1gm = ₹{parseFloat(rateForm.silver_999).toFixed(2)}
-          </div>
-        )}
-      </div>
-
-      {/* Save Button */}
-      <button
-        disabled={rateSaving}
-        onClick={async () => {
-          if (!rateForm.date || !rateForm.gold_22k || !rateForm.gold_24k || !rateForm.silver_999) {
-            setRateMsg('❌ All fields are required.')
-            return
-          }
-          setRateSaving(true)
-          try {
-            await api.post('/metal-rates/', {
-              date: rateForm.date,
-              gold_22k: rateForm.gold_22k,
-              gold_24k: rateForm.gold_24k,
-              silver_999: rateForm.silver_999,
-            })
-            setRateMsg('✅ Rate saved successfully!')
-            fetchMetalPrices()   // refresh the table
-            setTimeout(() => setShowRatePopup(false), 1400)
-          } catch (err) {
-            setRateMsg('❌ Failed: ' + JSON.stringify(err.response?.data))
-          }
-          setRateSaving(false)
-        }}
-        style={{
-          width: '100%', padding: '14px',
-          background: rateSaving ? 'rgba(255,215,0,0.3)' : 'linear-gradient(90deg,#fbbf24,#ffd700)',
-          border: 'none', borderRadius: '12px',
-          fontWeight: 800, color: rateSaving ? '#ffd700' : '#431407',
-          fontSize: '15px', cursor: rateSaving ? 'not-allowed' : 'pointer',
-          letterSpacing: '0.5px', transition: 'all 0.3s ease'
-        }}
-      >
-        {rateSaving ? '⏳ Saving...' : '💾 Save Rate'}
-      </button>
-    </div>
-  </div>
-)}
 
         {/* ── BIRTHDAY LIST MODAL ── */}
         {showBirthdayList && (
@@ -2411,212 +2512,256 @@ const buildHierarchyOrders = (period) => {
         )}
 
 
-{/* ── ORDER HIERARCHY POPUP ─────────────────────────────────────────── */}
-{orderPopupState.visible && (() => {
-  const hData = buildHierarchyOrders(orderPopupState.period)
-  const periodLabel = { today: "TODAY'S", week: "THIS WEEK'S", month: "THIS MONTH'S" }[orderPopupState.period]
+        {/* ── ORDER HIERARCHY POPUP ─────────────────────────────────────────── */}
+        {orderPopupState.visible && (() => {
+         const hData = buildHierarchyOrders(orderPopupState.period, orderPopupState.metalKey)
+          const periodLabel = { today: "TODAY'S", week: "THIS WEEK'S", month: "THIS MONTH'S" }[orderPopupState.period]
 
-  const Arrow = ({ rgb }) => (
-    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'2px 0' }}>
-      <div style={{ width:'1.5px', height:'12px', background:`rgba(${rgb},0.45)` }} />
-      <div style={{ width:0, height:0, borderLeft:'4px solid transparent', borderRight:'4px solid transparent', borderTop:`6px solid rgba(${rgb},0.55)` }} />
-    </div>
-  )
-
-  return (
-    <div
-      style={{
-        position:'fixed', zIndex:9998,
-        left: Math.min(orderPopupState.left, window.innerWidth - 310),
-        top:  Math.min(Math.max(orderPopupState.top, 10), window.innerHeight - 510),
-        background: dark ? 'rgba(5,10,20,0.97)' : 'rgba(248,250,252,0.98)',
-        border: '1px solid rgba(34,211,238,0.22)',
-        borderRadius:'16px', padding:'16px',
-        minWidth:'260px', maxWidth:'300px',
-        maxHeight:'78vh', overflowY:'auto', overflowX:'hidden',
-        boxShadow:'0 32px 80px rgba(0,0,0,0.85)',
-        fontFamily:'Inter,system-ui,sans-serif',
-        animation:'popupIn 0.25s cubic-bezier(0.22,1,0.36,1) both',
-        scrollbarWidth:'thin', scrollbarColor:'rgba(34,211,238,0.4) transparent',
-      }}
-      onMouseEnter={() => clearTimeout(orderHideTimer.current)}
-      onMouseLeave={() => {
-        orderHideTimer.current = setTimeout(
-          () => setOrderPopupState(p => ({ ...p, visible: false })), 300
-        )
-      }}
-    >
-      {/* Header */}
-      <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'12px', paddingBottom:'10px', borderBottom:'1px solid rgba(34,211,238,0.12)' }}>
-        <div style={{ width:'26px', height:'26px', borderRadius:'8px', background:'rgba(34,211,238,0.15)', border:'1px solid rgba(34,211,238,0.35)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', flexShrink:0 }}>📊</div>
-        <div>
-          <div style={{ fontSize:'10px', fontWeight:800, color:'#22d3ee', letterSpacing:'1.5px' }}>{periodLabel} ORDER CHAIN</div>
-          <div style={{ fontSize:'9px', color:dark?'#475569':'#94a3b8', marginTop:'2px' }}>Full hierarchy breakdown</div>
-        </div>
-      </div>
-
-      {/* States */}
-      {!hierarchyData && (
-        <div style={{ textAlign:'center', color:subtext, padding:'18px 0', fontSize:'12px' }}>
-          <div style={{ width:18, height:18, border:'2px solid rgba(34,211,238,0.2)', borderTop:'2px solid #22d3ee', borderRadius:'50%', animation:'spin 1s linear infinite', margin:'0 auto 8px' }} />
-          Loading hierarchy...
-        </div>
-      )}
-     {hData && hData.admins.length === 0 && hData.unlinked.length === 0 && (
-  <div style={{ textAlign:'center', color:subtext, padding:'18px 0', fontSize:'12px' }}>No orders in this period</div>
-)}
-
-{hData && (hData.admins.length > 0 || hData.unlinked.length > 0) && (
-        <div>
-          {/* ── Super Admin ── */}
-          <div style={{ background:'rgba(255,215,0,0.08)', border:'1px solid rgba(255,215,0,0.3)', borderRadius:'10px', padding:'9px 12px' }}>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:'8px', color:'#ffd700', fontWeight:800, letterSpacing:'1px' }}>🛡️ SUPER ADMIN</div>
-                <div style={{ fontSize:'10px', color:dark?'#cbd5e1':'#475569', marginTop:'3px', wordBreak:'break-all' }}>{hData.superAdminEmail}</div>
-              </div>
-              <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
-                <div style={{ fontSize:'15px', fontWeight:800, color:'#ffd700', fontFamily:'monospace' }}>{hData.superTotal}</div>
-                <div style={{ fontSize:'8px', color:'rgba(255,215,0,0.55)' }}>orders</div>
-              </div>
+          const Arrow = ({ rgb }) => (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2px 0' }}>
+              <div style={{ width: '1.5px', height: '12px', background: `rgba(${rgb},0.45)` }} />
+              <div style={{ width: 0, height: 0, borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderTop: `6px solid rgba(${rgb},0.55)` }} />
             </div>
-          </div>
+          )
 
-          {/* ── Hierarchy chain (admins → dealers → ...) ── */}
-          {hData.admins.map(admin => (
-            <div key={admin.admin_id}>
-              <Arrow rgb="34,211,238" />
-              <div style={{ background:'rgba(34,211,238,0.06)', border:'1px solid rgba(34,211,238,0.22)', borderRadius:'10px', padding:'9px 12px' }}>
-                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                  <div>
-                    <div style={{ fontSize:'8px', color:'#22d3ee', fontWeight:800, letterSpacing:'1px' }}>🛡️ ADMIN</div>
-                    <div style={{ fontSize:'9px', color:'rgba(34,211,238,0.6)', fontFamily:'monospace' }}>{admin.admin_id}</div>
-                    <div style={{ fontSize:'12px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700, marginTop:'2px' }}>{admin.first_name} {admin.last_name||''}</div>
-                  </div>
-                  <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
-                    <div style={{ fontSize:'15px', fontWeight:800, color:'#22d3ee', fontFamily:'monospace' }}>{admin.orderCount}</div>
-                    <div style={{ fontSize:'8px', color:'rgba(34,211,238,0.55)' }}>orders</div>
-                  </div>
+          return (
+            <div
+              style={{
+                position: 'fixed', zIndex: 9998,
+                left: Math.min(orderPopupState.left, window.innerWidth - 310),
+                top: Math.min(Math.max(orderPopupState.top, 10), window.innerHeight - 510),
+                background: dark ? 'rgba(5,10,20,0.97)' : 'rgba(248,250,252,0.98)',
+                border: '1px solid rgba(34,211,238,0.22)',
+                borderRadius: '16px', padding: '16px',
+                minWidth: '260px', maxWidth: '300px',
+                maxHeight: '78vh', overflowY: 'auto', overflowX: 'hidden',
+                boxShadow: '0 32px 80px rgba(0,0,0,0.85)',
+                fontFamily: 'Inter,system-ui,sans-serif',
+                animation: 'popupIn 0.25s cubic-bezier(0.22,1,0.36,1) both',
+                scrollbarWidth: 'thin', scrollbarColor: 'rgba(34,211,238,0.4) transparent',
+              }}
+              onMouseEnter={() => clearTimeout(orderHideTimer.current)}
+              onMouseLeave={() => {
+                orderHideTimer.current = setTimeout(
+                  () => setOrderPopupState(p => ({ ...p, visible: false })), 300
+                )
+              }}
+            >
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', paddingBottom: '10px', borderBottom: '1px solid rgba(34,211,238,0.12)' }}>
+                <div style={{ width: '26px', height: '26px', borderRadius: '8px', background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(34,211,238,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', flexShrink: 0 }}>📊</div>
+                <div>
+                  <div style={{ fontSize: '10px', fontWeight: 800, color: '#22d3ee', letterSpacing: '1.5px' }}>{periodLabel} ORDER CHAIN</div>
+                  <div style={{ fontSize: '9px', color: dark ? '#475569' : '#94a3b8', marginTop: '2px' }}>Full hierarchy breakdown</div>
                 </div>
               </div>
 
-              {admin.dealers.map(dealer => (
-                <div key={dealer.dealer_id} style={{ marginLeft:'10px' }}>
-                  <Arrow rgb="74,222,128" />
-                  <div style={{ background:'rgba(74,222,128,0.06)', border:'1px solid rgba(74,222,128,0.22)', borderRadius:'10px', padding:'9px 12px' }}>
-                    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                      <div>
-                        <div style={{ fontSize:'8px', color:'#4ade80', fontWeight:800, letterSpacing:'1px' }}>🏪 DEALER</div>
-                        <div style={{ fontSize:'9px', color:'rgba(74,222,128,0.6)', fontFamily:'monospace' }}>{dealer.dealer_id}</div>
-                        <div style={{ fontSize:'12px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700, marginTop:'2px' }}>{dealer.first_name} {dealer.last_name||''}</div>
+              {/* States */}
+              {!hierarchyData && (
+                <div style={{ textAlign: 'center', color: subtext, padding: '18px 0', fontSize: '12px' }}>
+                  <div style={{ width: 18, height: 18, border: '2px solid rgba(34,211,238,0.2)', borderTop: '2px solid #22d3ee', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 8px' }} />
+                  Loading hierarchy...
+                </div>
+              )}
+              {hData && hData.admins.length === 0 && hData.unlinked.length === 0 && (
+                <div style={{ textAlign: 'center', color: subtext, padding: '18px 0', fontSize: '12px' }}>No orders in this period</div>
+              )}
+
+              {hData && (hData.admins.length > 0 || hData.unlinked.length > 0) && (
+                <div>
+                  {/* ── Super Admin ── */}
+                  <div style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '10px', padding: '9px 12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '8px', color: '#ffd700', fontWeight: 800, letterSpacing: '1px' }}>🛡️ SUPER ADMIN</div>
+                        <div style={{ fontSize: '10px', color: dark ? '#cbd5e1' : '#475569', marginTop: '3px', wordBreak: 'break-all' }}>{hData.superAdminEmail}</div>
                       </div>
-                      <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
-                        <div style={{ fontSize:'15px', fontWeight:800, color:'#4ade80', fontFamily:'monospace' }}>{dealer.orderCount}</div>
-                        <div style={{ fontSize:'8px', color:'rgba(74,222,128,0.55)' }}>orders</div>
+                      <div style={{ textAlign: 'right', marginLeft: '8px', flexShrink: 0 }}>
+                        <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffd700', fontFamily: 'monospace' }}>{hData.superTotal}</div>
+                        <div style={{ fontSize: '8px', color: 'rgba(255,215,0,0.55)' }}>orders</div>
                       </div>
                     </div>
                   </div>
 
-                  {dealer.subDealers.map(sd => (
-                    <div key={sd.sub_dealer_id} style={{ marginLeft:'10px' }}>
-                      <Arrow rgb="245,158,11" />
-                      <div style={{ background:'rgba(245,158,11,0.06)', border:'1px solid rgba(245,158,11,0.22)', borderRadius:'10px', padding:'9px 12px' }}>
-                        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  {/* ── Hierarchy chain (admins → dealers → ...) ── */}
+                  {hData.admins.map(admin => (
+                    <div key={admin.admin_id}>
+                      <Arrow rgb="34,211,238" />
+                      <div style={{ background: 'rgba(34,211,238,0.06)', border: '1px solid rgba(34,211,238,0.22)', borderRadius: '10px', padding: '9px 12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <div>
-                            <div style={{ fontSize:'8px', color:'#f59e0b', fontWeight:800, letterSpacing:'1px' }}>🔗 SUB DEALER</div>
-                            <div style={{ fontSize:'9px', color:'rgba(245,158,11,0.6)', fontFamily:'monospace' }}>{sd.sub_dealer_id}</div>
-                            <div style={{ fontSize:'12px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700, marginTop:'2px' }}>{sd.first_name} {sd.last_name||''}</div>
+                            <div style={{ fontSize: '8px', color: '#22d3ee', fontWeight: 800, letterSpacing: '1px' }}>🛡️ ADMIN</div>
+                            <div style={{ fontSize: '9px', color: 'rgba(34,211,238,0.6)', fontFamily: 'monospace' }}>{admin.admin_id}</div>
+                            <div style={{ fontSize: '12px', color: dark ? '#f1f5f9' : '#0f172a', fontWeight: 700, marginTop: '2px' }}>{admin.first_name} {admin.last_name || ''}</div>
+                            <div style={{ fontSize: '9px', color: 'rgba(34,211,238,0.6)', marginTop: '2px' }}>📞 {admin.mobile_number}</div>
                           </div>
-                          <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
-                            <div style={{ fontSize:'15px', fontWeight:800, color:'#f59e0b', fontFamily:'monospace' }}>{sd.orderCount}</div>
-                            <div style={{ fontSize:'8px', color:'rgba(245,158,11,0.55)' }}>orders</div>
+                          <div style={{ textAlign: 'right', marginLeft: '8px', flexShrink: 0 }}>
+                            <div style={{ fontSize: '15px', fontWeight: 800, color: '#22d3ee', fontFamily: 'monospace' }}>{admin.orderCount}</div>
+                            <div style={{ fontSize: '8px', color: 'rgba(34,211,238,0.55)' }}>orders</div>
                           </div>
                         </div>
                       </div>
 
-                      {sd.promotors.map(pr => (
-                        <div key={pr.promotor_id} style={{ marginLeft:'10px' }}>
-                          <Arrow rgb="167,139,250" />
-                          <div style={{ background:'rgba(167,139,250,0.06)', border:'1px solid rgba(167,139,250,0.22)', borderRadius:'10px', padding:'9px 12px' }}>
-                            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                      {admin.dealers.map(dealer => (
+                        <div key={dealer.dealer_id} style={{ marginLeft: '10px' }}>
+                          <Arrow rgb="74,222,128" />
+                          <div style={{ background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.22)', borderRadius: '10px', padding: '9px 12px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                               <div>
-                                <div style={{ fontSize:'8px', color:'#a78bfa', fontWeight:800, letterSpacing:'1px' }}>🌟 PROMOTOR</div>
-                                <div style={{ fontSize:'9px', color:'rgba(167,139,250,0.6)', fontFamily:'monospace' }}>{pr.promotor_id}</div>
-                                <div style={{ fontSize:'12px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700, marginTop:'2px' }}>{pr.first_name} {pr.last_name||''}</div>
+                                <div style={{ fontSize: '8px', color: '#4ade80', fontWeight: 800, letterSpacing: '1px' }}>🏪 DEALER</div>
+                                <div style={{ fontSize: '9px', color: 'rgba(74,222,128,0.6)', fontFamily: 'monospace' }}>{dealer.dealer_id}</div>
+                                <div style={{ fontSize: '12px', color: dark ? '#f1f5f9' : '#0f172a', fontWeight: 700, marginTop: '2px' }}>{dealer.first_name} {dealer.last_name || ''}</div>
+                                <div style={{ fontSize: '9px', color: 'rgba(74,222,128,0.6)', marginTop: '2px' }}>📞 {dealer.mobile_number}</div>
                               </div>
-                              <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
-                                <div style={{ fontSize:'15px', fontWeight:800, color:'#a78bfa', fontFamily:'monospace' }}>{pr.orderCount}</div>
-                                <div style={{ fontSize:'8px', color:'rgba(167,139,250,0.55)' }}>orders</div>
+                              <div style={{ textAlign: 'right', marginLeft: '8px', flexShrink: 0 }}>
+                                <div style={{ fontSize: '15px', fontWeight: 800, color: '#4ade80', fontFamily: 'monospace' }}>{dealer.orderCount}</div>
+                                <div style={{ fontSize: '8px', color: 'rgba(74,222,128,0.55)' }}>orders</div>
                               </div>
                             </div>
                           </div>
 
-                          {pr.customers.length > 0 && (
-  <div style={{ marginLeft:'10px' }}>
-    <Arrow rgb="244,114,182" />
-    {/* Customer row — tree style */}
-    <div style={{ display:'flex', gap:'6px', flexWrap:'wrap' }}>
-      {pr.customers.map(c => (
-        <div key={c.customer_id} style={{
-          background:'rgba(244,114,182,0.08)',
-          border:'1px solid rgba(244,114,182,0.35)',
-          borderRadius:'10px', padding:'8px 10px',
-          minWidth:'130px', flex:'1',
-        }}>
-          <div style={{ fontSize:'8px', color:'#f472b6', fontWeight:800, letterSpacing:'1px', marginBottom:'4px' }}>👤 CUSTOMER</div>
-          <div style={{ fontSize:'9px', color:'rgba(244,114,182,0.6)', fontFamily:'monospace', marginBottom:'2px' }}>{c.customer_id}</div>
-          <div style={{ fontSize:'11px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700 }}>{c.first_name} {c.last_name||''}</div>
-          <div style={{ fontSize:'9px', color:'rgba(244,114,182,0.6)', marginTop:'2px' }}>📞 {c.mobile_number}</div>
-          <div style={{ display:'flex', justifyContent:'flex-end', marginTop:'4px' }}>
-            <span style={{ fontSize:'14px', fontWeight:800, color:'#f472b6', fontFamily:'monospace' }}>{c.orderCount}</span>
-            <span style={{ fontSize:'8px', color:'rgba(244,114,182,0.55)', marginLeft:'3px', alignSelf:'flex-end' }}>orders</span>
-          </div>
-        </div>
-      ))}
+                          {dealer.subDealers.map(sd => (
+                            <div key={sd.sub_dealer_id} style={{ marginLeft: '10px' }}>
+                              <Arrow rgb="245,158,11" />
+                              <div style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.22)', borderRadius: '10px', padding: '9px 12px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                  <div>
+                                    <div style={{ fontSize: '8px', color: '#f59e0b', fontWeight: 800, letterSpacing: '1px' }}>🔗 SUB DEALER</div>
+                                    <div style={{ fontSize: '9px', color: 'rgba(245,158,11,0.6)', fontFamily: 'monospace' }}>{sd.sub_dealer_id}</div>
+                                    <div style={{ fontSize: '12px', color: dark ? '#f1f5f9' : '#0f172a', fontWeight: 700, marginTop: '2px' }}>{sd.first_name} {sd.last_name || ''}</div>
+                                    <div style={{ fontSize: '9px', color: 'rgba(245,158,11,0.6)', marginTop: '2px' }}>📞 {sd.mobile_number}</div>
+                                  </div>
+                                  <div style={{ textAlign: 'right', marginLeft: '8px', flexShrink: 0 }}>
+                                    <div style={{ fontSize: '15px', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>{sd.orderCount}</div>
+                                    <div style={{ fontSize: '8px', color: 'rgba(245,158,11,0.55)' }}>orders</div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {sd.promotors.map(pr => (
+                                <div key={pr.promotor_id} style={{ marginLeft: '10px' }}>
+                                  <Arrow rgb="167,139,250" />
+                                  <div style={{ background: 'rgba(167,139,250,0.06)', border: '1px solid rgba(167,139,250,0.22)', borderRadius: '10px', padding: '9px 12px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                      <div>
+                                        <div style={{ fontSize: '8px', color: '#a78bfa', fontWeight: 800, letterSpacing: '1px' }}>🌟 PROMOTOR</div>
+                                        <div style={{ fontSize: '9px', color: 'rgba(167,139,250,0.6)', fontFamily: 'monospace' }}>{pr.promotor_id}</div>
+                                        <div style={{ fontSize: '12px', color: dark ? '#f1f5f9' : '#0f172a', fontWeight: 700, marginTop: '2px' }}>{pr.first_name} {pr.last_name || ''}</div>
+                                        <div style={{ fontSize: '9px', color: 'rgba(167,139,250,0.6)', marginTop: '2px' }}>📞 {pr.mobile_number}</div>
+                                      </div>
+                                      <div style={{ textAlign: 'right', marginLeft: '8px', flexShrink: 0 }}>
+                                        <div style={{ fontSize: '15px', fontWeight: 800, color: '#a78bfa', fontFamily: 'monospace' }}>{pr.orderCount}</div>
+                                        <div style={{ fontSize: '8px', color: 'rgba(167,139,250,0.55)' }}>orders</div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {pr.customers.length > 0 && (
+                                    <div style={{ marginLeft: '10px' }}>
+                                      <Arrow rgb="244,114,182" />
+                                      {/* Customer row — tree style */}
+                                      {/* Customer row — proper tree style */}
+<div style={{
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  gap: '12px',
+  flexWrap: 'nowrap',
+  paddingTop: '18px',
+  overflowX: 'auto',
+}}>
+
+  {pr.customers.length > 1 && (
+    <div style={{
+      position: 'absolute',
+      top: '6px',
+      left: '12%',
+      right: '12%',
+      height: '1.5px',
+      background: 'rgba(244,114,182,0.45)',
+    }} />
+  )}
+
+  {pr.customers.map(c => (
+    <div
+      key={c.customer_id}
+      style={{
+        position: 'relative',
+        background: 'rgba(244,114,182,0.08)',
+        border: '1px solid rgba(244,114,182,0.35)',
+        borderRadius: '10px',
+        padding: '8px 10px',
+        minWidth: '130px',
+        flex: '0 0 130px',
+      }}
+    >
+      <div style={{
+        position: 'absolute',
+        top: '-12px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '1.5px',
+        height: '12px',
+        background: 'rgba(244,114,182,0.55)',
+      }} />
+
+      <div style={{ fontSize: '8px', color: '#f472b6', fontWeight: 800, letterSpacing: '1px', marginBottom: '4px' }}>👤 CUSTOMER</div>
+      <div style={{ fontSize: '9px', color: 'rgba(244,114,182,0.6)', fontFamily: 'monospace', marginBottom: '2px' }}>{c.customer_id}</div>
+      <div style={{ fontSize: '11px', color: dark ? '#f1f5f9' : '#0f172a', fontWeight: 700 }}>{c.first_name} {c.last_name || ''}</div>
+      <div style={{ fontSize: '9px', color: 'rgba(244,114,182,0.6)', marginTop: '2px' }}>📞 {c.mobile_number}</div>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
+        <span style={{ fontSize: '14px', fontWeight: 800, color: '#f472b6', fontFamily: 'monospace' }}>{c.orderCount}</span>
+        <span style={{ fontSize: '8px', color: 'rgba(244,114,182,0.55)', marginLeft: '3px', alignSelf: 'flex-end' }}>orders</span>
+      </div>
     </div>
-  </div>
-)}
+  ))}
+</div>
+
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ))}
                         </div>
                       ))}
                     </div>
                   ))}
-                </div>
-              ))}
-            </div>
-          ))}
 
-          {/* ── Unlinked customers (no assigned promotor in hierarchy) ── */}
-          {hData.unlinked && hData.unlinked.length > 0 && (
-            <div>
-              <Arrow rgb="244,114,182" />
-              <div style={{ background:'rgba(244,114,182,0.06)', border:'1px dashed rgba(244,114,182,0.4)', borderRadius:'10px', padding:'9px 12px' }}>
-                <div style={{ fontSize:'8px', color:'#f472b6', fontWeight:800, letterSpacing:'1px', marginBottom:'6px' }}>
-                  👤 DIRECT CUSTOMERS — {hData.unlinked.length} customer{hData.unlinked.length > 1 ? 's' : ''}
-                </div>
-                <div style={{ fontSize:'8px', color:'rgba(244,114,182,0.5)', marginBottom:'8px', fontStyle:'italic' }}>
-                  ⚠️ Not linked to any promotor in hierarchy
-                </div>
-                {hData.unlinked.map(o => (
-                  <div key={o.customer_id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'4px 0', borderBottom:'1px solid rgba(244,114,182,0.1)' }}>
+                  {/* ── Unlinked customers (no assigned promotor in hierarchy) ── */}
+                  {hData.unlinked && hData.unlinked.length > 0 && (
                     <div>
-                      <div style={{ fontSize:'9px', color:'rgba(244,114,182,0.7)', fontFamily:'monospace' }}>{o.customer_id}</div>
-                      <div style={{ fontSize:'9px', color:'rgba(244,114,182,0.5)' }}>{o.email}</div>
+                      <Arrow rgb="244,114,182" />
+                      <div style={{ background: 'rgba(244,114,182,0.06)', border: '1px dashed rgba(244,114,182,0.4)', borderRadius: '10px', padding: '9px 12px' }}>
+                        <div style={{ fontSize: '8px', color: '#f472b6', fontWeight: 800, letterSpacing: '1px', marginBottom: '6px' }}>
+                          👤 DIRECT CUSTOMERS — {hData.unlinked.length} customer{hData.unlinked.length > 1 ? 's' : ''}
+                        </div>
+                        <div style={{ fontSize: '8px', color: 'rgba(244,114,182,0.5)', marginBottom: '8px', fontStyle: 'italic' }}>
+                          ⚠️ Not linked to any promotor in hierarchy
+                        </div>
+                        {hData.unlinked.map(o => (
+                          <div key={o.customer_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0', borderBottom: '1px solid rgba(244,114,182,0.1)' }}>
+                            <div>
+                              <div style={{ fontSize: '9px', color: 'rgba(244,114,182,0.7)', fontFamily: 'monospace' }}>{o.customer_id}</div>
+                              <div style={{ fontSize: '9px', color: 'rgba(244,114,182,0.5)' }}>{o.email}</div>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                              <div style={{ fontSize: '13px', fontWeight: 800, color: '#f472b6', fontFamily: 'monospace' }}>{o.count}</div>
+                              <div style={{ fontSize: '8px', color: 'rgba(244,114,182,0.55)' }}>orders</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div style={{ textAlign:'right' }}>
-                      <div style={{ fontSize:'13px', fontWeight:800, color:'#f472b6', fontFamily:'monospace' }}>{o.count}</div>
-                      <div style={{ fontSize:'8px', color:'rgba(244,114,182,0.55)' }}>orders</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+                  )}
+                </div>
+              )}
 
-    </div>
-  )
-})()}
+            </div>
+          )
+        })()}
 
 
         {/* ── PROFILE UPDATE REQUESTS MODAL ── */}
@@ -3199,29 +3344,7 @@ const buildHierarchyOrders = (period) => {
           </div>
         )}
 
-        {/* ── SENT ANNOUNCEMENTS WITH REPLY VIEWER — inside showAnnouncement modal, after Send button ── */}
-        {/* {myAnnouncements.length > 0 && (
-  <div style={{ marginTop:'24px', borderTop:`1px solid rgba(251,146,60,0.2)`, paddingTop:'20px' }}>
-    <div style={{ fontSize:'11px', color:'#fb923c', fontWeight:800, letterSpacing:'1.5px', marginBottom:'12px' }}>📋 SENT ANNOUNCEMENTS</div>
-    <div style={{ display:'flex', flexDirection:'column', gap:'8px', maxHeight:'200px', overflowY:'auto' }}>
-      {myAnnouncements.map(ann => (
-        <div key={ann.id} style={{ background:'rgba(255,255,255,0.03)', border:'1px solid rgba(251,146,60,0.2)', borderRadius:'12px', padding:'10px 14px', display:'flex', justifyContent:'space-between', alignItems:'center', gap:'10px' }}>
-          <div style={{ flex:1, minWidth:0 }}>
-            <div style={{ color:text, fontWeight:600, fontSize:'13px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{ann.title}</div>
-            <div style={{ color:subtext, fontSize:'10px', marginTop:'2px' }}>{new Date(ann.created_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</div>
-          </div>
-          <button
-            onClick={() => { fetchReplies(ann.id); setReplyAnn(ann) }}
-            style={{ padding:'5px 12px', fontSize:'10px', fontWeight:700, background:'rgba(34,211,238,0.12)', border:'1px solid rgba(34,211,238,0.3)', borderRadius:'20px', color:'#22d3ee', cursor:'pointer', whiteSpace:'nowrap', flexShrink:0 }}
-          >
-            💬 View Wishes
-          </button>
-        </div>
-      ))}
-    </div>
-  </div>
-)} */}
-
+ 
 
 
         {/* ── PROOF DOCUMENT PREVIEW MODAL ── */}
