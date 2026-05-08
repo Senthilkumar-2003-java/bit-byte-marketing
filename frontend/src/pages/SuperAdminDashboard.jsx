@@ -735,6 +735,11 @@ const [orderStats, setOrderStats] = useState({
   week:  { gold_22k:{count:0,grams:0,amount:0}, gold_24k:{count:0,grams:0,amount:0}, silver_999:{count:0,grams:0,amount:0} },
   month: { gold_22k:{count:0,grams:0,amount:0}, gold_24k:{count:0,grams:0,amount:0}, silver_999:{count:0,grams:0,amount:0} },
 })
+
+const [orderDetails, setOrderDetails] = useState({ today: {}, week: {}, month: {} })
+const [orderPopupState, setOrderPopupState] = useState({ visible: false, period: null, left: 0, top: 0 })
+const orderHideTimer = useRef(null)
+
   const canvasRef = useRef(null)
 
   const bg = dark ? '#020617' : '#f8fafc'
@@ -1081,12 +1086,10 @@ const fetchOrderStats = async () => {
 
     const now = new Date()
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-
     const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay()
     const weekStart = new Date(now)
     weekStart.setDate(now.getDate() - dayOfWeek + 1)
     weekStart.setHours(0, 0, 0, 0)
-
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
 
     const empty = () => ({ count: 0, grams: 0, amount: 0 })
@@ -1096,32 +1099,47 @@ const fetchOrderStats = async () => {
       month: { gold_22k: empty(), gold_24k: empty(), silver_999: empty() },
     }
 
+    // ── NEW: per-customer breakdown ──────────────────────────────────
+    const details = { today: {}, week: {}, month: {} }
+
     orders.forEach(order => {
       const d = new Date(order.created_at)
       const m = order.metal_type
       if (!stats.today[m]) return
-      const grams = parseFloat(order.weight_grams) * parseInt(order.count)
+      const grams  = parseFloat(order.weight_grams) * parseInt(order.count)
       const amount = parseFloat(order.total_amount)
-      const cnt = parseInt(order.count)
+      const cnt    = parseInt(order.count)
+      const custId = order.customer_id
 
-      if (d >= monthStart) {
-        stats.month[m].count += cnt
-        stats.month[m].grams += grams
-        stats.month[m].amount += amount
+      const inMonth = d >= monthStart
+      const inWeek  = d >= weekStart
+      const inToday = d >= todayStart
+
+      if (inMonth) {
+        stats.month[m].count += cnt; stats.month[m].grams += grams; stats.month[m].amount += amount
+        if (custId) {
+          if (!details.month[custId]) details.month[custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
+          details.month[custId].count += cnt; details.month[custId].amount += amount
+        }
       }
-      if (d >= weekStart) {
-        stats.week[m].count += cnt
-        stats.week[m].grams += grams
-        stats.week[m].amount += amount
+      if (inWeek) {
+        stats.week[m].count += cnt; stats.week[m].grams += grams; stats.week[m].amount += amount
+        if (custId) {
+          if (!details.week[custId]) details.week[custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
+          details.week[custId].count += cnt; details.week[custId].amount += amount
+        }
       }
-      if (d >= todayStart) {
-        stats.today[m].count += cnt
-        stats.today[m].grams += grams
-        stats.today[m].amount += amount
+      if (inToday) {
+        stats.today[m].count += cnt; stats.today[m].grams += grams; stats.today[m].amount += amount
+        if (custId) {
+          if (!details.today[custId]) details.today[custId] = { customer_id: custId, email: order.email, count: 0, amount: 0 }
+          details.today[custId].count += cnt; details.today[custId].amount += amount
+        }
       }
     })
 
     setOrderStats(stats)
+    setOrderDetails(details) // ── NEW
   } catch (e) {
     console.error('fetchOrderStats error:', e)
   }
@@ -1156,6 +1174,7 @@ useEffect(() => {
   fetchAllMembers()
   fetchMetalPrices()
   fetchOrderStats()
+  fetchHierarchy()
 }, [])
 
 
@@ -1198,6 +1217,57 @@ const handleSubmit = async e => {
     setMsg('❌ Error: ' + JSON.stringify(err.response?.data))
   }
 }
+
+// ── ORDER HIERARCHY BUILDER ─────────────────────────────────────────────────
+const buildHierarchyOrders = (period) => {
+  if (!hierarchyData) return null
+  const custOrders = orderDetails[period] || {}
+  const superAdminEmail = localStorage.getItem('email') || ''
+  let superTotal = 0
+  const matchedIds = new Set()   // ← track which customer_ids exist in hierarchy
+
+  console.log(`[OrderPopup] period=${period} custOrders=`, custOrders)
+
+console.log('hierarchyData keys:', Object.keys(hierarchyData))
+console.log('first admin sample:', JSON.stringify(hierarchyData.admins?.[0], null, 2))
+const admins = (hierarchyData.admins || []).map(admin => {    let adminTotal = 0
+    const dealers = (admin.dealers || []).map(dealer => {
+      let dealerTotal = 0
+      const subDealers = (dealer.sub_dealers || []).map(sd => {
+        let sdTotal = 0
+        const promotors = (sd.promotors || []).map(pr => {
+          let prTotal = 0
+          console.log('PR customers:', pr.customers)
+          console.log('PR full data:', JSON.stringify(pr, null, 2))  // ADD THIS LINE
+          const customers = (pr.customers || pr.customer || []).map(c => {
+            const o = custOrders[c.customer_id] || { count: 0, amount: 0 }
+            if (o.count > 0) matchedIds.add(c.customer_id)  // ← mark as matched
+            prTotal += o.count
+            return { ...c, orderCount: o.count, orderAmount: o.amount }
+          }).filter(c => c.orderCount > 0)
+          sdTotal += prTotal
+          return { ...pr, customers, orderCount: prTotal }
+        }).filter(pr => pr.orderCount > 0)
+        dealerTotal += sdTotal
+        return { ...sd, promotors, orderCount: sdTotal }
+      }).filter(sd => sd.orderCount > 0)
+      adminTotal += dealerTotal
+      return { ...dealer, subDealers, orderCount: dealerTotal }
+    }).filter(d => d.orderCount > 0)
+    superTotal += adminTotal
+    return { ...admin, dealers, orderCount: adminTotal }
+  }).filter(a => a.orderCount > 0)
+
+  // ── Customers whose orders exist but are NOT in any hierarchy chain ──
+  const unlinked = Object.values(custOrders).filter(o => !matchedIds.has(o.customer_id))
+  const unlinkedTotal = unlinked.reduce((s, o) => s + o.count, 0)
+  superTotal += unlinkedTotal
+
+  console.log(`[OrderPopup] admins=${admins.length}, unlinked=${unlinked.length}, superTotal=${superTotal}`)
+
+  return { superAdminEmail, superTotal, admins, unlinked, unlinkedTotal }
+}
+
 
   const s = {
     card: { background: cardBg, border: cardBorder, borderRadius: '20px', padding: '32px 36px', marginBottom: '24px' },
@@ -1490,19 +1560,35 @@ const handleSubmit = async e => {
 </div>
 
 {[
-  { label: 'Today Order', color: '#22d3ee', data: orderStats.today },
-  { label: 'This Week Order', color: '#4ade80', data: orderStats.week },
-  { label: 'This Month Order', color: '#a78bfa', data: orderStats.month },
+  { label: 'Today Order',      color: '#22d3ee', data: orderStats.today, periodKey: 'today' },
+  { label: 'This Week Order',  color: '#4ade80', data: orderStats.week,  periodKey: 'week'  },
+  { label: 'This Month Order', color: '#a78bfa', data: orderStats.month, periodKey: 'month' },
 ].map(s => {
-  const total22k = s.data.gold_22k
-  const total24k = s.data.gold_24k
+  const total22k    = s.data.gold_22k
+  const total24k    = s.data.gold_24k
   const totalSilver = s.data.silver_999
   return (
     <div key={s.label} style={{
       background: dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
       border: cardBorder, borderRadius: '10px', padding: '10px',
-    }}>
-      <div style={{ fontSize: '9px', color: s.color, fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>
+      cursor: 'default',
+    }}
+    onMouseEnter={e => {
+      clearTimeout(orderHideTimer.current)
+      const rect = e.currentTarget.getBoundingClientRect()
+      let left = rect.right + 14
+      let top  = rect.top
+      if (left + 300 > window.innerWidth) left = rect.left - 314
+      if (top + 500  > window.innerHeight) top = window.innerHeight - 510
+      setOrderPopupState({ visible: true, period: s.periodKey, left, top })
+    }}
+    onMouseLeave={() => {
+      orderHideTimer.current = setTimeout(
+        () => setOrderPopupState(p => ({ ...p, visible: false })), 300
+      )
+    }}
+    >
+            <div style={{ fontSize: '9px', color: s.color, fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>
         {s.label}
       </div>
 
@@ -2324,6 +2410,215 @@ const handleSubmit = async e => {
             </div>
           </div>
         )}
+
+
+{/* ── ORDER HIERARCHY POPUP ─────────────────────────────────────────── */}
+{orderPopupState.visible && (() => {
+  const hData = buildHierarchyOrders(orderPopupState.period)
+  const periodLabel = { today: "TODAY'S", week: "THIS WEEK'S", month: "THIS MONTH'S" }[orderPopupState.period]
+
+  const Arrow = ({ rgb }) => (
+    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'2px 0' }}>
+      <div style={{ width:'1.5px', height:'12px', background:`rgba(${rgb},0.45)` }} />
+      <div style={{ width:0, height:0, borderLeft:'4px solid transparent', borderRight:'4px solid transparent', borderTop:`6px solid rgba(${rgb},0.55)` }} />
+    </div>
+  )
+
+  return (
+    <div
+      style={{
+        position:'fixed', zIndex:9998,
+        left: Math.min(orderPopupState.left, window.innerWidth - 310),
+        top:  Math.min(Math.max(orderPopupState.top, 10), window.innerHeight - 510),
+        background: dark ? 'rgba(5,10,20,0.97)' : 'rgba(248,250,252,0.98)',
+        border: '1px solid rgba(34,211,238,0.22)',
+        borderRadius:'16px', padding:'16px',
+        minWidth:'260px', maxWidth:'300px',
+        maxHeight:'78vh', overflowY:'auto', overflowX:'hidden',
+        boxShadow:'0 32px 80px rgba(0,0,0,0.85)',
+        fontFamily:'Inter,system-ui,sans-serif',
+        animation:'popupIn 0.25s cubic-bezier(0.22,1,0.36,1) both',
+        scrollbarWidth:'thin', scrollbarColor:'rgba(34,211,238,0.4) transparent',
+      }}
+      onMouseEnter={() => clearTimeout(orderHideTimer.current)}
+      onMouseLeave={() => {
+        orderHideTimer.current = setTimeout(
+          () => setOrderPopupState(p => ({ ...p, visible: false })), 300
+        )
+      }}
+    >
+      {/* Header */}
+      <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'12px', paddingBottom:'10px', borderBottom:'1px solid rgba(34,211,238,0.12)' }}>
+        <div style={{ width:'26px', height:'26px', borderRadius:'8px', background:'rgba(34,211,238,0.15)', border:'1px solid rgba(34,211,238,0.35)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', flexShrink:0 }}>📊</div>
+        <div>
+          <div style={{ fontSize:'10px', fontWeight:800, color:'#22d3ee', letterSpacing:'1.5px' }}>{periodLabel} ORDER CHAIN</div>
+          <div style={{ fontSize:'9px', color:dark?'#475569':'#94a3b8', marginTop:'2px' }}>Full hierarchy breakdown</div>
+        </div>
+      </div>
+
+      {/* States */}
+      {!hierarchyData && (
+        <div style={{ textAlign:'center', color:subtext, padding:'18px 0', fontSize:'12px' }}>
+          <div style={{ width:18, height:18, border:'2px solid rgba(34,211,238,0.2)', borderTop:'2px solid #22d3ee', borderRadius:'50%', animation:'spin 1s linear infinite', margin:'0 auto 8px' }} />
+          Loading hierarchy...
+        </div>
+      )}
+     {hData && hData.admins.length === 0 && hData.unlinked.length === 0 && (
+  <div style={{ textAlign:'center', color:subtext, padding:'18px 0', fontSize:'12px' }}>No orders in this period</div>
+)}
+
+{hData && (hData.admins.length > 0 || hData.unlinked.length > 0) && (
+        <div>
+          {/* ── Super Admin ── */}
+          <div style={{ background:'rgba(255,215,0,0.08)', border:'1px solid rgba(255,215,0,0.3)', borderRadius:'10px', padding:'9px 12px' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:'8px', color:'#ffd700', fontWeight:800, letterSpacing:'1px' }}>🛡️ SUPER ADMIN</div>
+                <div style={{ fontSize:'10px', color:dark?'#cbd5e1':'#475569', marginTop:'3px', wordBreak:'break-all' }}>{hData.superAdminEmail}</div>
+              </div>
+              <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
+                <div style={{ fontSize:'15px', fontWeight:800, color:'#ffd700', fontFamily:'monospace' }}>{hData.superTotal}</div>
+                <div style={{ fontSize:'8px', color:'rgba(255,215,0,0.55)' }}>orders</div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Hierarchy chain (admins → dealers → ...) ── */}
+          {hData.admins.map(admin => (
+            <div key={admin.admin_id}>
+              <Arrow rgb="34,211,238" />
+              <div style={{ background:'rgba(34,211,238,0.06)', border:'1px solid rgba(34,211,238,0.22)', borderRadius:'10px', padding:'9px 12px' }}>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <div>
+                    <div style={{ fontSize:'8px', color:'#22d3ee', fontWeight:800, letterSpacing:'1px' }}>🛡️ ADMIN</div>
+                    <div style={{ fontSize:'9px', color:'rgba(34,211,238,0.6)', fontFamily:'monospace' }}>{admin.admin_id}</div>
+                    <div style={{ fontSize:'12px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700, marginTop:'2px' }}>{admin.first_name} {admin.last_name||''}</div>
+                  </div>
+                  <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
+                    <div style={{ fontSize:'15px', fontWeight:800, color:'#22d3ee', fontFamily:'monospace' }}>{admin.orderCount}</div>
+                    <div style={{ fontSize:'8px', color:'rgba(34,211,238,0.55)' }}>orders</div>
+                  </div>
+                </div>
+              </div>
+
+              {admin.dealers.map(dealer => (
+                <div key={dealer.dealer_id} style={{ marginLeft:'10px' }}>
+                  <Arrow rgb="74,222,128" />
+                  <div style={{ background:'rgba(74,222,128,0.06)', border:'1px solid rgba(74,222,128,0.22)', borderRadius:'10px', padding:'9px 12px' }}>
+                    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                      <div>
+                        <div style={{ fontSize:'8px', color:'#4ade80', fontWeight:800, letterSpacing:'1px' }}>🏪 DEALER</div>
+                        <div style={{ fontSize:'9px', color:'rgba(74,222,128,0.6)', fontFamily:'monospace' }}>{dealer.dealer_id}</div>
+                        <div style={{ fontSize:'12px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700, marginTop:'2px' }}>{dealer.first_name} {dealer.last_name||''}</div>
+                      </div>
+                      <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
+                        <div style={{ fontSize:'15px', fontWeight:800, color:'#4ade80', fontFamily:'monospace' }}>{dealer.orderCount}</div>
+                        <div style={{ fontSize:'8px', color:'rgba(74,222,128,0.55)' }}>orders</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {dealer.subDealers.map(sd => (
+                    <div key={sd.sub_dealer_id} style={{ marginLeft:'10px' }}>
+                      <Arrow rgb="245,158,11" />
+                      <div style={{ background:'rgba(245,158,11,0.06)', border:'1px solid rgba(245,158,11,0.22)', borderRadius:'10px', padding:'9px 12px' }}>
+                        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                          <div>
+                            <div style={{ fontSize:'8px', color:'#f59e0b', fontWeight:800, letterSpacing:'1px' }}>🔗 SUB DEALER</div>
+                            <div style={{ fontSize:'9px', color:'rgba(245,158,11,0.6)', fontFamily:'monospace' }}>{sd.sub_dealer_id}</div>
+                            <div style={{ fontSize:'12px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700, marginTop:'2px' }}>{sd.first_name} {sd.last_name||''}</div>
+                          </div>
+                          <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
+                            <div style={{ fontSize:'15px', fontWeight:800, color:'#f59e0b', fontFamily:'monospace' }}>{sd.orderCount}</div>
+                            <div style={{ fontSize:'8px', color:'rgba(245,158,11,0.55)' }}>orders</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {sd.promotors.map(pr => (
+                        <div key={pr.promotor_id} style={{ marginLeft:'10px' }}>
+                          <Arrow rgb="167,139,250" />
+                          <div style={{ background:'rgba(167,139,250,0.06)', border:'1px solid rgba(167,139,250,0.22)', borderRadius:'10px', padding:'9px 12px' }}>
+                            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                              <div>
+                                <div style={{ fontSize:'8px', color:'#a78bfa', fontWeight:800, letterSpacing:'1px' }}>🌟 PROMOTOR</div>
+                                <div style={{ fontSize:'9px', color:'rgba(167,139,250,0.6)', fontFamily:'monospace' }}>{pr.promotor_id}</div>
+                                <div style={{ fontSize:'12px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700, marginTop:'2px' }}>{pr.first_name} {pr.last_name||''}</div>
+                              </div>
+                              <div style={{ textAlign:'right', marginLeft:'8px', flexShrink:0 }}>
+                                <div style={{ fontSize:'15px', fontWeight:800, color:'#a78bfa', fontFamily:'monospace' }}>{pr.orderCount}</div>
+                                <div style={{ fontSize:'8px', color:'rgba(167,139,250,0.55)' }}>orders</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {pr.customers.length > 0 && (
+  <div style={{ marginLeft:'10px' }}>
+    <Arrow rgb="244,114,182" />
+    {/* Customer row — tree style */}
+    <div style={{ display:'flex', gap:'6px', flexWrap:'wrap' }}>
+      {pr.customers.map(c => (
+        <div key={c.customer_id} style={{
+          background:'rgba(244,114,182,0.08)',
+          border:'1px solid rgba(244,114,182,0.35)',
+          borderRadius:'10px', padding:'8px 10px',
+          minWidth:'130px', flex:'1',
+        }}>
+          <div style={{ fontSize:'8px', color:'#f472b6', fontWeight:800, letterSpacing:'1px', marginBottom:'4px' }}>👤 CUSTOMER</div>
+          <div style={{ fontSize:'9px', color:'rgba(244,114,182,0.6)', fontFamily:'monospace', marginBottom:'2px' }}>{c.customer_id}</div>
+          <div style={{ fontSize:'11px', color:dark?'#f1f5f9':'#0f172a', fontWeight:700 }}>{c.first_name} {c.last_name||''}</div>
+          <div style={{ fontSize:'9px', color:'rgba(244,114,182,0.6)', marginTop:'2px' }}>📞 {c.mobile_number}</div>
+          <div style={{ display:'flex', justifyContent:'flex-end', marginTop:'4px' }}>
+            <span style={{ fontSize:'14px', fontWeight:800, color:'#f472b6', fontFamily:'monospace' }}>{c.orderCount}</span>
+            <span style={{ fontSize:'8px', color:'rgba(244,114,182,0.55)', marginLeft:'3px', alignSelf:'flex-end' }}>orders</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))}
+
+          {/* ── Unlinked customers (no assigned promotor in hierarchy) ── */}
+          {hData.unlinked && hData.unlinked.length > 0 && (
+            <div>
+              <Arrow rgb="244,114,182" />
+              <div style={{ background:'rgba(244,114,182,0.06)', border:'1px dashed rgba(244,114,182,0.4)', borderRadius:'10px', padding:'9px 12px' }}>
+                <div style={{ fontSize:'8px', color:'#f472b6', fontWeight:800, letterSpacing:'1px', marginBottom:'6px' }}>
+                  👤 DIRECT CUSTOMERS — {hData.unlinked.length} customer{hData.unlinked.length > 1 ? 's' : ''}
+                </div>
+                <div style={{ fontSize:'8px', color:'rgba(244,114,182,0.5)', marginBottom:'8px', fontStyle:'italic' }}>
+                  ⚠️ Not linked to any promotor in hierarchy
+                </div>
+                {hData.unlinked.map(o => (
+                  <div key={o.customer_id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'4px 0', borderBottom:'1px solid rgba(244,114,182,0.1)' }}>
+                    <div>
+                      <div style={{ fontSize:'9px', color:'rgba(244,114,182,0.7)', fontFamily:'monospace' }}>{o.customer_id}</div>
+                      <div style={{ fontSize:'9px', color:'rgba(244,114,182,0.5)' }}>{o.email}</div>
+                    </div>
+                    <div style={{ textAlign:'right' }}>
+                      <div style={{ fontSize:'13px', fontWeight:800, color:'#f472b6', fontFamily:'monospace' }}>{o.count}</div>
+                      <div style={{ fontSize:'8px', color:'rgba(244,114,182,0.55)' }}>orders</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+    </div>
+  )
+})()}
+
 
         {/* ── PROFILE UPDATE REQUESTS MODAL ── */}
         {showRequests && (
