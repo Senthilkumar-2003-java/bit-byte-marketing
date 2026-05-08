@@ -381,25 +381,49 @@ class FullHierarchyView(APIView):
                 admins = [current_admin]
             except AdminProfile.DoesNotExist:
                 admins = []
-        else:
-            admins = AdminProfile.objects.all()
+            else:
+                admins = AdminProfile.objects.all()
 
         tree = []
 
         for admin in admins:
-            dealers = DealerProfile.objects.filter(assigned_admin=admin)
+            dealers = DealerProfile.objects.filter(
+                assigned_admin=admin
+            ) | DealerProfile.objects.filter(
+                assigned_admin__isnull=True,
+                created_by=admin.user
+            )
+            dealers = dealers.distinct()
             dealer_list = []
 
             for dealer in dealers:
-                sub_dealers = SubDealerProfile.objects.filter(assigned_dealer=dealer)
+                sub_dealers = SubDealerProfile.objects.filter(
+                    assigned_dealer=dealer
+                ) | SubDealerProfile.objects.filter(
+                    assigned_dealer__isnull=True,
+                    created_by=dealer.user
+                )
+                sub_dealers = sub_dealers.distinct()
                 sub_dealer_list = []
 
                 for sd in sub_dealers:
-                    promotors = PromotorProfile.objects.filter(assigned_sub_dealer=sd)
+                    promotors = PromotorProfile.objects.filter(
+                        assigned_sub_dealer=sd
+                    ) | PromotorProfile.objects.filter(
+                        assigned_sub_dealer__isnull=True,
+                        created_by=sd.user
+                    )
+                    promotors = promotors.distinct()
                     promotor_list = []
 
                     for pr in promotors:
-                        customers = CustomerProfile.objects.filter(assigned_promotor=pr)
+                        customers = CustomerProfile.objects.filter(
+                            assigned_promotor=pr
+                        ) | CustomerProfile.objects.filter(
+                            assigned_promotor__isnull=True,
+                            created_by=pr.user
+                        )
+                        customers = customers.distinct()
                         customer_list = [
                             {
                                 'id': c.id,
