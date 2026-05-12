@@ -13,6 +13,15 @@ import GoldRings from './gold_silver/gold_rings'
 import SilverRings from './gold_silver/silver_rings'
 import GoldBangles from './gold_silver/gold_bangles'
 import SilverBangles from './gold_silver/silver_bangles'
+import EarringsCollection from './collection/earrings_collection'
+import GoldEarrings from './gold_silver/gold_earrings'
+import SilverEarrings from './gold_silver/silver_earrings'
+import ChainsCollection from './collection/chains_collection'
+import GoldChain from './gold_silver/gold_chain'
+import SilverChain from './gold_silver/silver_chain'
+import NecklacesCollection from './collection/necklaces_collection'
+import GoldNecklaces from './gold_silver/gold_necklaces'
+import SilverNecklaces from './gold_silver/silver_necklaces'
 
 
 function ProtectedRoute({ children, role }) {
@@ -61,6 +70,21 @@ export default function App() {
         <Route path="/collection/bangles" element={<BanglesCollection />} />
         <Route path="/gold-bangles" element={<GoldBangles />} />
         <Route path="/silver-bangles" element={<SilverBangles />} />
+
+              {/* Earring Routes */}
+        <Route path="/collection/earrings" element={<EarringsCollection />} />
+        <Route path="/gold-earrings" element={<GoldEarrings />} />
+        <Route path="/silver-earrings" element={<SilverEarrings />} />
+
+               {/* Chain Routes */}
+        <Route path="/collection/chains" element={<ChainsCollection />} />
+        <Route path="/gold-chain" element={<GoldChain />} />
+        <Route path="/silver-chain" element={<SilverChain />} />
+
+                {/* Necklace Routes */}
+        <Route path="/collection/necklaces" element={<NecklacesCollection />} />
+        <Route path="/gold-necklaces" element={<GoldNecklaces />} />
+        <Route path="/silver-necklaces" element={<SilverNecklaces />} />
 
 
       </Routes>

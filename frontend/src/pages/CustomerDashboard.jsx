@@ -1227,19 +1227,22 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
       </div>
 
       {/* Heritage Necklaces */}
-      <div
-        className="jewel-card"
-        onMouseEnter={() => setHoveredJewel('necklaces')}
-        onMouseLeave={() => setHoveredJewel(null)}
-        style={{
-          position: 'relative', borderRadius: '20px', overflow: 'hidden', cursor: 'pointer',
-          border: hoveredJewel === 'necklaces' ? '1px solid rgba(34,211,238,0.6)' : cardBorder,
-          minHeight: '200px',
-          transform: hoveredJewel === 'necklaces' ? 'scale(1.02)' : 'scale(1)',
-          boxShadow: hoveredJewel === 'necklaces' ? '0 16px 48px rgba(34,211,238,0.2)' : 'none',
-          transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
-        }}
-      >
+    <div
+  className="jewel-card"
+  onClick={() => navigate('/collection/necklaces')}
+  onMouseEnter={() => setHoveredJewel('necklaces')}
+  onMouseLeave={() => setHoveredJewel(null)}
+  style={{
+    position: 'relative',
+    borderRadius: '20px',
+    overflow: 'hidden',
+    cursor: 'pointer',
+    border: hoveredJewel === 'necklaces' ? '1px solid rgba(251,191,36,0.6)' : cardBorder,
+    transform: hoveredJewel === 'necklaces' ? 'scale(1.02)' : 'scale(1)',
+    boxShadow: hoveredJewel === 'necklaces' ? '0 16px 48px rgba(251,191,36,0.22)' : 'none',
+    transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+  }}
+>
         <div className="jewel-shine" />
         <img src="/src/assets/img/gold/gold chain-1.png" alt="Heritage Necklaces" className="jewel-card-img" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <div style={{ position: 'absolute', inset: 0, background: hoveredJewel === 'necklaces' ? 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.1) 55%)' : 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)', transition: 'background 0.4s ease' }} />
@@ -1291,18 +1294,23 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 
       {/* Diamond Earrings */}
       <div
-        className="jewel-card"
-        onMouseEnter={() => setHoveredJewel('earrings')}
-        onMouseLeave={() => setHoveredJewel(null)}
-        style={{
-          position: 'relative', borderRadius: '20px', overflow: 'hidden', cursor: 'pointer',
-          border: hoveredJewel === 'earrings' ? '1px solid rgba(167,139,250,0.6)' : cardBorder,
-          minHeight: '200px',
-          transform: hoveredJewel === 'earrings' ? 'scale(1.02)' : 'scale(1)',
-          boxShadow: hoveredJewel === 'earrings' ? '0 16px 48px rgba(167,139,250,0.2)' : 'none',
-          transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
-        }}
-      >
+  className="jewel-card"
+  onClick={() => navigate('/collection/earrings')}
+  onMouseEnter={() => setHoveredJewel('earrings')}
+  onMouseLeave={() => setHoveredJewel(null)}
+  style={{
+    position: 'relative',
+    borderRadius: '20px',
+    overflow: 'hidden',
+    cursor: 'pointer',
+    border: hoveredJewel === 'earrings' ? '1px solid rgba(167,139,250,0.6)' : cardBorder,
+    minHeight: '200px',
+    transform: hoveredJewel === 'earrings' ? 'scale(1.02)' : 'scale(1)',
+    boxShadow: hoveredJewel === 'earrings' ? '0 16px 48px rgba(167,139,250,0.2)' : 'none',
+    transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+  }}
+>
+        
         <div className="jewel-shine" />
         <img src="/src/assets/img/silver/silver-Earrings-4.png" alt="Diamond Earrings" className="jewel-card-img" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <div style={{ position: 'absolute', inset: 0, background: hoveredJewel === 'earrings' ? 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.1) 55%)' : 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)', transition: 'background 0.4s ease' }} />
@@ -1321,19 +1329,22 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
       </div>
 
       {/* Gold Chains */}
-      <div
-        className="jewel-card"
-        onMouseEnter={() => setHoveredJewel('chains')}
-        onMouseLeave={() => setHoveredJewel(null)}
-        style={{
-          position: 'relative', borderRadius: '20px', overflow: 'hidden', cursor: 'pointer',
-          border: hoveredJewel === 'chains' ? '1px solid rgba(255,215,0,0.6)' : cardBorder,
-          minHeight: '200px',
-          transform: hoveredJewel === 'chains' ? 'scale(1.02)' : 'scale(1)',
-          boxShadow: hoveredJewel === 'chains' ? '0 16px 48px rgba(255,215,0,0.2)' : 'none',
-          transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
-        }}
-      >
+<div
+  className="jewel-card"
+  onClick={() => navigate('/collection/chains')}
+  onMouseEnter={() => setHoveredJewel('chains')}
+  onMouseLeave={() => setHoveredJewel(null)}
+  style={{
+    position: 'relative',
+    borderRadius: '20px',
+    overflow: 'hidden',
+    cursor: 'pointer',
+    border: hoveredJewel === 'chains' ? '1px solid rgba(251,191,36,0.6)' : cardBorder,
+    transform: hoveredJewel === 'chains' ? 'scale(1.02)' : 'scale(1)',
+    boxShadow: hoveredJewel === 'chains' ? '0 16px 48px rgba(251,191,36,0.22)' : 'none',
+    transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+  }}
+>
         <div className="jewel-shine" />
         <img src="/src/assets/img/gold/gold chain-1.png" alt="Gold Chains" className="jewel-card-img" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <div style={{ position: 'absolute', inset: 0, background: hoveredJewel === 'chains' ? 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.1) 55%)' : 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)', transition: 'background 0.4s ease' }} />

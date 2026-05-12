@@ -11,7 +11,7 @@ const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   opacity: Math.random() * 0.18 + 0.04,
 }))
 
-export default function EarringsCollection() {
+export default function ChainsCollection() {
   const navigate = useNavigate()
   const [dark, setDark] = useState(true)
   const [hoveredCard, setHoveredCard] = useState(null)
@@ -148,31 +148,31 @@ export default function EarringsCollection() {
   const collections = [
     {
       id: 'gold',
-      title: 'Gold Earrings',
+      title: 'Gold Chain',
       subtitle: '5 Exclusive Designs',
-      description: 'Premium gold earrings with bridal, festive, and everyday elegant designs.',
+      description: 'Premium gold chains with minimal, bridal, and modern elegant patterns.',
       color: '#fbbf24',
       glow: 'rgba(251,191,36,0.35)',
       border: 'rgba(251,191,36,0.4)',
       bg: 'rgba(251,191,36,0.06)',
-      img: '/src/assets/img/gold/gold-earrings-2.png',
+      img: '/src/assets/img/gold/gold chain-3.png',
       tag: '22K & 24K',
-      route: '/gold-earrings',
+      route: '/gold-chain',
       icon: '🏅',
       shimmer: 'linear-gradient(90deg, transparent, rgba(251,191,36,0.15), transparent)',
     },
     {
       id: 'silver',
-      title: 'Silver Earrings',
+      title: 'Silver Chain',
       subtitle: '5 Exclusive Designs',
-      description: 'Handcrafted silver earrings with modern, traditional, and premium styles.',
+      description: 'Handcrafted silver chains with clean finishing and premium everyday style.',
       color: '#c0c0c0',
       glow: 'rgba(192,192,192,0.25)',
       border: 'rgba(192,192,192,0.4)',
       bg: 'rgba(192,192,192,0.05)',
-      img: '/src/assets/img/silver/silver-Earrings-4.png',
+      img: '/src/assets/img/silver/silver-chain-2.png',
       tag: 'Silver 999',
-      route: '/silver-earrings',
+      route: '/silver-chain',
       icon: '🥈',
       shimmer: 'linear-gradient(90deg, transparent, rgba(192,192,192,0.15), transparent)',
     },
@@ -188,9 +188,9 @@ export default function EarringsCollection() {
         @keyframes pulse-ring { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.05)} }
         @keyframes sparkle { 0%,100%{opacity:0;transform:scale(0) rotate(0deg)} 50%{opacity:1;transform:scale(1) rotate(180deg)} }
 
-        .earring-card { animation: fadeInUp 0.6s ease both; }
-        .earring-card:nth-child(1) { animation-delay: 0.1s; }
-        .earring-card:nth-child(2) { animation-delay: 0.25s; }
+        .chain-card { animation: fadeInUp 0.6s ease both; }
+        .chain-card:nth-child(1) { animation-delay: 0.1s; }
+        .chain-card:nth-child(2) { animation-delay: 0.25s; }
 
         .card-shimmer {
           position:absolute;
@@ -205,7 +205,7 @@ export default function EarringsCollection() {
           transition:opacity 0.3s;
         }
 
-        .earring-card-wrap:hover .card-shimmer { opacity:1; }
+        .chain-card-wrap:hover .card-shimmer { opacity:1; }
 
         .explore-btn { position:relative; overflow:hidden; }
         .explore-btn::after {
@@ -222,8 +222,8 @@ export default function EarringsCollection() {
 
       <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 1, opacity: 0.4 }} />
 
-      <div style={{ position: 'absolute', borderRadius: '50%', filter: 'blur(80px)', animation: 'float-orb 20s infinite ease-in-out', zIndex: 0, top: '8%', left: '8%', width: '380px', height: '380px', background: dark ? 'rgba(167,139,250,0.08)' : 'rgba(167,139,250,0.08)' }} />
-      <div style={{ position: 'absolute', borderRadius: '50%', filter: 'blur(80px)', animation: 'float-orb 20s infinite ease-in-out', zIndex: 0, bottom: '10%', right: '4%', width: '460px', height: '460px', background: dark ? 'rgba(251,191,36,0.06)' : 'rgba(251,191,36,0.06)', animationDelay: '-5s' }} />
+      <div style={{ position: 'absolute', borderRadius: '50%', filter: 'blur(80px)', animation: 'float-orb 20s infinite ease-in-out', zIndex: 0, top: '8%', left: '8%', width: '380px', height: '380px', background: dark ? 'rgba(251,191,36,0.06)' : 'rgba(251,191,36,0.06)' }} />
+      <div style={{ position: 'absolute', borderRadius: '50%', filter: 'blur(80px)', animation: 'float-orb 20s infinite ease-in-out', zIndex: 0, bottom: '10%', right: '4%', width: '460px', height: '460px', background: dark ? 'rgba(192,192,192,0.05)' : 'rgba(192,192,192,0.05)', animationDelay: '-5s' }} />
 
       {PARTICLES.map(p => (
         <div key={p.id} style={{ position: 'absolute', left: `${p.x}%`, bottom: '-100px', width: p.size, height: p.size, borderRadius: '40% 60% 60% 40% / 40% 40% 60% 60%', border: `1px solid ${accent}44`, opacity: p.opacity, animation: `antigravity ${p.duration}s ${p.delay}s infinite linear`, '--op': p.opacity, pointerEvents: 'none', zIndex: 0 }} />
@@ -232,7 +232,7 @@ export default function EarringsCollection() {
       <div style={{ position: 'relative', zIndex: 10, background: glass, borderBottom: `1px solid ${border}`, padding: '18px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(16px)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img src={logo} alt="BitByte Logo" style={{ width: 60, height: 50, borderRadius: '10px', objectFit: 'contain' }} />
-          <span style={{ color: '#a78bfa', fontWeight: 700, fontSize: '14px' }}>💎 Earrings Collections</span>
+          <span style={{ color: '#fbbf24', fontWeight: 700, fontSize: '14px' }}>📿 Chain Collections</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -254,18 +254,18 @@ export default function EarringsCollection() {
 
       <div style={{ position: 'relative', zIndex: 10, padding: '60px 40px', maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '60px', animation: 'fadeInUp 0.5s ease both' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(167,139,250,0.08)', border: '1px solid rgba(167,139,250,0.25)', borderRadius: '30px', padding: '6px 20px', marginBottom: '20px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '30px', padding: '6px 20px', marginBottom: '20px' }}>
             <span className="sparkle-dot" style={{ fontSize: '12px' }}>✦</span>
-            <span style={{ color: '#a78bfa', fontSize: '11px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Our Collections</span>
+            <span style={{ color: '#fbbf24', fontSize: '11px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Our Collections</span>
             <span className="sparkle-dot" style={{ fontSize: '12px', animationDelay: '1s' }}>✦</span>
           </div>
 
           <h1 style={{ color: text, fontSize: '42px', fontWeight: 900, margin: '0 0 12px', letterSpacing: '-1px' }}>
-            💎 <span style={{ background: 'linear-gradient(90deg,#a78bfa,#fbbf24,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Earrings Collections</span>
+            📿 <span style={{ background: 'linear-gradient(90deg,#fbbf24,#e5e7eb,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Chain Collections</span>
           </h1>
 
           <p style={{ color: subtext, fontSize: '15px', margin: 0, maxWidth: '520px', marginInline: 'auto', lineHeight: '1.6' }}>
-            Explore handcrafted gold and silver earrings with premium finishing and elegant designs.
+            Explore premium gold and silver chains with modern, minimal, and traditional craftsmanship.
           </p>
         </div>
 
@@ -273,12 +273,12 @@ export default function EarringsCollection() {
           {collections.map((col, idx) => (
             <div
               key={col.id}
-              className="earring-card"
+              className="chain-card"
               onClick={() => navigate(col.route)}
               style={{ animationDelay: `${idx * 0.15}s` }}
             >
               <div
-                className="earring-card-wrap"
+                className="chain-card-wrap"
                 onMouseEnter={() => setHoveredCard(col.id)}
                 onMouseLeave={() => setHoveredCard(null)}
                 style={{
@@ -370,7 +370,7 @@ export default function EarringsCollection() {
         <div style={{ textAlign: 'center', marginTop: '60px', animation: 'fadeInUp 0.8s ease 0.4s both' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', color: subtext, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600 }}>
             <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,transparent,${subtext})` }} />
-            BitByte Jewellers • Premium Earrings
+            BitByte Jewellers • Premium Chains
             <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,${subtext},transparent)` }} />
           </div>
         </div>

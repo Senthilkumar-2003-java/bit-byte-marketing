@@ -24,28 +24,29 @@ const WEIGHTS = [
   { label: '8 gm', grams: 8 },
 ]
 
-const GOLD_EARRINGS = [
-  { id: 1, name: 'Golden Bloom', desc: 'Elegant floral earrings with premium gold finish', img: '/src/assets/img/gold/gold-earrings-1.png', tag: 'Bestseller' },
-  { id: 2, name: 'Royal Drops', desc: 'Traditional drop earrings for festive and bridal wear', img: '/src/assets/img/gold/gold-earrings-2.png', tag: 'Premium' },
-  { id: 3, name: 'Classic Studs', desc: 'Minimal everyday studs with handcrafted detailing', img: '/src/assets/img/gold/gold-earrings-3.png', tag: 'Minimal' },
-  { id: 4, name: 'Temple Shine', desc: 'Statement earrings inspired by heritage craftsmanship', img: '/src/assets/img/gold/gold-earrings-4.png', tag: 'Statement' },
-  { id: 5, name: 'Duo Charm', desc: 'Modern earrings with polished elegant curves', img: '/src/assets/img/gold/gold-earrings-5.png', tag: 'New' },
+const SILVER_NECKLACES = [
+  { id: 1, name: 'Silver Royal Necklace', desc: 'Premium silver necklace with elegant handcrafted finish', img: '/src/assets/img/silver/silver-necklace-1.png', tag: 'Bestseller' },
+  { id: 2, name: 'Moonlight Necklace', desc: 'Smooth silver shine with modern premium styling', img: '/src/assets/img/silver/silver-necklace-2.png', tag: 'Premium' },
+  { id: 3, name: 'Floral Silver Necklace', desc: 'Floral silver design for special occasions', img: '/src/assets/img/silver/silver-necklace-3.png', tag: 'Statement' },
+  { id: 4, name: 'Minimal Silver Necklace', desc: 'Lightweight necklace for daily wear', img: '/src/assets/img/silver/silver-necklace-4.png', tag: 'Minimal' },
+  { id: 5, name: 'Classic Silver Charm', desc: 'Classic necklace with premium polished finish', img: '/src/assets/img/silver/silver-necklace-5.png', tag: 'New' },
+  { id: 6, name: 'Heritage Silver Necklace', desc: 'Traditional silver necklace with detailed craftsmanship', img: '/src/assets/img/silver/silver-necklace-6.png', tag: 'Premium' },
 ]
 
 const TAG_COLORS = {
   Bestseller: { bg: 'rgba(52,211,153,0.2)', border: 'rgba(52,211,153,0.5)', color: '#34d399' },
-  Premium: { bg: 'rgba(251,191,36,0.22)', border: 'rgba(251,191,36,0.55)', color: '#fbbf24' },
   Minimal: { bg: 'rgba(34,211,238,0.2)', border: 'rgba(34,211,238,0.5)', color: '#22d3ee' },
+  Premium: { bg: 'rgba(192,192,192,0.25)', border: 'rgba(192,192,192,0.6)', color: '#e2e8f0' },
   Statement: { bg: 'rgba(167,139,250,0.2)', border: 'rgba(167,139,250,0.5)', color: '#a78bfa' },
   New: { bg: 'rgba(244,114,182,0.2)', border: 'rgba(244,114,182,0.5)', color: '#f472b6' },
 }
 
-export default function GoldEarrings() {
+export default function SilverNecklaces() {
   const navigate = useNavigate()
   const [dark, setDark] = useState(true)
   const [selectedWeight, setSelectedWeight] = useState('All Weights')
   const [hoveredItem, setHoveredItem] = useState(null)
-  const [goldPrice, setGoldPrice] = useState(null)
+  const [silverPrice, setSilverPrice] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
   const canvasRef = useRef(null)
 
@@ -58,13 +59,12 @@ export default function GoldEarrings() {
   const inpBg = dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
   const inpBorder = dark ? '#374151' : '#d1d5db'
   const optionBg = dark ? '#1a2035' : '#ffffff'
-
-  const goldColor = '#fbbf24'
+  const silverColor = '#c0c0c0'
 
   useEffect(() => {
     import('../api').then(({ default: api }) => {
       api.get('/metal-rates/').then(res => {
-        setGoldPrice(parseFloat(res.data.gold_22k))
+        setSilverPrice(parseFloat(res.data.silver_999))
       }).catch(() => {})
     }).catch(() => {})
   }, [])
@@ -120,7 +120,7 @@ export default function GoldEarrings() {
       }
 
       draw() {
-        ctx.fillStyle = dark ? 'rgba(251,191,36,0.8)' : 'rgba(217,119,6,0.65)'
+        ctx.fillStyle = dark ? 'rgba(192,192,192,0.75)' : 'rgba(100,116,139,0.6)'
         ctx.save()
         ctx.translate(this.x, this.y)
         ctx.beginPath()
@@ -156,7 +156,7 @@ export default function GoldEarrings() {
           const d = Math.sqrt(dx * dx + dy * dy)
 
           if (d < 150) {
-            ctx.strokeStyle = `rgba(251,191,36,${(1 - d / 150) * 0.35})`
+            ctx.strokeStyle = `rgba(192,192,192,${(1 - d / 150) * 0.35})`
             ctx.lineWidth = 0.5
             ctx.beginPath()
             ctx.moveTo(particles[a].x, particles[a].y)
@@ -188,7 +188,7 @@ export default function GoldEarrings() {
   }, [dark])
 
   const selectedW = WEIGHTS.find(w => w.label === selectedWeight)
-  const unitPrice = selectedW?.grams && goldPrice ? selectedW.grams * goldPrice : null
+  const unitPrice = selectedW?.grams && silverPrice ? selectedW.grams * silverPrice : null
   const tagStyle = tag => TAG_COLORS[tag] || { bg: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.2)', color: '#fff' }
 
   return (
@@ -197,23 +197,17 @@ export default function GoldEarrings() {
         @keyframes float-orb { 0%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-50px) scale(1.1)} 66%{transform:translate(-20px,20px) scale(0.9)} 100%{transform:translate(0,0) scale(1)} }
         @keyframes antigravity { 0%{transform:translateY(110vh) rotate(0deg);opacity:0} 10%{opacity:var(--op)} 90%{opacity:var(--op)} 100%{transform:translateY(-20vh) rotate(360deg);opacity:0} }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes goldShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
-        @keyframes glow-pulse { 0%,100%{box-shadow:0 0 20px rgba(251,191,36,0.1)} 50%{box-shadow:0 0 40px rgba(251,191,36,0.35)} }
+        @keyframes silverShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+        @keyframes glow-pulse { 0%,100%{box-shadow:0 0 20px rgba(192,192,192,0.1)} 50%{box-shadow:0 0 40px rgba(192,192,192,0.35)} }
         @keyframes shine { 0%{left:-80%} 100%{left:120%} }
         @keyframes sparkle { 0%,100%{opacity:0;transform:scale(0) rotate(0deg)} 50%{opacity:1;transform:scale(1) rotate(180deg)} }
 
-        .ge-card { animation: fadeInUp 0.5s ease both; }
-        .ge-card:nth-child(1){animation-delay:0.05s}
-        .ge-card:nth-child(2){animation-delay:0.12s}
-        .ge-card:nth-child(3){animation-delay:0.19s}
-        .ge-card:nth-child(4){animation-delay:0.26s}
-        .ge-card:nth-child(5){animation-delay:0.33s}
+        .sn-card { animation: fadeInUp 0.5s ease both; }
+        .sn-img-wrap { overflow:hidden; }
+        .sn-img-wrap img { transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+        .sn-card:hover .sn-img-wrap img { transform:scale(1.12) translateY(-4px) !important; }
 
-        .ge-img-wrap { overflow:hidden; }
-        .ge-img-wrap img { transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-        .ge-card:hover .ge-img-wrap img { transform:scale(1.12) translateY(-4px) !important; }
-
-        .ge-shine {
+        .sn-shine {
           position:absolute;
           top:0;
           left:-80%;
@@ -225,7 +219,7 @@ export default function GoldEarrings() {
           transition:opacity 0.3s;
         }
 
-        .ge-card:hover .ge-shine { opacity:1; animation:shine 0.6s ease; }
+        .sn-card:hover .sn-shine { opacity:1; animation:shine 0.6s ease; }
         .sparkle-dot { animation:sparkle 2s ease infinite; }
         .weight-chip { transition:all 0.2s ease; }
         .weight-chip:hover { transform:translateY(-2px); }
@@ -233,21 +227,21 @@ export default function GoldEarrings() {
 
       <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 1, opacity: 0.4 }} />
 
-      <div style={{ position: 'absolute', borderRadius: '50%', filter: 'blur(90px)', animation: 'float-orb 20s infinite ease-in-out', zIndex: 0, top: '5%', left: '5%', width: '420px', height: '420px', background: 'rgba(251,191,36,0.06)' }} />
-      <div style={{ position: 'absolute', borderRadius: '50%', filter: 'blur(90px)', animation: 'float-orb 20s infinite ease-in-out', zIndex: 0, bottom: '5%', right: '5%', width: '500px', height: '500px', background: 'rgba(245,158,11,0.05)', animationDelay: '-7s' }} />
+      <div style={{ position: 'absolute', borderRadius: '50%', filter: 'blur(90px)', animation: 'float-orb 20s infinite ease-in-out', zIndex: 0, top: '5%', left: '5%', width: '420px', height: '420px', background: 'rgba(192,192,192,0.06)' }} />
+      <div style={{ position: 'absolute', borderRadius: '50%', filter: 'blur(90px)', animation: 'float-orb 20s infinite ease-in-out', zIndex: 0, bottom: '5%', right: '5%', width: '500px', height: '500px', background: 'rgba(148,163,184,0.05)', animationDelay: '-7s' }} />
 
       {PARTICLES.map(p => (
-        <div key={p.id} style={{ position: 'absolute', left: `${p.x}%`, bottom: '-100px', width: p.size, height: p.size, borderRadius: '40% 60% 60% 40%/40% 40% 60% 60%', border: `1px solid ${goldColor}44`, opacity: p.opacity, animation: `antigravity ${p.duration}s ${p.delay}s infinite linear`, '--op': p.opacity, pointerEvents: 'none', zIndex: 0 }} />
+        <div key={p.id} style={{ position: 'absolute', left: `${p.x}%`, bottom: '-100px', width: p.size, height: p.size, borderRadius: '40% 60% 60% 40%/40% 40% 60% 60%', border: `1px solid ${silverColor}44`, opacity: p.opacity, animation: `antigravity ${p.duration}s ${p.delay}s infinite linear`, '--op': p.opacity, pointerEvents: 'none', zIndex: 0 }} />
       ))}
 
       <div style={{ position: 'relative', zIndex: 10, background: glass, borderBottom: `1px solid ${border}`, padding: '18px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(16px)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img src={logo} alt="BitByte" style={{ width: 60, height: 50, borderRadius: '10px', objectFit: 'contain' }} />
-          <span style={{ color: goldColor, fontWeight: 700, fontSize: '14px' }}>🏅 Gold Earrings Collection</span>
+          <span style={{ color: silverColor, fontWeight: 700, fontSize: '14px' }}>🥈 Silver Necklaces Collection</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button onClick={() => navigate('/collection/earrings')} style={{ padding: '8px 16px', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.35)', color: goldColor, borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>← Back</button>
+          <button onClick={() => navigate('/collection/necklaces')} style={{ padding: '8px 16px', background: 'rgba(192,192,192,0.1)', border: '1px solid rgba(192,192,192,0.35)', color: silverColor, borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>← Back</button>
           <button onClick={() => navigate('/customer')} style={{ padding: '8px 16px', background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.35)', color: '#34d399', borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>Dashboard</button>
           <button onClick={() => setDark(!dark)} style={{ padding: '8px 14px', borderRadius: '14px', border: `1px solid ${border}`, background: 'transparent', color: text, cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>
             {dark ? '☀️ Light' : '🌙 Dark'}
@@ -255,28 +249,28 @@ export default function GoldEarrings() {
         </div>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 10, padding: '40px', maxWidth: '1300px', margin: '0 auto' }}>
+      <div style={{ position: 'relative', zIndex: 10, padding: '40px', maxWidth: '1400px', margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '40px', animation: 'fadeInUp 0.4s ease both' }}>
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '20px', padding: '5px 14px', marginBottom: '14px' }}>
-              <span className="sparkle-dot" style={{ color: goldColor, fontSize: '11px' }}>✦</span>
-              <span style={{ color: goldColor, fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Premium Gold Collection</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(192,192,192,0.08)', border: '1px solid rgba(192,192,192,0.25)', borderRadius: '20px', padding: '5px 14px', marginBottom: '14px' }}>
+              <span className="sparkle-dot" style={{ color: silverColor, fontSize: '11px' }}>✦</span>
+              <span style={{ color: silverColor, fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Premium Silver Collection</span>
             </div>
 
             <h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px' }}>
-              🏅{' '}
-              <span style={{ background: 'linear-gradient(90deg,#d97706,#fbbf24,#fde68a,#fbbf24)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'goldShimmer 3s linear infinite' }}>
-                Gold Earrings
+              🥈{' '}
+              <span style={{ background: 'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'silverShimmer 3s linear infinite' }}>
+                Silver Necklaces
               </span>
             </h1>
 
-            <p style={{ color: subtext, fontSize: '13px', margin: '8px 0 0', fontWeight: 500 }}>5 exclusive designs · Handcrafted Gold 22K</p>
+            <p style={{ color: subtext, fontSize: '13px', margin: '8px 0 0', fontWeight: 500 }}>6 exclusive designs · Handcrafted Silver 999</p>
           </div>
 
-          {goldPrice && (
-            <div style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '10px', padding: '12px 20px', textAlign: 'right' }}>
-              <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Live Rate Gold 22K</div>
-              <div style={{ color: goldColor, fontWeight: 900, fontSize: '18px', fontFamily: 'monospace' }}>₹{goldPrice.toFixed(2)}/gm</div>
+          {silverPrice && (
+            <div style={{ background: 'rgba(192,192,192,0.08)', border: '1px solid rgba(192,192,192,0.25)', borderRadius: '10px', padding: '12px 20px', textAlign: 'right' }}>
+              <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Live Rate Silver 999</div>
+              <div style={{ color: silverColor, fontWeight: 900, fontSize: '18px', fontFamily: 'monospace' }}>₹{silverPrice.toFixed(2)}/gm</div>
             </div>
           )}
         </div>
@@ -287,7 +281,7 @@ export default function GoldEarrings() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             {WEIGHTS.map(w => {
               const isActive = selectedWeight === w.label
-              const price = w.grams && goldPrice ? `₹${(w.grams * goldPrice).toFixed(0)}` : null
+              const price = w.grams && silverPrice ? `₹${(w.grams * silverPrice).toFixed(0)}` : null
 
               return (
                 <button
@@ -297,16 +291,16 @@ export default function GoldEarrings() {
                   style={{
                     padding: '7px 16px',
                     borderRadius: '20px',
-                    border: isActive ? `1px solid ${goldColor}` : `1px solid ${border}`,
-                    background: isActive ? 'rgba(251,191,36,0.15)' : 'transparent',
-                    color: isActive ? goldColor : subtext,
+                    border: isActive ? `1px solid ${silverColor}` : `1px solid ${border}`,
+                    background: isActive ? 'rgba(192,192,192,0.15)' : 'transparent',
+                    color: isActive ? silverColor : subtext,
                     fontWeight: isActive ? 800 : 500,
                     fontSize: '12px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
-                    boxShadow: isActive ? '0 0 12px rgba(251,191,36,0.2)' : 'none',
+                    boxShadow: isActive ? '0 0 12px rgba(192,192,192,0.2)' : 'none',
                     transition: 'all 0.2s ease',
                   }}
                 >
@@ -318,31 +312,31 @@ export default function GoldEarrings() {
           </div>
 
           {selectedWeight !== 'All Weights' && unitPrice && (
-            <div style={{ marginTop: '14px', display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '12px', padding: '10px 18px' }}>
+            <div style={{ marginTop: '14px', display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(192,192,192,0.06)', border: '1px solid rgba(192,192,192,0.25)', borderRadius: '12px', padding: '10px 18px' }}>
               <div>
                 <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' }}>Price for {selectedWeight}</div>
                 <div style={{ color: '#4ade80', fontWeight: 900, fontSize: '18px', fontFamily: 'monospace' }}>₹{unitPrice.toFixed(2)}</div>
               </div>
 
-              <div style={{ width: '1px', height: '32px', background: 'rgba(251,191,36,0.2)' }} />
+              <div style={{ width: '1px', height: '32px', background: 'rgba(192,192,192,0.2)' }} />
 
               <div>
                 <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' }}>Rate Used</div>
-                <div style={{ color: goldColor, fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>₹{goldPrice?.toFixed(2)}/gm</div>
+                <div style={{ color: silverColor, fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>₹{silverPrice?.toFixed(2)}/gm</div>
               </div>
             </div>
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: '18px' }}>
-          {GOLD_EARRINGS.map(item => {
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: '16px' }}>
+          {SILVER_NECKLACES.map(item => {
             const isHovered = hoveredItem === item.id
             const tag = tagStyle(item.tag)
 
             return (
               <div
                 key={item.id}
-                className="ge-card"
+                className="sn-card"
                 onClick={() => setSelectedItem(item)}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
@@ -351,16 +345,16 @@ export default function GoldEarrings() {
                   overflow: 'hidden',
                   cursor: 'pointer',
                   position: 'relative',
-                  border: `1px solid ${isHovered ? 'rgba(251,191,36,0.55)' : 'rgba(251,191,36,0.18)'}`,
-                  background: isHovered ? 'rgba(251,191,36,0.07)' : cardBg,
+                  border: `1px solid ${isHovered ? 'rgba(192,192,192,0.55)' : 'rgba(192,192,192,0.18)'}`,
+                  background: isHovered ? 'rgba(192,192,192,0.07)' : cardBg,
                   transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
-                  boxShadow: isHovered ? '0 20px 50px rgba(251,191,36,0.22), 0 0 0 1px rgba(251,191,36,0.1)' : 'none',
+                  boxShadow: isHovered ? '0 20px 50px rgba(192,192,192,0.22), 0 0 0 1px rgba(192,192,192,0.1)' : 'none',
                   transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
                 }}
               >
-                <div className="ge-shine" />
+                <div className="sn-shine" />
 
-                <div className="ge-img-wrap" style={{ position: 'relative', height: '200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
+                <div className="sn-img-wrap" style={{ position: 'relative', height: '190px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
                   <img src={item.img} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
 
@@ -368,26 +362,26 @@ export default function GoldEarrings() {
                     {item.tag}
                   </div>
 
-                  <div style={{ position: 'absolute', top: '10px', right: '10px', width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: goldColor, fontSize: '10px', fontWeight: 900 }}>
+                  <div style={{ position: 'absolute', top: '10px', right: '10px', width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(192,192,192,0.15)', border: '1px solid rgba(192,192,192,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: silverColor, fontSize: '10px', fontWeight: 900 }}>
                     {item.id}
                   </div>
 
                   {isHovered && (
                     <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-                      <div style={{ width: '70px', height: '70px', borderRadius: '50%', border: '2px solid rgba(251,191,36,0.6)', animation: 'glow-pulse 1.5s ease infinite' }} />
+                      <div style={{ width: '70px', height: '70px', borderRadius: '50%', border: '2px solid rgba(192,192,192,0.6)', animation: 'glow-pulse 1.5s ease infinite' }} />
                     </div>
                   )}
                 </div>
 
-                <div style={{ padding: '14px 16px' }}>
-                  <div style={{ color: isHovered ? goldColor : text, fontWeight: 800, fontSize: '13px', marginBottom: '4px', transition: 'color 0.3s' }}>{item.name}</div>
+                <div style={{ padding: '14px 14px' }}>
+                  <div style={{ color: isHovered ? silverColor : text, fontWeight: 800, fontSize: '12px', marginBottom: '4px', transition: 'color 0.3s' }}>{item.name}</div>
                   <div style={{ color: subtext, fontSize: '10px', lineHeight: '1.5', marginBottom: '10px' }}>{item.desc}</div>
 
                   {selectedWeight !== 'All Weights' ? (
-                    <div style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)', borderRadius: '8px', padding: '8px 10px' }}>
+                    <div style={{ background: 'rgba(192,192,192,0.08)', border: '1px solid rgba(192,192,192,0.2)', borderRadius: '8px', padding: '8px 10px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ color: subtext, fontSize: '10px' }}>{selectedWeight}</span>
-                        <span style={{ color: '#4ade80', fontWeight: 800, fontSize: '12px', fontFamily: 'monospace' }}>
+                        <span style={{ color: '#4ade80', fontWeight: 800, fontSize: '11px', fontFamily: 'monospace' }}>
                           {unitPrice ? `₹${unitPrice.toFixed(2)}` : '—'}
                         </span>
                       </div>
@@ -396,31 +390,15 @@ export default function GoldEarrings() {
                     <div style={{ color: subtext, fontSize: '10px', fontStyle: 'italic', textAlign: 'center' }}>Select weight to see price</div>
                   )}
                 </div>
-
-                {isHovered && (
-                  <div style={{ padding: '0 16px 14px', animation: 'fadeInUp 0.2s ease' }}>
-                    <div style={{ width: '100%', padding: '8px', background: 'linear-gradient(90deg,#f59e0b,#fbbf24)', borderRadius: '10px', color: '#000', fontWeight: 800, fontSize: '11px', textAlign: 'center' }}>
-                      👁 View Details
-                    </div>
-                  </div>
-                )}
               </div>
             )
           })}
-        </div>
-
-        <div style={{ marginTop: '48px', textAlign: 'center', animation: 'fadeInUp 0.6s ease 0.4s both' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', color: subtext, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600 }}>
-            <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,transparent,${goldColor})` }} />
-            BitByte Jewellers • Gold Earrings Collection
-            <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,${goldColor},transparent)` }} />
-          </div>
         </div>
       </div>
 
       {selectedItem && (
         <div onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(14px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc', border: '1px solid rgba(251,191,36,0.35)', borderRadius: '28px', width: '95%', maxWidth: '560px', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.8)', animation: 'fadeInUp 0.3s ease' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc', border: '1px solid rgba(192,192,192,0.35)', borderRadius: '28px', width: '95%', maxWidth: '560px', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.8)', animation: 'fadeInUp 0.3s ease' }}>
             <div style={{ position: 'relative', height: '320px', overflow: 'hidden' }}>
               <img src={selectedItem.img} alt={selectedItem.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(2,6,23,0.9) 0%,transparent 60%)' }} />
@@ -435,46 +413,33 @@ export default function GoldEarrings() {
             </div>
 
             <div style={{ padding: '28px 32px' }}>
-              <div style={{ color: goldColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px' }}>{selectedItem.name}</div>
+              <div style={{ color: silverColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px' }}>{selectedItem.name}</div>
               <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedItem.desc}</div>
 
-              <div style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.2)', borderRadius: '16px', padding: '18px 20px', marginBottom: '20px' }}>
-                <div style={{ color: goldColor, fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px' }}>Price Calculator</div>
+              <div style={{ background: 'rgba(192,192,192,0.06)', border: '1px solid rgba(192,192,192,0.2)', borderRadius: '16px', padding: '18px 20px', marginBottom: '20px' }}>
+                <div style={{ color: silverColor, fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px' }}>Price Calculator</div>
 
-                <div>
-                  <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, marginBottom: '6px', textTransform: 'uppercase' }}>Weight</div>
-                  <select
-                    value={selectedWeight}
-                    onChange={e => setSelectedWeight(e.target.value)}
-                    style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '8px', padding: '10px 14px', color: text, fontSize: '13px', outline: 'none', cursor: 'pointer' }}
-                  >
-                    {WEIGHTS.map(w => (
-                      <option key={w.label} value={w.label} style={{ background: optionBg }}>{w.label}</option>
-                    ))}
-                  </select>
-                </div>
+                <select value={selectedWeight} onChange={e => setSelectedWeight(e.target.value)} style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '8px', padding: '10px 14px', color: text, fontSize: '13px', outline: 'none', cursor: 'pointer' }}>
+                  {WEIGHTS.map(w => (
+                    <option key={w.label} value={w.label} style={{ background: optionBg }}>{w.label}</option>
+                  ))}
+                </select>
 
                 {unitPrice && (
-                  <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid rgba(251,191,36,0.15)' }}>
+                  <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid rgba(192,192,192,0.15)' }}>
                     <div style={{ color: subtext, fontSize: '12px' }}>Estimated Price</div>
                     <div style={{ color: '#4ade80', fontWeight: 900, fontSize: '22px', fontFamily: 'monospace' }}>₹{unitPrice.toFixed(2)}</div>
                   </div>
                 )}
 
-                {goldPrice && (
+                {silverPrice && (
                   <div style={{ marginTop: '8px', color: subtext, fontSize: '10px', fontFamily: 'monospace' }}>
-                    Rate: ₹{goldPrice.toFixed(2)}/gm (Gold 22K)
+                    Rate: ₹{silverPrice.toFixed(2)}/gm (Silver 999)
                   </div>
                 )}
               </div>
 
-              <button
-                onClick={() => {
-                  setSelectedItem(null)
-                  navigate('/customer')
-                }}
-                style={{ width: '100%', padding: '14px', background: 'linear-gradient(90deg,#f59e0b,#fbbf24)', border: 'none', borderRadius: '14px', color: '#000', fontWeight: 900, fontSize: '14px', cursor: 'pointer' }}
-              >
+              <button onClick={() => { setSelectedItem(null); navigate('/customer') }} style={{ width: '100%', padding: '14px', background: 'linear-gradient(90deg,#9ca3af,#e2e8f0)', border: 'none', borderRadius: '14px', color: '#000', fontWeight: 900, fontSize: '14px', cursor: 'pointer' }}>
                 🛒 Place Order on Dashboard
               </button>
             </div>

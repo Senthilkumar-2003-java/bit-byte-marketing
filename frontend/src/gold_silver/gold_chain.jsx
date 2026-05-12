@@ -24,12 +24,12 @@ const WEIGHTS = [
   { label: '8 gm', grams: 8 },
 ]
 
-const GOLD_EARRINGS = [
-  { id: 1, name: 'Golden Bloom', desc: 'Elegant floral earrings with premium gold finish', img: '/src/assets/img/gold/gold-earrings-1.png', tag: 'Bestseller' },
-  { id: 2, name: 'Royal Drops', desc: 'Traditional drop earrings for festive and bridal wear', img: '/src/assets/img/gold/gold-earrings-2.png', tag: 'Premium' },
-  { id: 3, name: 'Classic Studs', desc: 'Minimal everyday studs with handcrafted detailing', img: '/src/assets/img/gold/gold-earrings-3.png', tag: 'Minimal' },
-  { id: 4, name: 'Temple Shine', desc: 'Statement earrings inspired by heritage craftsmanship', img: '/src/assets/img/gold/gold-earrings-4.png', tag: 'Statement' },
-  { id: 5, name: 'Duo Charm', desc: 'Modern earrings with polished elegant curves', img: '/src/assets/img/gold/gold-earrings-5.png', tag: 'New' },
+const GOLD_CHAINS = [
+  { id: 1, name: 'Classic Gold Link', desc: 'Elegant classic chain with smooth gold finishing', img: '/src/assets/img/gold/gold chain-1.png', tag: 'Bestseller' },
+  { id: 2, name: 'Royal Rope Chain', desc: 'Premium rope-style chain for festive and daily wear', img: '/src/assets/img/gold/gold chain-2.png', tag: 'Premium' },
+  { id: 3, name: 'Floral Pendant Chain', desc: 'Modern chain with rich shine and handcrafted detail', img: '/src/assets/img/gold/gold chain-3.png', tag: 'Statement' },
+  { id: 4, name: 'Minimal Daily Chain', desc: 'Lightweight gold chain for everyday elegance', img: '/src/assets/img/gold/gold chain-4.png', tag: 'Minimal' },
+  { id: 5, name: 'Heritage Gold Chain', desc: 'Traditional gold chain with premium polished look', img: '/src/assets/img/gold/gold chain-5.png', tag: 'New' },
 ]
 
 const TAG_COLORS = {
@@ -40,7 +40,7 @@ const TAG_COLORS = {
   New: { bg: 'rgba(244,114,182,0.2)', border: 'rgba(244,114,182,0.5)', color: '#f472b6' },
 }
 
-export default function GoldEarrings() {
+export default function GoldChain() {
   const navigate = useNavigate()
   const [dark, setDark] = useState(true)
   const [selectedWeight, setSelectedWeight] = useState('All Weights')
@@ -58,7 +58,6 @@ export default function GoldEarrings() {
   const inpBg = dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
   const inpBorder = dark ? '#374151' : '#d1d5db'
   const optionBg = dark ? '#1a2035' : '#ffffff'
-
   const goldColor = '#fbbf24'
 
   useEffect(() => {
@@ -202,18 +201,18 @@ export default function GoldEarrings() {
         @keyframes shine { 0%{left:-80%} 100%{left:120%} }
         @keyframes sparkle { 0%,100%{opacity:0;transform:scale(0) rotate(0deg)} 50%{opacity:1;transform:scale(1) rotate(180deg)} }
 
-        .ge-card { animation: fadeInUp 0.5s ease both; }
-        .ge-card:nth-child(1){animation-delay:0.05s}
-        .ge-card:nth-child(2){animation-delay:0.12s}
-        .ge-card:nth-child(3){animation-delay:0.19s}
-        .ge-card:nth-child(4){animation-delay:0.26s}
-        .ge-card:nth-child(5){animation-delay:0.33s}
+        .gc-card { animation: fadeInUp 0.5s ease both; }
+        .gc-card:nth-child(1){animation-delay:0.05s}
+        .gc-card:nth-child(2){animation-delay:0.12s}
+        .gc-card:nth-child(3){animation-delay:0.19s}
+        .gc-card:nth-child(4){animation-delay:0.26s}
+        .gc-card:nth-child(5){animation-delay:0.33s}
 
-        .ge-img-wrap { overflow:hidden; }
-        .ge-img-wrap img { transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-        .ge-card:hover .ge-img-wrap img { transform:scale(1.12) translateY(-4px) !important; }
+        .gc-img-wrap { overflow:hidden; }
+        .gc-img-wrap img { transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+        .gc-card:hover .gc-img-wrap img { transform:scale(1.12) translateY(-4px) !important; }
 
-        .ge-shine {
+        .gc-shine {
           position:absolute;
           top:0;
           left:-80%;
@@ -225,7 +224,7 @@ export default function GoldEarrings() {
           transition:opacity 0.3s;
         }
 
-        .ge-card:hover .ge-shine { opacity:1; animation:shine 0.6s ease; }
+        .gc-card:hover .gc-shine { opacity:1; animation:shine 0.6s ease; }
         .sparkle-dot { animation:sparkle 2s ease infinite; }
         .weight-chip { transition:all 0.2s ease; }
         .weight-chip:hover { transform:translateY(-2px); }
@@ -243,11 +242,11 @@ export default function GoldEarrings() {
       <div style={{ position: 'relative', zIndex: 10, background: glass, borderBottom: `1px solid ${border}`, padding: '18px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(16px)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img src={logo} alt="BitByte" style={{ width: 60, height: 50, borderRadius: '10px', objectFit: 'contain' }} />
-          <span style={{ color: goldColor, fontWeight: 700, fontSize: '14px' }}>🏅 Gold Earrings Collection</span>
+          <span style={{ color: goldColor, fontWeight: 700, fontSize: '14px' }}>🏅 Gold Chain Collection</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button onClick={() => navigate('/collection/earrings')} style={{ padding: '8px 16px', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.35)', color: goldColor, borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>← Back</button>
+          <button onClick={() => navigate('/collection/chains')} style={{ padding: '8px 16px', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.35)', color: goldColor, borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>← Back</button>
           <button onClick={() => navigate('/customer')} style={{ padding: '8px 16px', background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.35)', color: '#34d399', borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>Dashboard</button>
           <button onClick={() => setDark(!dark)} style={{ padding: '8px 14px', borderRadius: '14px', border: `1px solid ${border}`, background: 'transparent', color: text, cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>
             {dark ? '☀️ Light' : '🌙 Dark'}
@@ -266,7 +265,7 @@ export default function GoldEarrings() {
             <h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px' }}>
               🏅{' '}
               <span style={{ background: 'linear-gradient(90deg,#d97706,#fbbf24,#fde68a,#fbbf24)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'goldShimmer 3s linear infinite' }}>
-                Gold Earrings
+                Gold Chain
               </span>
             </h1>
 
@@ -335,14 +334,14 @@ export default function GoldEarrings() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: '18px' }}>
-          {GOLD_EARRINGS.map(item => {
+          {GOLD_CHAINS.map(item => {
             const isHovered = hoveredItem === item.id
             const tag = tagStyle(item.tag)
 
             return (
               <div
                 key={item.id}
-                className="ge-card"
+                className="gc-card"
                 onClick={() => setSelectedItem(item)}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
@@ -358,9 +357,9 @@ export default function GoldEarrings() {
                   transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
                 }}
               >
-                <div className="ge-shine" />
+                <div className="gc-shine" />
 
-                <div className="ge-img-wrap" style={{ position: 'relative', height: '200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
+                <div className="gc-img-wrap" style={{ position: 'relative', height: '200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
                   <img src={item.img} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
 
@@ -408,14 +407,6 @@ export default function GoldEarrings() {
             )
           })}
         </div>
-
-        <div style={{ marginTop: '48px', textAlign: 'center', animation: 'fadeInUp 0.6s ease 0.4s both' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', color: subtext, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600 }}>
-            <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,transparent,${goldColor})` }} />
-            BitByte Jewellers • Gold Earrings Collection
-            <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,${goldColor},transparent)` }} />
-          </div>
-        </div>
       </div>
 
       {selectedItem && (
@@ -441,18 +432,15 @@ export default function GoldEarrings() {
               <div style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.2)', borderRadius: '16px', padding: '18px 20px', marginBottom: '20px' }}>
                 <div style={{ color: goldColor, fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px' }}>Price Calculator</div>
 
-                <div>
-                  <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, marginBottom: '6px', textTransform: 'uppercase' }}>Weight</div>
-                  <select
-                    value={selectedWeight}
-                    onChange={e => setSelectedWeight(e.target.value)}
-                    style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '8px', padding: '10px 14px', color: text, fontSize: '13px', outline: 'none', cursor: 'pointer' }}
-                  >
-                    {WEIGHTS.map(w => (
-                      <option key={w.label} value={w.label} style={{ background: optionBg }}>{w.label}</option>
-                    ))}
-                  </select>
-                </div>
+                <select
+                  value={selectedWeight}
+                  onChange={e => setSelectedWeight(e.target.value)}
+                  style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '8px', padding: '10px 14px', color: text, fontSize: '13px', outline: 'none', cursor: 'pointer' }}
+                >
+                  {WEIGHTS.map(w => (
+                    <option key={w.label} value={w.label} style={{ background: optionBg }}>{w.label}</option>
+                  ))}
+                </select>
 
                 {unitPrice && (
                   <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid rgba(251,191,36,0.15)' }}>
