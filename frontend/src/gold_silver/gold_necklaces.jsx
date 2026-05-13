@@ -277,60 +277,9 @@ export default function GoldNecklaces() {
           )}
         </div>
 
-        <div style={{ marginBottom: '32px', animation: 'fadeInUp 0.5s ease 0.1s both' }}>
-          <div style={{ color: subtext, fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>Filter by Weight</div>
+     
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {WEIGHTS.map(w => {
-              const isActive = selectedWeight === w.label
-              const price = w.grams && goldPrice ? `₹${(w.grams * goldPrice).toFixed(0)}` : null
-
-              return (
-                <button
-                  key={w.label}
-                  className="weight-chip"
-                  onClick={() => setSelectedWeight(w.label)}
-                  style={{
-                    padding: '7px 16px',
-                    borderRadius: '20px',
-                    border: isActive ? `1px solid ${goldColor}` : `1px solid ${border}`,
-                    background: isActive ? 'rgba(251,191,36,0.15)' : 'transparent',
-                    color: isActive ? goldColor : subtext,
-                    fontWeight: isActive ? 800 : 500,
-                    fontSize: '12px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: isActive ? '0 0 12px rgba(251,191,36,0.2)' : 'none',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  {w.label}
-                  {price && isActive && <span style={{ fontSize: '10px', opacity: 0.8, fontFamily: 'monospace' }}>{price}</span>}
-                </button>
-              )
-            })}
-          </div>
-
-          {selectedWeight !== 'All Weights' && unitPrice && (
-            <div style={{ marginTop: '14px', display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '12px', padding: '10px 18px' }}>
-              <div>
-                <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' }}>Price for {selectedWeight}</div>
-                <div style={{ color: '#4ade80', fontWeight: 900, fontSize: '18px', fontFamily: 'monospace' }}>₹{unitPrice.toFixed(2)}</div>
-              </div>
-
-              <div style={{ width: '1px', height: '32px', background: 'rgba(251,191,36,0.2)' }} />
-
-              <div>
-                <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' }}>Rate Used</div>
-                <div style={{ color: goldColor, fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>₹{goldPrice?.toFixed(2)}/gm</div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
           {GOLD_NECKLACES.map(item => {
             const isHovered = hoveredItem === item.id
             const tag = tagStyle(item.tag)
@@ -379,18 +328,7 @@ export default function GoldNecklaces() {
                   <div style={{ color: isHovered ? goldColor : text, fontWeight: 800, fontSize: '12px', marginBottom: '4px', transition: 'color 0.3s' }}>{item.name}</div>
                   <div style={{ color: subtext, fontSize: '10px', lineHeight: '1.5', marginBottom: '10px' }}>{item.desc}</div>
 
-                  {selectedWeight !== 'All Weights' ? (
-                    <div style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)', borderRadius: '8px', padding: '8px 10px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ color: subtext, fontSize: '10px' }}>{selectedWeight}</span>
-                        <span style={{ color: '#4ade80', fontWeight: 800, fontSize: '11px', fontFamily: 'monospace' }}>
-                          {unitPrice ? `₹${unitPrice.toFixed(2)}` : '—'}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div style={{ color: subtext, fontSize: '10px', fontStyle: 'italic', textAlign: 'center' }}>Select weight to see price</div>
-                  )}
+
                 </div>
               </div>
             )
@@ -418,28 +356,7 @@ export default function GoldNecklaces() {
               <div style={{ color: goldColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px' }}>{selectedItem.name}</div>
               <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedItem.desc}</div>
 
-              <div style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.2)', borderRadius: '16px', padding: '18px 20px', marginBottom: '20px' }}>
-                <div style={{ color: goldColor, fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px' }}>Price Calculator</div>
 
-                <select value={selectedWeight} onChange={e => setSelectedWeight(e.target.value)} style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '8px', padding: '10px 14px', color: text, fontSize: '13px', outline: 'none', cursor: 'pointer' }}>
-                  {WEIGHTS.map(w => (
-                    <option key={w.label} value={w.label} style={{ background: optionBg }}>{w.label}</option>
-                  ))}
-                </select>
-
-                {unitPrice && (
-                  <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid rgba(251,191,36,0.15)' }}>
-                    <div style={{ color: subtext, fontSize: '12px' }}>Estimated Price</div>
-                    <div style={{ color: '#4ade80', fontWeight: 900, fontSize: '22px', fontFamily: 'monospace' }}>₹{unitPrice.toFixed(2)}</div>
-                  </div>
-                )}
-
-                {goldPrice && (
-                  <div style={{ marginTop: '8px', color: subtext, fontSize: '10px', fontFamily: 'monospace' }}>
-                    Rate: ₹{goldPrice.toFixed(2)}/gm (Gold 22K)
-                  </div>
-                )}
-              </div>
 
               <button onClick={() => { setSelectedItem(null); navigate('/customer') }} style={{ width: '100%', padding: '14px', background: 'linear-gradient(90deg,#f59e0b,#fbbf24)', border: 'none', borderRadius: '14px', color: '#000', fontWeight: 900, fontSize: '14px', cursor: 'pointer' }}>
                 🛒 Place Order on Dashboard

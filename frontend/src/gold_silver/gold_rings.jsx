@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
+import { addToCart } from '../collection/card_section'
 
 const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   id: i, size: Math.random() * 50 + 8, x: Math.random() * 100,
@@ -36,6 +37,7 @@ const TAG_COLORS = {
   Stackable:  { bg: 'rgba(34,211,238,0.2)', border: 'rgba(34,211,238,0.5)', color: '#22d3ee' },
 }
 
+
 export default function GoldRings() {
   const navigate = useNavigate()
   const [dark, setDark] = useState(true)
@@ -44,6 +46,8 @@ export default function GoldRings() {
   const [metalType, setMetalType] = useState('22k')   // '22k' | '24k'
   const [metalPrices, setMetalPrices] = useState({ gold22k: null, gold24k: null })
   const [selectedRing, setSelectedRing] = useState(null)
+  const [dbRings, setDbRings] = useState([])
+  const [dbLoading, setDbLoading] = useState(false)
   const canvasRef = useRef(null)
 
   const bg       = dark ? '#020617' : '#f8fafc'
@@ -60,14 +64,12 @@ export default function GoldRings() {
   const goldGlow  = metalType === '22k' ? 'rgba(251,191,36,0.3)' : 'rgba(255,215,0,0.3)'
 
   // Try to get prices from API (optional — works even without)
-  useEffect(() => {
+useEffect(() => {
     import('../api').then(({ default: api }) => {
-      api.get('/metal-rates/').then(res => {
-        setMetalPrices({
-          gold22k: parseFloat(res.data.gold_22k),
-          gold24k: parseFloat(res.data.gold_24k),
-        })
-      }).catch(() => {})
+      setDbLoading(true)
+      api.get('/jewelry-products/?category=rings&metal=gold')
+        .then(res => { setDbRings(res.data); setDbLoading(false) })
+        .catch(() => setDbLoading(false))
     }).catch(() => {})
   }, [])
 
@@ -241,62 +243,22 @@ export default function GoldRings() {
           </div>
         </div>
 
-        {/* Weight Filter Chips */}
-        <div style={{ marginBottom: '32px', animation: 'fadeInUp 0.5s ease 0.1s both' }}>
-          <div style={{ color: subtext, fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>Filter by Weight</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {WEIGHTS.map(w => {
-              const isActive = selectedWeight === w.label
-              const price = w.grams && currentRate ? `₹${(w.grams * currentRate).toFixed(0)}` : null
-              return (
-                <button
-                  key={w.label}
-                  className="weight-chip"
-                  onClick={() => setSelectedWeight(w.label)}
-                  style={{
-                    padding: '7px 16px',
-                    borderRadius: '20px',
-                    border: isActive ? `1px solid ${goldColor}` : `1px solid ${border}`,
-                    background: isActive ? `rgba(251,191,36,0.15)` : 'transparent',
-                    color: isActive ? goldColor : subtext,
-                    fontWeight: isActive ? 800 : 500,
-                    fontSize: '12px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: isActive ? `0 0 12px rgba(251,191,36,0.2)` : 'none',
-                  }}
-                >
-                  {w.label}
-                  {price && isActive && <span style={{ fontSize: '10px', opacity: 0.8, fontFamily: 'monospace' }}>{price}</span>}
-                </button>
-              )
-            })}
-          </div>
 
-          {/* Price info when weight selected */}
-          {selectedWeight !== 'All Weights' && unitPrice && (
-            <div style={{ marginTop: '14px', display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '12px', padding: '10px 18px' }}>
-              <div>
-                <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' }}>Price for {selectedWeight}</div>
-                <div style={{ color: '#4ade80', fontWeight: 900, fontSize: '18px', fontFamily: 'monospace' }}>₹{unitPrice.toFixed(2)}</div>
-              </div>
-              <div style={{ width: '1px', height: '32px', background: 'rgba(251,191,36,0.2)' }} />
-              <div>
-                <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' }}>Rate Used</div>
-                <div style={{ color: goldColor, fontWeight: 700, fontSize: '13px', fontFamily: 'monospace' }}>₹{currentRate?.toFixed(2)}/gm</div>
-              </div>
+ 
+ {/* Ring Cards Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px' }}>
+          {dbLoading && (
+            <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'40px' }}>Loading products...</div>
+          )}
+          {!dbLoading && dbRings.length === 0 && (
+            <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'40px', fontSize:'14px' }}>
+              No gold rings added yet. Super Admin can add via Add Product.
             </div>
           )}
-        </div>
-
-        {/* Ring Cards Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '18px' }}>
-          {GOLD_RINGS.map((ring) => {
+          {dbRings.map((ring) => {
             const isHovered = hoveredRing === ring.id
-            const tag = tagStyle(ring.tag)
+            const tag = tagStyle(ring.tag || 'Premium')
+            const firstImg = ring.images?.[0]?.image || null
             return (
               <div
                 key={ring.id}
@@ -305,72 +267,47 @@ export default function GoldRings() {
                 onMouseEnter={() => setHoveredRing(ring.id)}
                 onMouseLeave={() => setHoveredRing(null)}
                 style={{
-                  borderRadius: '20px',
-                  overflow: 'hidden',
+                  borderRadius: '20px', overflow: 'hidden',
                   border: `1px solid ${isHovered ? 'rgba(251,191,36,0.5)' : 'rgba(251,191,36,0.15)'}`,
                   background: isHovered ? 'rgba(251,191,36,0.07)' : cardBg,
-                  cursor: 'pointer',
-                  position: 'relative',
+                  cursor: 'pointer', position: 'relative',
                   transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
-                  boxShadow: isHovered ? `0 20px 50px rgba(251,191,36,0.25), 0 0 0 1px rgba(251,191,36,0.1)` : 'none',
+                  boxShadow: isHovered ? `0 20px 50px rgba(251,191,36,0.25)` : 'none',
                   transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
-                  animation: isHovered ? 'none' : undefined,
                 }}
               >
-                {/* Shine overlay */}
                 <div className="shine-overlay" />
-
-                {/* Image */}
-                <div className="ring-img-wrap" style={{ position: 'relative', height: '200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
-                  <img
-                    src={ring.img}
-                    alt={ring.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
-
-                  {/* Tag */}
-                  <div style={{ position: 'absolute', top: '10px', left: '10px', background: tag.bg, border: `1px solid ${tag.border}`, borderRadius: '16px', padding: '3px 10px', color: tag.color, fontSize: '9px', fontWeight: 800, letterSpacing: '0.5px', backdropFilter: 'blur(8px)' }}>
-                    {ring.tag}
-                  </div>
-
-                  {/* Ring number */}
-                  <div style={{ position: 'absolute', top: '10px', right: '10px', width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: goldColor, fontSize: '10px', fontWeight: 900 }}>
-                    {ring.id}
-                  </div>
-
-                  {/* Hover glow ring */}
-                  {isHovered && (
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-                      <div style={{ width: '70px', height: '70px', borderRadius: '50%', border: `2px solid rgba(251,191,36,0.6)`, animation: 'glow-pulse 1.5s ease infinite' }} />
-                    </div>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div style={{ padding: '14px 16px' }}>
-                  <div style={{ color: isHovered ? goldColor : text, fontWeight: 800, fontSize: '13px', marginBottom: '4px', transition: 'color 0.3s' }}>{ring.name}</div>
-                  <div style={{ color: subtext, fontSize: '10px', lineHeight: '1.5', marginBottom: '10px' }}>{ring.desc}</div>
-
-                  {/* Weight + Price */}
-                  {selectedWeight !== 'All Weights' ? (
-                    <div style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)', borderRadius: '8px', padding: '8px 10px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ color: subtext, fontSize: '10px' }}>{selectedWeight}</span>
-                        <span style={{ color: '#4ade80', fontWeight: 800, fontSize: '12px', fontFamily: 'monospace' }}>
-                          {unitPrice ? `₹${unitPrice.toFixed(2)}` : '—'}
-                        </span>
-                      </div>
-                    </div>
+                <div className="ring-img-wrap" style={{ position:'relative', height:'200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
+                  {firstImg ? (
+                    <img src={firstImg} alt={ring.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
                   ) : (
-                    <div style={{ color: subtext, fontSize: '10px', fontStyle: 'italic', textAlign: 'center' }}>Select weight to see price</div>
+                    <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'8px' }}>
+                      <span style={{ fontSize:'28px', opacity:0.3 }}>🏅</span>
+                      <span style={{ color:subtext, fontSize:'11px' }}>No image</span>
+                    </div>
+                  )}
+                  <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
+                  {ring.tag && (
+                    <div style={{ position:'absolute', top:'10px', left:'10px', background:tag.bg, border:`1px solid ${tag.border}`, borderRadius:'16px', padding:'3px 10px', color:tag.color, fontSize:'9px', fontWeight:800, backdropFilter:'blur(8px)' }}>
+                      {ring.tag}
+                    </div>
+                  )}
+                  {isHovered && (
+                    <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', pointerEvents:'none' }}>
+                      <div style={{ width:'70px', height:'70px', borderRadius:'50%', border:`2px solid rgba(251,191,36,0.6)`, animation:'glow-pulse 1.5s ease infinite' }} />
+                    </div>
                   )}
                 </div>
-
-                {/* Bottom hover CTA */}
+                <div style={{ padding:'14px 16px' }}>
+                  <div style={{ color: isHovered ? goldColor : text, fontWeight:800, fontSize:'13px', marginBottom:'4px', transition:'color 0.3s' }}>{ring.name}</div>
+                  <div style={{ color:subtext, fontSize:'10px', lineHeight:'1.5', marginBottom:'6px' }}>{ring.description}</div>
+                  {ring.price && (
+                    <div style={{ color:goldColor, fontWeight:800, fontSize:'12px', fontFamily:'monospace' }}>₹{parseFloat(ring.price).toLocaleString('en-IN')}</div>
+                  )}
+                </div>
                 {isHovered && (
-                  <div style={{ padding: '0 16px 14px', animation: 'fadeInUp 0.2s ease' }}>
-                    <div style={{ width: '100%', padding: '8px', background: 'linear-gradient(90deg,#f59e0b,#fbbf24)', borderRadius: '10px', color: '#000', fontWeight: 800, fontSize: '11px', textAlign: 'center', cursor: 'pointer' }}>
+                  <div style={{ padding:'0 16px 14px', animation:'fadeInUp 0.2s ease' }}>
+                    <div style={{ width:'100%', padding:'8px', background:'linear-gradient(90deg,#f59e0b,#fbbf24)', borderRadius:'10px', color:'#000', fontWeight:800, fontSize:'11px', textAlign:'center' }}>
                       👁 View Details
                     </div>
                   </div>
@@ -408,37 +345,35 @@ export default function GoldRings() {
               <div style={{ color: goldColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px' }}>{selectedRing.name}</div>
               <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedRing.desc}</div>
 
-              {/* Price Calculator */}
-              <div style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.2)', borderRadius: '16px', padding: '18px 20px', marginBottom: '20px' }}>
-                <div style={{ color: goldColor, fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px' }}>Price Calculator</div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  <div>
-                    <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, marginBottom: '6px', textTransform: 'uppercase' }}>Metal Type</div>
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      {[{ val: '22k', label: '22K' }, { val: '24k', label: '24K' }].map(({ val, label }) => (
-                        <button key={val} onClick={() => setMetalType(val)} style={{ flex: 1, padding: '7px', border: `1px solid ${metalType === val ? goldColor : inpBorder}`, borderRadius: '8px', background: metalType === val ? 'rgba(251,191,36,0.15)' : 'transparent', color: metalType === val ? goldColor : subtext, fontWeight: 700, fontSize: '11px', cursor: 'pointer' }}>{label}</button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, marginBottom: '6px', textTransform: 'uppercase' }}>Weight</div>
-                    <select value={selectedWeight} onChange={e => setSelectedWeight(e.target.value)} style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '8px', padding: '7px 10px', color: text, fontSize: '12px', outline: 'none', cursor: 'pointer' }}>
-                      {WEIGHTS.map(w => <option key={w.label} value={w.label} style={{ background: optionBg }}>{w.label}</option>)}
-                    </select>
-                  </div>
-                </div>
 
-                {unitPrice && (
-                  <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid rgba(251,191,36,0.15)' }}>
-                    <div style={{ color: subtext, fontSize: '12px' }}>Estimated Price</div>
-                    <div style={{ color: '#4ade80', fontWeight: 900, fontSize: '22px', fontFamily: 'monospace' }}>₹{unitPrice.toFixed(2)}</div>
-                  </div>
-                )}
+
+              <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
+                <button
+                  onClick={() => {
+                    addToCart({
+                      id: selectedRing.id,
+                      name: selectedRing.name,
+                      desc: selectedRing.desc,
+                      img: selectedRing.img,
+                      tag: selectedRing.tag,
+                      metal: metalType,
+                      metalLabel: `Gold ${metalType.toUpperCase()}`,
+                      ringType: 'Gold Ring',
+                    })
+                    setSelectedRing(null)
+                    navigate('/cart')
+                  }}
+                  style={{ width:'100%', padding:'14px', background:'linear-gradient(90deg,#f59e0b,#fbbf24)', border:'none', borderRadius:'14px', color:'#000', fontWeight:900, fontSize:'14px', cursor:'pointer' }}
+                >
+                  🛒 Add to Cart
+                </button>
+                <button
+                  onClick={() => { setSelectedRing(null); navigate('/customer') }}
+                  style={{ width:'100%', padding:'12px', background:'rgba(251,191,36,0.08)', border:'1px solid rgba(251,191,36,0.3)', borderRadius:'14px', color:'#fbbf24', fontWeight:700, fontSize:'13px', cursor:'pointer' }}
+                >
+                  ⚡ Place Order on Dashboard
+                </button>
               </div>
-
-              <button onClick={() => { setSelectedRing(null); navigate('/customer') }} style={{ width: '100%', padding: '14px', background: 'linear-gradient(90deg,#f59e0b,#fbbf24)', border: 'none', borderRadius: '14px', color: '#000', fontWeight: 900, fontSize: '14px', cursor: 'pointer' }}>
-                🛒 Place Order on Dashboard
-              </button>
             </div>
           </div>
         </div>

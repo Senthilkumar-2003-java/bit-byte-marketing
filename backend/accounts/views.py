@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
-from .models import User, AdminProfile, DealerProfile, SubDealerProfile, PromotorProfile, CustomerProfile, Announcement, AnnouncementReply, ProfileUpdateRequest, MetalRate, MetalOrder
+from .models import User, AdminProfile, DealerProfile, SubDealerProfile, PromotorProfile, CustomerProfile, Announcement, AnnouncementReply, ProfileUpdateRequest, MetalRate, MetalOrder, JewelryProduct, JewelryProductImage
 from .serializers import *
 from django.utils import timezone
 from datetime import timedelta
@@ -719,6 +719,43 @@ class MetalOrderSummaryView(APIView):
             'week':  summarize(base.filter(created_at__date__gte=week_start)),
             'month': summarize(base.filter(created_at__date__gte=month_start)),
         })    
+
+
+# ADD AT BOTTOM OF views.py (before the ping function):
+
+class JewelryProductView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if request.user.role != 'super_admin':
+            return Response({'error': 'Permission denied'}, status=403)
+        
+        # Handle multipart form data
+        data = request.data.dict() if hasattr(request.data, 'dict') else dict(request.data)
+        images = request.FILES.getlist('uploaded_images')
+        
+        serializer = JewelryProductSerializer(
+            data={**data, 'uploaded_images': images},
+            context={'request': request}
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Product created!', 'data': serializer.data}, status=201)
+        return Response(serializer.errors, status=400)
+
+    def get(self, request):
+        category = request.query_params.get('category')
+        metal = request.query_params.get('metal')
+        
+        qs = JewelryProduct.objects.filter(is_active=True).prefetch_related('images')
+        if category:
+            qs = qs.filter(category=category)
+        if metal:
+            qs = qs.filter(metal=metal)
+        
+        serializer = JewelryProductSerializer(qs, many=True, context={'request': request})
+        return Response(serializer.data)
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])

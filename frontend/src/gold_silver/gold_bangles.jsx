@@ -244,46 +244,6 @@ export default function GoldBangles() {
           </div>
         </div>
 
-        {/* ── Weight Filter Chips ── */}
-        <div style={{ marginBottom:'32px', animation:'fadeInUp 0.5s ease 0.1s both' }}>
-          <div style={{ color:subtext, fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'1px', marginBottom:'12px' }}>Filter by Weight</div>
-          <div style={{ display:'flex', flexWrap:'wrap', gap:'8px' }}>
-            {WEIGHTS.map(w => {
-              const isActive = selectedWeight === w.label
-              const price    = w.grams && currentRate ? `₹${(w.grams * currentRate).toFixed(0)}` : null
-              return (
-                <button key={w.label} className="weight-chip" onClick={() => setSelectedWeight(w.label)}
-                  style={{
-                    padding:'7px 16px', borderRadius:'20px',
-                    border: isActive ? `1px solid ${goldColor}` : `1px solid ${border}`,
-                    background: isActive ? 'rgba(251,191,36,0.15)' : 'transparent',
-                    color: isActive ? goldColor : subtext,
-                    fontWeight: isActive ? 800 : 500, fontSize:'12px', cursor:'pointer',
-                    display:'flex', alignItems:'center', gap:'6px',
-                    boxShadow: isActive ? '0 0 12px rgba(251,191,36,0.25)' : 'none',
-                    transition:'all 0.2s ease',
-                  }}>
-                  {w.label}
-                  {price && isActive && <span style={{ fontSize:'10px', opacity:0.8, fontFamily:'monospace' }}>{price}</span>}
-                </button>
-              )
-            })}
-          </div>
-
-          {selectedWeight !== 'All Weights' && unitPrice && (
-            <div style={{ marginTop:'14px', display:'inline-flex', alignItems:'center', gap:'12px', background:'rgba(251,191,36,0.06)', border:'1px solid rgba(251,191,36,0.25)', borderRadius:'12px', padding:'10px 18px' }}>
-              <div>
-                <div style={{ color:subtext, fontSize:'10px', fontWeight:600, textTransform:'uppercase' }}>Price for {selectedWeight}</div>
-                <div style={{ color:'#4ade80', fontWeight:900, fontSize:'18px', fontFamily:'monospace' }}>₹{unitPrice.toFixed(2)}</div>
-              </div>
-              <div style={{ width:'1px', height:'32px', background:'rgba(251,191,36,0.2)' }} />
-              <div>
-                <div style={{ color:subtext, fontSize:'10px', fontWeight:600, textTransform:'uppercase' }}>Rate Used</div>
-                <div style={{ color:goldColor, fontWeight:700, fontSize:'13px', fontFamily:'monospace' }}>₹{currentRate?.toFixed(2)}/gm</div>
-              </div>
-            </div>
-          )}
-        </div>
 
         {/* ── Bangle Cards — 6 cards, 3 columns ── */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'20px' }}>
@@ -333,18 +293,7 @@ export default function GoldBangles() {
                   <div style={{ color: isHovered ? goldColor : text, fontWeight:800, fontSize:'14px', marginBottom:'4px', transition:'color 0.3s' }}>{bangle.name}</div>
                   <div style={{ color:subtext, fontSize:'11px', lineHeight:'1.5', marginBottom:'10px' }}>{bangle.desc}</div>
 
-                  {selectedWeight !== 'All Weights' ? (
-                    <div style={{ background:'rgba(251,191,36,0.08)', border:'1px solid rgba(251,191,36,0.2)', borderRadius:'8px', padding:'8px 10px' }}>
-                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                        <span style={{ color:subtext, fontSize:'10px' }}>{selectedWeight} ({metalType === 'gold_24k' ? '24K' : '22K'})</span>
-                        <span style={{ color:'#4ade80', fontWeight:800, fontSize:'12px', fontFamily:'monospace' }}>
-                          {unitPrice ? `₹${unitPrice.toFixed(2)}` : '—'}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div style={{ color:subtext, fontSize:'10px', fontStyle:'italic', textAlign:'center' }}>Select weight to see price</div>
-                  )}
+
                 </div>
 
                 {/* hover CTA */}
@@ -376,7 +325,7 @@ export default function GoldBangles() {
           <div onClick={e => e.stopPropagation()} style={{ background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc', border:'1px solid rgba(251,191,36,0.35)', borderRadius:'28px', width:'95%', maxWidth:'560px', overflow:'hidden', boxShadow:'0 40px 100px rgba(0,0,0,0.8)', animation:'fadeInUp 0.3s ease' }}>
 
             {/* image */}
-            <div style={{ position:'relative', height:'200px', overflow:'hidden' }}>
+            <div style={{ position:'relative', height:'180px', overflow:'hidden' }}>
               <img src={selectedBangle.img} alt={selectedBangle.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(2,6,23,0.9) 0%,transparent 60%)' }} />
               <button onClick={() => setSelectedBangle(null)} style={{ position:'absolute', top:'16px', right:'16px', background:'rgba(239,68,68,0.15)', border:'1px solid rgba(239,68,68,0.4)', color:'#f87171', borderRadius:'10px', padding:'6px 14px', cursor:'pointer', fontSize:'12px', backdropFilter:'blur(8px)' }}>✕ Close</button>
@@ -398,30 +347,6 @@ export default function GoldBangles() {
                 ))}
               </div>
 
-              {/* price calculator */}
-              <div style={{ background:'rgba(251,191,36,0.06)', border:'1px solid rgba(251,191,36,0.2)', borderRadius:'16px', padding:'18px 20px', marginBottom:'20px' }}>
-                <div style={{ color:goldColor, fontSize:'11px', fontWeight:800, textTransform:'uppercase', letterSpacing:'1px', marginBottom:'14px' }}>Price Calculator</div>
-                <div>
-                  <div style={{ color:subtext, fontSize:'10px', fontWeight:600, marginBottom:'6px', textTransform:'uppercase' }}>Weight</div>
-                  <select value={selectedWeight} onChange={e => setSelectedWeight(e.target.value)}
-                    style={{ width:'100%', background:inpBg, border:`1px solid ${inpBorder}`, borderRadius:'8px', padding:'10px 14px', color:text, fontSize:'13px', outline:'none', cursor:'pointer' }}>
-                    {WEIGHTS.map(w => <option key={w.label} value={w.label} style={{ background:optionBg }}>{w.label}</option>)}
-                  </select>
-                </div>
-
-                {unitPrice && (
-                  <div style={{ marginTop:'16px', display:'flex', justifyContent:'space-between', alignItems:'center', paddingTop:'14px', borderTop:'1px solid rgba(251,191,36,0.15)' }}>
-                    <div style={{ color:subtext, fontSize:'12px' }}>Estimated Price</div>
-                    <div style={{ color:'#4ade80', fontWeight:900, fontSize:'22px', fontFamily:'monospace' }}>₹{unitPrice.toFixed(2)}</div>
-                  </div>
-                )}
-
-                {currentRate && (
-                  <div style={{ marginTop:'8px', color:subtext, fontSize:'10px', fontFamily:'monospace' }}>
-                    Rate: ₹{currentRate.toFixed(2)}/gm ({metalType === 'gold_24k' ? 'Gold 24K' : 'Gold 22K'})
-                  </div>
-                )}
-              </div>
 
               <button onClick={() => { setSelectedBangle(null); navigate('/customer') }}
                 style={{ width:'100%', padding:'14px', background:'linear-gradient(90deg,#f59e0b,#fbbf24)', border:'none', borderRadius:'14px', color:'#000', fontWeight:900, fontSize:'14px', cursor:'pointer' }}>

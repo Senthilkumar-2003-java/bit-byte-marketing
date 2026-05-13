@@ -476,4 +476,56 @@ class MetalOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.email} - {self.metal_type} - {self.weight_label} × {self.count}"                
+        return f"{self.user.email} - {self.metal_type} - {self.weight_label} × {self.count}"  
+
+
+
+
+# AFTER — ADD THIS NEW MODEL:
+class JewelryProduct(models.Model):
+    CATEGORY_CHOICES = [
+        ('rings', 'Rings'),
+        ('necklaces', 'Necklaces'),
+        ('bangles', 'Bangles'),
+        ('earrings', 'Earrings'),
+        ('chains', 'Chains'),
+        ('coins', 'Coins'),
+    ]
+    METAL_CHOICES = [
+        ('gold', 'Gold'),
+        ('silver', 'Silver'),
+    ]
+    GRADE_CHOICES = [
+        ('22k', '22K'),
+        ('24k', '24K'),
+        ('999', '999'),
+    ]
+
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    metal = models.CharField(max_length=10, choices=METAL_CHOICES)
+    grade = models.CharField(max_length=10, choices=GRADE_CHOICES, blank=True)
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    weight_grams = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    tag = models.CharField(max_length=50, blank=True)  # e.g. Bestseller, Bridal
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.category} - {self.metal})"
+
+
+class JewelryProductImage(models.Model):
+    product = models.ForeignKey(
+        JewelryProduct, on_delete=models.CASCADE, related_name='images'
+    )
+    image = models.ImageField(upload_to='jewelry_products/')
+    order = models.IntegerField(default=0)  # for sorting images
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"Image for {self.product.name}"                      

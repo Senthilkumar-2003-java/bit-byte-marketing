@@ -22,6 +22,7 @@ import SilverChain from './gold_silver/silver_chain'
 import NecklacesCollection from './collection/necklaces_collection'
 import GoldNecklaces from './gold_silver/gold_necklaces'
 import SilverNecklaces from './gold_silver/silver_necklaces'
+import CardSection from './collection/card_section'
 
 
 function ProtectedRoute({ children, role }) {
@@ -85,6 +86,9 @@ export default function App() {
         <Route path="/collection/necklaces" element={<NecklacesCollection />} />
         <Route path="/gold-necklaces" element={<GoldNecklaces />} />
         <Route path="/silver-necklaces" element={<SilverNecklaces />} />
+
+               {/* card section */}
+        <Route path="/cart" element={<CardSection />} />
 
 
       </Routes>

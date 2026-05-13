@@ -4,6 +4,7 @@ import api from '../api'
 import logo from '../assets/logo.png'
 import goldCoin from '../assets/gold-coin.png'
 import silverCoin from '../assets/silver-coin.png'
+import { getCartCount } from '../collection/card_section'
 
 const PARTICLES = Array.from({ length: 15 }, (_, i) => ({
   id: i, size: Math.random() * 60 + 10, x: Math.random() * 100,
@@ -53,6 +54,7 @@ const [orderMsg, setOrderMsg]               = useState('')
 const [msg, setMsg]         = useState('')
 const [msgType, setMsgType] = useState('')
 const [hoveredJewel, setHoveredJewel] = useState(null)
+const [cartCount, setCartCount] = useState(getCartCount())
 const canvasRef = useRef(null)
 
   const bg      = dark ? '#020617' : '#f8fafc'
@@ -142,6 +144,14 @@ draw() {
     init(); animate()
     return () => { window.removeEventListener('resize',handleResize); window.removeEventListener('mousemove',handleMouseMove); cancelAnimationFrame(animationFrameId) }
   }, [dark])
+
+
+  useEffect(() => {
+  const handler = () => setCartCount(getCartCount())
+  window.addEventListener('bb_cart_update', handler)
+  return () => window.removeEventListener('bb_cart_update', handler)
+}, [])
+
 
  const WEIGHTS = [
   { label: '50 mg',  grams: 0.05 },
@@ -454,7 +464,22 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
             )}
           </div>
 
+                    <div
+            onClick={() => navigate('/cart')}
+            style={{ position:'relative', cursor:'pointer', padding:'6px', borderRadius:'10px', border:'1px solid rgba(52,211,153,0.35)', background:'rgba(52,211,153,0.1)', display:'flex', alignItems:'center', justifyContent:'center', transition:'all 0.25s ease' }}
+            onMouseEnter={e => { e.currentTarget.style.background='rgba(52,211,153,0.25)'; e.currentTarget.style.transform='translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.background='rgba(52,211,153,0.1)'; e.currentTarget.style.transform='translateY(0)' }}
+            title="My Cart"
+          >
+            <span style={{ fontSize:'18px', lineHeight:1 }}>🛒</span>
+            {cartCount > 0 && (
+              <div style={{ position:'absolute', top:'-7px', right:'-7px', background:'linear-gradient(135deg,#f59e0b,#fbbf24)', color:'#000', borderRadius:'50%', minWidth:'18px', height:'18px', fontSize:'9px', fontWeight:900, display:'flex', alignItems:'center', justifyContent:'center', padding:'0 3px', boxShadow:'0 2px 8px rgba(251,191,36,0.5)', border:'1.5px solid #020617' }}>
+                {cartCount > 99 ? '99+' : cartCount}
+              </div>
+            )}
+          </div>
           
+
           <button onClick={() => setDark(!dark)} style={{ padding:'8px 16px', borderRadius:'16px', border:`1px solid ${border}`, background:'transparent', color: text, cursor:'pointer', fontWeight:600, fontSize:'13px' }}>
             {dark ? '☀️ Light' : '🌙 Dark'}
           </button>

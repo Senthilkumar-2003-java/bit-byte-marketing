@@ -449,13 +449,13 @@ function showChainPopup(anchorEl, ancestors, current, dark, text, subtext, super
     const isLast = idx === chain.length - 1
     const isSuperAdmin = item.type === 'super_admin'
 
-    const arrowHtml = idx > 0 ? `
-      <div style="display:flex;justify-content:center;padding:5px 0;">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
-          <div style="width:1.5px;height:16px;background:linear-gradient(180deg,rgba(34,211,238,0.65),rgba(34,211,238,0.1));"></div>
-          <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid rgba(34,211,238,0.5);"></div>
-        </div>
-      </div>` : ''
+const arrowHtml = idx > 0 ? `
+  <div style="display:flex;justify-content:center;padding:5px 0;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
+      <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid rgba(34,211,238,0.5);"></div>
+      <div style="width:1.5px;height:16px;background:linear-gradient(180deg,rgba(34,211,238,0.1),rgba(34,211,238,0.65));"></div>
+    </div>
+  </div>` : ''
 
     if (isSuperAdmin) {
       return `
@@ -723,6 +723,17 @@ export default function SuperAdminDashboard() {
 
   // NEW — Rate entry popup
   const [showRatePopup, setShowRatePopup] = useState(false)
+  const [showAddProduct, setShowAddProduct] = useState(false)
+  const [productForm, setProductForm] = useState({
+    category: '', metal: '', grade: '', name: '', description: '',
+    weight_grams: '', tag: '',
+  })
+  const [productImages, setProductImages] = useState([])  // File objects
+  const [productPreviewUrls, setProductPreviewUrls] = useState([])  // preview URLs
+  const [productMsg, setProductMsg] = useState('')
+  const [productSaving, setProductSaving] = useState(false)
+  const [previewImageIdx, setPreviewImageIdx] = useState(null) // for lightbox
+  const [livePrice, setLivePrice] = useState(null)
   const [rateForm, setRateForm] = useState({
     date: new Date().toISOString().split('T')[0],
     gold_22k: '',
@@ -1208,26 +1219,20 @@ export default function SuperAdminDashboard() {
     }
   }
 
+   const calcLivePrice = (weight, metal, grade) => {
+    if (!weight || !metal) { setLivePrice(null); return }
+    const w = parseFloat(weight)
+    if (isNaN(w) || w <= 0) { setLivePrice(null); return }
+    let rate = null
+    if (metal === 'gold') {
+      rate = grade === '22k' ? metalPrices.gold22k : metalPrices.gold24k
+    } else if (metal === 'silver') {
+      rate = metalPrices.silver
+    }
+    if (rate) setLivePrice((w * rate).toFixed(2))
+    else setLivePrice(null)
+  }
 
-  // useEffect(() => {
-  //   fetchAdmins()
-  //   fetchAnnouncementCount()
-  //   fetchMyAnnouncements()
-  //   fetchProfileRequests()
-  //   fetchAllMembers()
-  //   fetchMetalPrices()
-  //   fetchOrderStats()
-  //   const interval = setInterval(() => {
-  //     fetchAdmins()
-  //     fetchAnnouncementCount()
-  //     fetchMyAnnouncements()
-  //     fetchProfileRequests()
-  //     fetchAllMembers()
-  //     fetchMetalPrices()
-  //     fetchOrderStats()
-  //   }, 30000)
-  //   return () => clearInterval(interval)
-  // }, [])
 
   useEffect(() => {
     fetchAdmins()
@@ -1399,6 +1404,7 @@ const buildHierarchyOrders = (period, metalKey) => {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
 
+
           {/* 💰 Rate Entry Button */}
           <div
             onClick={() => {
@@ -1433,6 +1439,30 @@ const buildHierarchyOrders = (period, metalKey) => {
           >
             <span style={{ fontSize: '16px', lineHeight: 1 }}>💰</span>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#ffd700' }}>Rate</span>
+          </div>
+
+            {/* 🛍️ Add Product Button */}
+          <div
+            onClick={() => {
+              setShowAddProduct(true)
+              setProductMsg('')
+              setProductForm({ category: '', metal: '', grade: '', name: '', description: '', weight_grams: '', tag: '' })
+              setProductImages([])
+              setProductPreviewUrls([])
+              setLivePrice(null)
+            }}
+            title="Add Jewelry Product"
+            style={{
+              cursor: 'pointer', padding: '6px 12px', borderRadius: '10px',
+              border: '1px solid rgba(167,139,250,0.45)',
+              background: 'rgba(167,139,250,0.1)',
+              display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.25s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(167,139,250,0.25)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(167,139,250,0.1)'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            <span style={{ fontSize: '16px', lineHeight: 1 }}>🛍️</span>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#a78bfa' }}>Add Product</span>
           </div>
 
 
@@ -2311,6 +2341,297 @@ setOrderPopupState({
             </div>
           </div>
         )}
+
+
+{/* ── ADD PRODUCT POPUP ── */}
+{showAddProduct && (
+  <div onClick={() => setShowAddProduct(false)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', backdropFilter:'blur(12px)', zIndex:1400, display:'flex', alignItems:'center', justifyContent:'center' }}>
+    <div onClick={e => e.stopPropagation()} style={{ background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc', border:'1px solid rgba(167,139,250,0.35)', borderRadius:'24px', width:'96%', maxWidth:'620px', maxHeight:'92vh', overflowY:'auto', padding:'32px', boxShadow:'0 32px 90px rgba(0,0,0,0.8)', animation:'fadeIn 0.25s ease' }}>
+      
+      {/* Header */}
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'24px' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
+          <div style={{ width:'42px', height:'42px', borderRadius:'12px', background:'rgba(167,139,250,0.15)', border:'1px solid rgba(167,139,250,0.4)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'20px' }}>🛍️</div>
+          <div>
+            <div style={{ color:'#a78bfa', fontWeight:800, fontSize:'15px' }}>ADD JEWELRY PRODUCT</div>
+            <div style={{ color:subtext, fontSize:'11px', marginTop:'2px' }}>Fill all details and upload images</div>
+          </div>
+        </div>
+        <button onClick={() => setShowAddProduct(false)} style={{ background:'rgba(239,68,68,0.1)', border:'1px solid rgba(239,68,68,0.3)', color:'#f87171', borderRadius:'8px', padding:'6px 14px', cursor:'pointer', fontSize:'12px' }}>✕ Close</button>
+      </div>
+
+      {productMsg && (
+        <div style={{ background: productMsg.includes('✅') ? 'rgba(74,222,128,0.1)' : 'rgba(239,68,68,0.1)', border:`1px solid ${productMsg.includes('✅') ? 'rgba(74,222,128,0.3)' : 'rgba(239,68,68,0.3)'}`, color: productMsg.includes('✅') ? '#4ade80' : '#f87171', borderRadius:'10px', padding:'12px 16px', fontSize:'13px', marginBottom:'18px' }}>
+          {productMsg}
+        </div>
+      )}
+
+      {/* STEP 1: Category */}
+      <div style={{ marginBottom:'20px' }}>
+        <label style={{ display:'block', color:'#a78bfa', fontSize:'11px', fontWeight:800, letterSpacing:'1px', textTransform:'uppercase', marginBottom:'10px' }}>
+          Step 1 — Select Category
+        </label>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:'8px' }}>
+          {['rings','necklaces','bangles','earrings','chains','coins'].map(cat => (
+            <div key={cat} onClick={() => setProductForm(f => ({ ...f, category: cat, metal:'', grade:'' }))}
+              style={{ padding:'8px 16px', borderRadius:'20px', cursor:'pointer', fontWeight:700, fontSize:'12px', textTransform:'capitalize', transition:'all 0.2s ease',
+                background: productForm.category === cat ? 'rgba(167,139,250,0.25)' : 'rgba(167,139,250,0.05)',
+                border: `1.5px solid ${productForm.category === cat ? 'rgba(167,139,250,0.7)' : 'rgba(167,139,250,0.2)'}`,
+                color: productForm.category === cat ? '#a78bfa' : subtext,
+              }}>
+              { {rings:'💍',necklaces:'📿',bangles:'⭕',earrings:'✨',chains:'⛓️',coins:'🪙'}[cat] } {cat}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* STEP 2: Metal */}
+      {productForm.category && (
+        <div style={{ marginBottom:'20px' }}>
+          <label style={{ display:'block', color:'#fbbf24', fontSize:'11px', fontWeight:800, letterSpacing:'1px', textTransform:'uppercase', marginBottom:'10px' }}>
+            Step 2 — Select Metal
+          </label>
+          <div style={{ display:'flex', gap:'10px' }}>
+            {['gold','silver'].map(m => (
+              <div key={m} onClick={() => setProductForm(f => ({ ...f, metal: m, grade:'' }))}
+                style={{ padding:'10px 24px', borderRadius:'20px', cursor:'pointer', fontWeight:800, fontSize:'13px', textTransform:'capitalize', transition:'all 0.2s ease',
+                  background: productForm.metal === m ? (m==='gold' ? 'rgba(251,191,36,0.2)' : 'rgba(192,192,192,0.15)') : 'rgba(255,255,255,0.04)',
+                  border: `1.5px solid ${productForm.metal === m ? (m==='gold' ? 'rgba(251,191,36,0.7)' : 'rgba(192,192,192,0.6)') : border}`,
+                  color: productForm.metal === m ? (m==='gold' ? '#fbbf24' : '#c0c0c0') : subtext,
+                }}>
+                {m === 'gold' ? '🏅 Gold' : '🥈 Silver'}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* STEP 3: Grade */}
+      {productForm.metal && (
+        <div style={{ marginBottom:'20px' }}>
+          <label style={{ display:'block', color:'#22d3ee', fontSize:'11px', fontWeight:800, letterSpacing:'1px', textTransform:'uppercase', marginBottom:'10px' }}>
+            Step 3 — Select Grade
+          </label>
+          <div style={{ display:'flex', gap:'10px' }}>
+            {(productForm.metal === 'gold' ? ['22k','24k'] : ['999']).map(g => (
+              <div key={g} onClick={() => setProductForm(f => ({ ...f, grade: g }))}
+                style={{ padding:'10px 24px', borderRadius:'20px', cursor:'pointer', fontWeight:800, fontSize:'13px', textTransform:'uppercase', transition:'all 0.2s ease',
+                  background: productForm.grade === g ? 'rgba(34,211,238,0.2)' : 'rgba(34,211,238,0.04)',
+                  border: `1.5px solid ${productForm.grade === g ? 'rgba(34,211,238,0.7)' : 'rgba(34,211,238,0.2)'}`,
+                  color: productForm.grade === g ? '#22d3ee' : subtext,
+                }}>
+                {g.toUpperCase()}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* STEP 4: Product Details */}
+      {productForm.grade && (
+        <>
+          <div style={{ marginBottom:'14px' }}>
+            <label style={{ display:'block', color:subtext, fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'8px' }}>
+              Product Name *
+            </label>
+            <input
+              value={productForm.name}
+              onChange={e => setProductForm(f => ({ ...f, name: e.target.value }))}
+              placeholder="e.g. Blossom Ring"
+              style={{ width:'100%', background:inpBg, border:`1px solid ${inpBorder}`, borderRadius:'10px', padding:'12px 16px', color:text, fontSize:'14px', outline:'none', boxSizing:'border-box' }}
+              onFocus={e => e.target.style.borderColor='#a78bfa'}
+              onBlur={e => e.target.style.borderColor=inpBorder}
+            />
+          </div>
+
+          <div style={{ marginBottom:'14px' }}>
+            <label style={{ display:'block', color:subtext, fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'8px' }}>
+              Description
+            </label>
+            <textarea
+              value={productForm.description}
+              onChange={e => setProductForm(f => ({ ...f, description: e.target.value }))}
+              rows={3}
+              placeholder="e.g. Floral petal design with a vintage soul"
+              style={{ width:'100%', background:inpBg, border:`1px solid ${inpBorder}`, borderRadius:'10px', padding:'12px 16px', color:text, fontSize:'14px', outline:'none', resize:'vertical', fontFamily:'inherit', boxSizing:'border-box' }}
+              onFocus={e => e.target.style.borderColor='#a78bfa'}
+              onBlur={e => e.target.style.borderColor=inpBorder}
+            />
+          </div>
+
+          <div style={{ marginBottom:'14px' }}>
+            <label style={{ display:'block', color:subtext, fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'8px' }}>
+              Tag (Optional)
+            </label>
+            <select
+              value={productForm.tag}
+              onChange={e => setProductForm(f => ({ ...f, tag: e.target.value }))}
+              style={{ width:'100%', background:inpBg, border:`1px solid ${inpBorder}`, borderRadius:'10px', padding:'12px 16px', color:text, fontSize:'14px', outline:'none', cursor:'pointer' }}
+            >
+              <option value="" style={{ background:optionBg }}>-- Select Tag --</option>
+              {['Bestseller','Bridal','Premium','Statement','Stackable','New','Limited'].map(t => (
+                <option key={t} value={t} style={{ background:optionBg }}>{t}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Weight + Live Price */}
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px', marginBottom:'14px' }}>
+            <div>
+              <label style={{ display:'block', color:subtext, fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'8px' }}>
+                Weight (grams) *
+              </label>
+              <input
+                type="number"
+                step="0.0001"
+                value={productForm.weight_grams}
+                onChange={e => {
+                  const val = e.target.value
+                  setProductForm(f => ({ ...f, weight_grams: val }))
+                  calcLivePrice(val, productForm.metal, productForm.grade)
+                }}
+                placeholder="e.g. 2.5"
+                style={{ width:'100%', background:inpBg, border:`1px solid ${inpBorder}`, borderRadius:'10px', padding:'12px 16px', color:text, fontSize:'14px', outline:'none', boxSizing:'border-box' }}
+                onFocus={e => e.target.style.borderColor='#a78bfa'}
+                onBlur={e => e.target.style.borderColor=inpBorder}
+              />
+            </div>
+            <div>
+              <label style={{ display:'block', color:subtext, fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'8px' }}>
+                Live Rate Price
+              </label>
+              <div style={{ background:inpBg, border:`1px solid ${livePrice ? 'rgba(74,222,128,0.5)' : inpBorder}`, borderRadius:'10px', padding:'12px 16px', fontFamily:'monospace', fontWeight:800, fontSize:'16px', color: livePrice ? '#4ade80' : subtext, display:'flex', alignItems:'center', minHeight:'46px' }}>
+                {livePrice ? `₹ ${livePrice}` : '—'}
+              </div>
+            </div>
+          </div>
+
+          {/* Image Upload */}
+          <div style={{ marginBottom:'20px' }}>
+            <label style={{ display:'block', color:subtext, fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'8px' }}>
+              Product Images (Multiple allowed)
+            </label>
+            <label htmlFor="product-img-upload" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'10px', padding:'14px', background:'rgba(167,139,250,0.08)', border:'2px dashed rgba(167,139,250,0.4)', borderRadius:'12px', cursor:'pointer', color:'#a78bfa', fontWeight:700, fontSize:'13px', transition:'all 0.2s ease' }}
+              onMouseEnter={e => e.currentTarget.style.background='rgba(167,139,250,0.15)'}
+              onMouseLeave={e => e.currentTarget.style.background='rgba(167,139,250,0.08)'}
+            >
+              📷 Add Image
+            </label>
+            <input
+              id="product-img-upload"
+              type="file"
+              accept="image/*"
+              multiple
+              style={{ display:'none' }}
+              onChange={e => {
+                const files = Array.from(e.target.files)
+                setProductImages(prev => [...prev, ...files])
+                const urls = files.map(f => URL.createObjectURL(f))
+                setProductPreviewUrls(prev => [...prev, ...urls])
+                e.target.value = ''
+              }}
+            />
+
+            {/* Preview Grid */}
+            {productPreviewUrls.length > 0 && (
+              <div style={{ display:'flex', flexWrap:'wrap', gap:'10px', marginTop:'14px' }}>
+                {productPreviewUrls.map((url, idx) => (
+                  <div key={idx} style={{ position:'relative', width:'90px', height:'90px', borderRadius:'12px', overflow:'hidden', border:'1px solid rgba(167,139,250,0.3)' }}>
+                    <img src={url} alt={`img-${idx}`} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+                    {/* View button */}
+                    <button
+                      onClick={() => setPreviewImageIdx(idx)}
+                      style={{ position:'absolute', bottom:0, left:0, right:0, background:'rgba(0,0,0,0.6)', color:'#fff', fontSize:'10px', fontWeight:700, padding:'4px 0', border:'none', cursor:'pointer', backdropFilter:'blur(4px)' }}
+                    >
+                      👁 View
+                    </button>
+                    {/* Remove button */}
+                    <button
+                      onClick={() => {
+                        setProductImages(prev => prev.filter((_,i) => i !== idx))
+                        setProductPreviewUrls(prev => prev.filter((_,i) => i !== idx))
+                      }}
+                      style={{ position:'absolute', top:'4px', right:'4px', background:'rgba(239,68,68,0.85)', color:'#fff', fontSize:'10px', fontWeight:900, width:'18px', height:'18px', borderRadius:'50%', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Submit */}
+          <button
+            disabled={productSaving || !productForm.name || !productForm.weight_grams}
+            onClick={async () => {
+              if (!productForm.name.trim()) { setProductMsg('❌ Product name required'); return }
+              if (!productForm.weight_grams) { setProductMsg('❌ Weight required'); return }
+              setProductSaving(true)
+              try {
+                const fd = new FormData()
+                fd.append('category', productForm.category)
+                fd.append('metal', productForm.metal)
+                fd.append('grade', productForm.grade)
+                fd.append('name', productForm.name)
+                fd.append('description', productForm.description)
+                fd.append('weight_grams', productForm.weight_grams)
+                fd.append('tag', productForm.tag)
+                if (livePrice) fd.append('price', livePrice)
+                productImages.forEach(img => fd.append('uploaded_images', img))
+                await api.post('/jewelry-products/', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+                setProductMsg('✅ Product added successfully!')
+                setProductForm({ category:'', metal:'', grade:'', name:'', description:'', weight_grams:'', tag:'' })
+                setProductImages([])
+                setProductPreviewUrls([])
+                setLivePrice(null)
+              } catch (err) {
+                setProductMsg('❌ Failed: ' + JSON.stringify(err.response?.data || err.message))
+              }
+              setProductSaving(false)
+            }}
+            style={{ width:'100%', padding:'14px', background: productSaving ? 'rgba(167,139,250,0.3)' : 'linear-gradient(90deg,#a78bfa,#22d3ee)', border:'none', borderRadius:'12px', fontWeight:900, fontSize:'15px', color: productSaving ? '#a78bfa' : '#1a0040', cursor: productSaving ? 'not-allowed' : 'pointer', transition:'all 0.3s ease' }}>
+            {productSaving ? '⏳ Saving...' : '✅ Add Product'}
+          </button>
+        </>
+      )}
+    </div>
+  </div>
+)}
+
+{/* Image Lightbox */}
+{previewImageIdx !== null && (
+  <div onClick={() => setPreviewImageIdx(null)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.95)', backdropFilter:'blur(16px)', zIndex:2000, display:'flex', alignItems:'center', justifyContent:'center' }}>
+    <div onClick={e => e.stopPropagation()} style={{ position:'relative', maxWidth:'90vw', maxHeight:'90vh' }}>
+      <img src={productPreviewUrls[previewImageIdx]} alt="preview" style={{ maxWidth:'100%', maxHeight:'85vh', objectFit:'contain', borderRadius:'16px', border:'1px solid rgba(167,139,250,0.3)' }} />
+      
+      {/* Left Arrow */}
+      {previewImageIdx > 0 && (
+        <button onClick={() => setPreviewImageIdx(i => i - 1)}
+          style={{ position:'absolute', left:'-50px', top:'50%', transform:'translateY(-50%)', background:'rgba(167,139,250,0.2)', border:'1px solid rgba(167,139,250,0.4)', color:'#a78bfa', width:'40px', height:'40px', borderRadius:'50%', fontSize:'18px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+          ‹
+        </button>
+      )}
+      {/* Right Arrow */}
+      {previewImageIdx < productPreviewUrls.length - 1 && (
+        <button onClick={() => setPreviewImageIdx(i => i + 1)}
+          style={{ position:'absolute', right:'-50px', top:'50%', transform:'translateY(-50%)', background:'rgba(167,139,250,0.2)', border:'1px solid rgba(167,139,250,0.4)', color:'#a78bfa', width:'40px', height:'40px', borderRadius:'50%', fontSize:'18px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+          ›
+        </button>
+      )}
+      
+      {/* Counter */}
+      <div style={{ position:'absolute', bottom:'-36px', left:'50%', transform:'translateX(-50%)', color:'rgba(255,255,255,0.6)', fontSize:'12px', fontWeight:600 }}>
+        {previewImageIdx + 1} / {productPreviewUrls.length}
+      </div>
+
+      <button onClick={() => setPreviewImageIdx(null)}
+        style={{ position:'absolute', top:'-16px', right:'-16px', background:'rgba(239,68,68,0.85)', border:'none', color:'#fff', width:'32px', height:'32px', borderRadius:'50%', fontSize:'14px', cursor:'pointer', fontWeight:900 }}>
+        ✕
+      </button>
+    </div>
+  </div>
+)}
 
         {/* ── BIRTHDAY LIST MODAL ── */}
         {showBirthdayList && (

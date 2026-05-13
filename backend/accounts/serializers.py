@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, AdminProfile, DealerProfile, SubDealerProfile, PromotorProfile, CustomerProfile, Announcement, AnnouncementReply, ProfileUpdateRequest, MetalRate, MetalOrder
+from .models import User, AdminProfile, DealerProfile, SubDealerProfile, PromotorProfile, CustomerProfile, Announcement, AnnouncementReply, ProfileUpdateRequest, MetalRate, MetalOrder,JewelryProduct, JewelryProductImage
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -418,3 +418,37 @@ class MetalOrderSerializer(serializers.ModelSerializer):
             return obj.user.customer_profile.customer_id
         except Exception:
             return None                
+
+
+
+
+class JewelryProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JewelryProductImage
+        fields = ['id', 'image', 'order']
+
+class JewelryProductSerializer(serializers.ModelSerializer):
+    images = JewelryProductImageSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(), write_only=True, required=False
+    )
+
+    class Meta:
+        model = JewelryProduct
+        fields = [
+            'id', 'category', 'metal', 'grade', 'name', 'description',
+            'weight_grams', 'price', 'tag', 'is_active',
+            'created_at', 'images', 'uploaded_images'
+        ]
+        read_only_fields = ['created_at']
+
+    def create(self, validated_data):
+        uploaded_images = validated_data.pop('uploaded_images', [])
+        request = self.context.get('request')
+        product = JewelryProduct.objects.create(
+            created_by=request.user,
+            **validated_data
+        )
+        for i, img in enumerate(uploaded_images):
+            JewelryProductImage.objects.create(product=product, image=img, order=i)
+        return product            
