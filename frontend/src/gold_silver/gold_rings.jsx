@@ -46,8 +46,6 @@ export default function GoldRings() {
   const [metalType, setMetalType] = useState('22k')   // '22k' | '24k'
   const [metalPrices, setMetalPrices] = useState({ gold22k: null, gold24k: null })
   const [selectedRing, setSelectedRing] = useState(null)
-  const [dbRings, setDbRings] = useState([])
-  const [dbLoading, setDbLoading] = useState(false)
   const canvasRef = useRef(null)
 
   const bg       = dark ? '#020617' : '#f8fafc'
@@ -64,12 +62,14 @@ export default function GoldRings() {
   const goldGlow  = metalType === '22k' ? 'rgba(251,191,36,0.3)' : 'rgba(255,215,0,0.3)'
 
   // Try to get prices from API (optional — works even without)
-useEffect(() => {
+  useEffect(() => {
     import('../api').then(({ default: api }) => {
-      setDbLoading(true)
-      api.get('/jewelry-products/?category=rings&metal=gold')
-        .then(res => { setDbRings(res.data); setDbLoading(false) })
-        .catch(() => setDbLoading(false))
+      api.get('/metal-rates/').then(res => {
+        setMetalPrices({
+          gold22k: parseFloat(res.data.gold_22k),
+          gold24k: parseFloat(res.data.gold_24k),
+        })
+      }).catch(() => {})
     }).catch(() => {})
   }, [])
 
@@ -244,21 +244,11 @@ useEffect(() => {
         </div>
 
 
- 
- {/* Ring Cards Grid */}
+        {/* Ring Cards Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px' }}>
-          {dbLoading && (
-            <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'40px' }}>Loading products...</div>
-          )}
-          {!dbLoading && dbRings.length === 0 && (
-            <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'40px', fontSize:'14px' }}>
-              No gold rings added yet. Super Admin can add via Add Product.
-            </div>
-          )}
-          {dbRings.map((ring) => {
+          {GOLD_RINGS.map((ring) => {
             const isHovered = hoveredRing === ring.id
-            const tag = tagStyle(ring.tag || 'Premium')
-            const firstImg = ring.images?.[0]?.image || null
+            const tag = tagStyle(ring.tag)
             return (
               <div
                 key={ring.id}
@@ -267,47 +257,60 @@ useEffect(() => {
                 onMouseEnter={() => setHoveredRing(ring.id)}
                 onMouseLeave={() => setHoveredRing(null)}
                 style={{
-                  borderRadius: '20px', overflow: 'hidden',
+                  borderRadius: '20px',
+                  overflow: 'hidden',
                   border: `1px solid ${isHovered ? 'rgba(251,191,36,0.5)' : 'rgba(251,191,36,0.15)'}`,
                   background: isHovered ? 'rgba(251,191,36,0.07)' : cardBg,
-                  cursor: 'pointer', position: 'relative',
+                  cursor: 'pointer',
+                  position: 'relative',
                   transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
-                  boxShadow: isHovered ? `0 20px 50px rgba(251,191,36,0.25)` : 'none',
+                  boxShadow: isHovered ? `0 20px 50px rgba(251,191,36,0.25), 0 0 0 1px rgba(251,191,36,0.1)` : 'none',
                   transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+                  animation: isHovered ? 'none' : undefined,
                 }}
               >
+                {/* Shine overlay */}
                 <div className="shine-overlay" />
-                <div className="ring-img-wrap" style={{ position:'relative', height:'200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
-                  {firstImg ? (
-                    <img src={firstImg} alt={ring.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
-                  ) : (
-                    <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'8px' }}>
-                      <span style={{ fontSize:'28px', opacity:0.3 }}>🏅</span>
-                      <span style={{ color:subtext, fontSize:'11px' }}>No image</span>
-                    </div>
-                  )}
-                  <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
-                  {ring.tag && (
-                    <div style={{ position:'absolute', top:'10px', left:'10px', background:tag.bg, border:`1px solid ${tag.border}`, borderRadius:'16px', padding:'3px 10px', color:tag.color, fontSize:'9px', fontWeight:800, backdropFilter:'blur(8px)' }}>
-                      {ring.tag}
-                    </div>
-                  )}
+
+                {/* Image */}
+                <div className="ring-img-wrap" style={{ position: 'relative', height: '200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
+                  <img
+                    src={ring.img}
+                    alt={ring.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
+
+                  {/* Tag */}
+                  <div style={{ position: 'absolute', top: '10px', left: '10px', background: tag.bg, border: `1px solid ${tag.border}`, borderRadius: '16px', padding: '3px 10px', color: tag.color, fontSize: '9px', fontWeight: 800, letterSpacing: '0.5px', backdropFilter: 'blur(8px)' }}>
+                    {ring.tag}
+                  </div>
+
+                  {/* Ring number */}
+                  <div style={{ position: 'absolute', top: '10px', right: '10px', width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: goldColor, fontSize: '10px', fontWeight: 900 }}>
+                    {ring.id}
+                  </div>
+
+                  {/* Hover glow ring */}
                   {isHovered && (
-                    <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', pointerEvents:'none' }}>
-                      <div style={{ width:'70px', height:'70px', borderRadius:'50%', border:`2px solid rgba(251,191,36,0.6)`, animation:'glow-pulse 1.5s ease infinite' }} />
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                      <div style={{ width: '70px', height: '70px', borderRadius: '50%', border: `2px solid rgba(251,191,36,0.6)`, animation: 'glow-pulse 1.5s ease infinite' }} />
                     </div>
                   )}
                 </div>
-                <div style={{ padding:'14px 16px' }}>
-                  <div style={{ color: isHovered ? goldColor : text, fontWeight:800, fontSize:'13px', marginBottom:'4px', transition:'color 0.3s' }}>{ring.name}</div>
-                  <div style={{ color:subtext, fontSize:'10px', lineHeight:'1.5', marginBottom:'6px' }}>{ring.description}</div>
-                  {ring.price && (
-                    <div style={{ color:goldColor, fontWeight:800, fontSize:'12px', fontFamily:'monospace' }}>₹{parseFloat(ring.price).toLocaleString('en-IN')}</div>
-                  )}
+
+                {/* Content */}
+                <div style={{ padding: '14px 16px' }}>
+                  <div style={{ color: isHovered ? goldColor : text, fontWeight: 800, fontSize: '13px', marginBottom: '4px', transition: 'color 0.3s' }}>{ring.name}</div>
+                  <div style={{ color: subtext, fontSize: '10px', lineHeight: '1.5', marginBottom: '10px' }}>{ring.desc}</div>
+
+
                 </div>
+
+                {/* Bottom hover CTA */}
                 {isHovered && (
-                  <div style={{ padding:'0 16px 14px', animation:'fadeInUp 0.2s ease' }}>
-                    <div style={{ width:'100%', padding:'8px', background:'linear-gradient(90deg,#f59e0b,#fbbf24)', borderRadius:'10px', color:'#000', fontWeight:800, fontSize:'11px', textAlign:'center' }}>
+                  <div style={{ padding: '0 16px 14px', animation: 'fadeInUp 0.2s ease' }}>
+                    <div style={{ width: '100%', padding: '8px', background: 'linear-gradient(90deg,#f59e0b,#fbbf24)', borderRadius: '10px', color: '#000', fontWeight: 800, fontSize: '11px', textAlign: 'center', cursor: 'pointer' }}>
                       👁 View Details
                     </div>
                   </div>
