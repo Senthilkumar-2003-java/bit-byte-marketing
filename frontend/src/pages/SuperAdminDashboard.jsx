@@ -1310,10 +1310,7 @@ const buildHierarchyOrders = (period, metalKey) => {
             // ✅ FIX: Try all possible id fields
             const custId = c.customer_id || c.id || c.pk
             const o = custOrders[custId] || { count: 0, amount: 0 }
-            
-            console.log(`Customer lookup: custId=${custId}, found=${o.count > 0}`, 
-              'Available keys:', Object.keys(custOrders).slice(0, 5))
-            
+          
             if (o.count > 0) matchedIds.add(custId)
             prTotal += o.count
             return { ...c, orderCount: o.count, orderAmount: o.amount }
