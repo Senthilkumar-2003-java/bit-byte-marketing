@@ -256,7 +256,7 @@ useEffect(() => {
               <div
                 key={ring.id}
                 className="sr-card"
-                onClick={() => setSelectedRing(ring)}
+                onClick={() => navigate(`/product-display?category=rings&metal=silver&id=${ring.id}`)}
                 onMouseEnter={() => setHoveredRing(ring.id)}
                 onMouseLeave={() => setHoveredRing(null)}
                 style={{

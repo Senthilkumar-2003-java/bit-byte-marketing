@@ -23,6 +23,7 @@ import NecklacesCollection from './collection/necklaces_collection'
 import GoldNecklaces from './gold_silver/gold_necklaces'
 import SilverNecklaces from './gold_silver/silver_necklaces'
 import CardSection from './collection/card_section'
+import ProductDisplay from './collection/product_display'
 
 
 function ProtectedRoute({ children, role }) {
@@ -89,6 +90,9 @@ export default function App() {
 
                {/* card section */}
         <Route path="/cart" element={<CardSection />} />
+
+             {/* product display */}
+        <Route path="/product-display" element={<ProductDisplay />} />
 
 
       </Routes>

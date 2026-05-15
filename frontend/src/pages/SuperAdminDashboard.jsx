@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
 import logo from '../assets/logo.png'
-import goldCoin from '../assets/gold-coin.png'
-import silverCoin from '../assets/silver-coin.png'
+// import goldCoin from '../assets/gold-coin.png'
+// import silverCoin from '../assets/silver-coin.png'
+import goldCoin from '../assets/gold-coin-transparent.png'
+import silverCoin from '../assets/silver-coin-transparent.png'
 
 const OCCUPATION_OPTIONS = ['employee', 'business', 'others']
 
@@ -1885,8 +1887,18 @@ return (
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   padding: '12px 0',
 }}>
-              <img src={goldCoin} alt="Gold 22K"
-                style={{ width: '48px', height: '48px', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(251,191,36,0.4))' }} />
+              <img
+  src={goldCoin}
+  alt="Gold 22K"
+  style={{
+    width: '70px',
+    height: '70px',
+    objectFit: 'contain',
+    background: 'transparent',
+    display: 'block',
+    filter: 'drop-shadow(0 2px 6px rgba(251,191,36,0.5))'
+  }}
+/>
             </div>
 
             {/* Weight Label */}
@@ -1956,8 +1968,18 @@ return (
   padding: '12px 0',
 }}>
 
-              <img src={goldCoin} alt="Gold 24K"
-                style={{ width: '48px', height: '48px', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255,215,0,0.5))' }} />
+              <img
+  src={goldCoin}
+  alt="Gold 24K"
+  style={{
+    width: '70px',
+    height: '70px',
+    objectFit: 'contain',
+    background: 'transparent',
+    display: 'block',
+    filter: 'drop-shadow(0 2px 6px rgba(255,215,0,0.5))'
+  }}
+/>
             </div>
 
             <div style={{ padding: '8px 8px 4px', textAlign: 'center' }}>
@@ -2024,8 +2046,18 @@ return (
   padding: '12px 0',
 }}>
 
-              <img src={silverCoin} alt="Silver 999"
-                style={{ width: '48px', height: '48px', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(192,192,192,0.4))' }} />
+<img
+  src={silverCoin}
+  alt="Silver 999"
+  style={{
+    width: '70px',
+    height: '70px',
+    objectFit: 'contain',
+    background: 'transparent',
+    display: 'block',
+    filter: 'drop-shadow(0 2px 6px rgba(192,192,192,0.45))'
+  }}
+/>
             </div>
 
             <div style={{ padding: '8px 8px 4px', textAlign: 'center' }}>

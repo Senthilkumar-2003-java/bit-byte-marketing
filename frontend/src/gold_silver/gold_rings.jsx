@@ -10,15 +10,15 @@ const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
 
 const WEIGHTS = [
   { label: 'All Weights', grams: null },
-  { label: '50 mg',  grams: 0.05 },
+  { label: '50 mg', grams: 0.05 },
   { label: '100 mg', grams: 0.10 },
   { label: '150 mg', grams: 0.15 },
   { label: '200 mg', grams: 0.20 },
   { label: '500 mg', grams: 0.50 },
-  { label: '1 gm',   grams: 1    },
-  { label: '2 gm',   grams: 2    },
-  { label: '4 gm',   grams: 4    },
-  { label: '8 gm',   grams: 8    },
+  { label: '1 gm', grams: 1 },
+  { label: '2 gm', grams: 2 },
+  { label: '4 gm', grams: 4 },
+  { label: '8 gm', grams: 8 },
 ]
 
 // const GOLD_RINGS = [
@@ -34,10 +34,10 @@ const WEIGHTS = [
 
 const TAG_COLORS = {
   Bestseller: { bg: 'rgba(52,211,153,0.2)', border: 'rgba(52,211,153,0.5)', color: '#34d399' },
-  Bridal:     { bg: 'rgba(244,114,182,0.2)', border: 'rgba(244,114,182,0.5)', color: '#f472b6' },
-  Premium:    { bg: 'rgba(251,191,36,0.2)', border: 'rgba(251,191,36,0.5)', color: '#fbbf24' },
-  Statement:  { bg: 'rgba(167,139,250,0.2)', border: 'rgba(167,139,250,0.5)', color: '#a78bfa' },
-  Stackable:  { bg: 'rgba(34,211,238,0.2)', border: 'rgba(34,211,238,0.5)', color: '#22d3ee' },
+  Bridal: { bg: 'rgba(244,114,182,0.2)', border: 'rgba(244,114,182,0.5)', color: '#f472b6' },
+  Premium: { bg: 'rgba(251,191,36,0.2)', border: 'rgba(251,191,36,0.5)', color: '#fbbf24' },
+  Statement: { bg: 'rgba(167,139,250,0.2)', border: 'rgba(167,139,250,0.5)', color: '#a78bfa' },
+  Stackable: { bg: 'rgba(34,211,238,0.2)', border: 'rgba(34,211,238,0.5)', color: '#22d3ee' },
 }
 
 
@@ -48,52 +48,52 @@ export default function GoldRings() {
   const [hoveredRing, setHoveredRing] = useState(null)
   const [metalType, setMetalType] = useState('22k')   // '22k' | '24k'
   const [metalPrices, setMetalPrices] = useState({ gold22k: null, gold24k: null })
-const [goldRings, setGoldRings] = useState([])
-const [loading, setLoading] = useState(true)
+  const [goldRings, setGoldRings] = useState([])
+  const [loading, setLoading] = useState(true)
   const [selectedRing, setSelectedRing] = useState(null)
   const canvasRef = useRef(null)
 
-  const bg       = dark ? '#020617' : '#f8fafc'
-  const text     = dark ? '#f8fafc' : '#020617'
-  const subtext  = dark ? '#94a3b8' : '#64748b'
-  const accent   = dark ? '#22d3ee' : '#2563eb'
-  const border   = dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-  const glass    = dark ? 'rgba(15,23,42,0.65)' : 'rgba(255,255,255,0.7)'
-  const cardBg   = dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'
-  const inpBg    = dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
-  const inpBorder= dark ? '#374151' : '#d1d5db'
+  const bg = dark ? '#020617' : '#f8fafc'
+  const text = dark ? '#f8fafc' : '#020617'
+  const subtext = dark ? '#94a3b8' : '#64748b'
+  const accent = dark ? '#22d3ee' : '#2563eb'
+  const border = dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+  const glass = dark ? 'rgba(15,23,42,0.65)' : 'rgba(255,255,255,0.7)'
+  const cardBg = dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'
+  const inpBg = dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
+  const inpBorder = dark ? '#374151' : '#d1d5db'
   const optionBg = dark ? '#1a2035' : '#ffffff'
   const goldColor = metalType === '22k' ? '#fbbf24' : '#ffd700'
-  const goldGlow  = metalType === '22k' ? 'rgba(251,191,36,0.3)' : 'rgba(255,215,0,0.3)'
+  const goldGlow = metalType === '22k' ? 'rgba(251,191,36,0.3)' : 'rgba(255,215,0,0.3)'
 
 
 
   const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
-const getImageUrl = (img) => {
-  if (!img) return '/img/gold/gold-ring-1.png'
+  const getImageUrl = (img) => {
+    if (!img) return '/img/gold/gold-ring-1.png'
 
-  if (img.startsWith('http://') || img.startsWith('https://')) {
-    return img
+    if (img.startsWith('http://') || img.startsWith('https://')) {
+      return img
+    }
+
+    return `${API_BASE}/${img.replace(/^\/+/, '')}`
   }
 
-  return `${API_BASE}/${img.replace(/^\/+/, '')}`
-}
-
   // Try to get prices from API (optional — works even without)
-// Add this useEffect in GoldRings.jsx (after the metalPrices useEffect)
-useEffect(() => {
-  import('../api').then(({ default: api }) => {
-    api.get('/jewelry-products/?category=rings&metal=gold')
-      .then(res => {
-        console.log('PRODUCT DATA:', res.data)
-    console.log('FIRST IMAGE:', res.data?.[0]?.images?.[0]?.image)
-        setGoldRings(res.data)
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  })
-}, [])
+  // Add this useEffect in GoldRings.jsx (after the metalPrices useEffect)
+  useEffect(() => {
+    import('../api').then(({ default: api }) => {
+      api.get('/jewelry-products/?category=rings&metal=gold')
+        .then(res => {
+          console.log('PRODUCT DATA:', res.data)
+          console.log('FIRST IMAGE:', res.data?.[0]?.images?.[0]?.image)
+          setGoldRings(res.data)
+          setLoading(false)
+        })
+        .catch(() => setLoading(false))
+    })
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -120,10 +120,10 @@ useEffect(() => {
         if (this.y > canvas.height || this.y < 0) this.speedY *= -1
         if (mouse.x !== null && mouse.y !== null) {
           let dx = mouse.x - this.x, dy = mouse.y - this.y
-          let dist = Math.sqrt(dx*dx+dy*dy)
+          let dist = Math.sqrt(dx * dx + dy * dy)
           if (dist < mouse.radius) {
             const f = (mouse.radius - dist) / mouse.radius
-            this.x += (dx/dist)*f*2; this.y += (dy/dist)*f*2
+            this.x += (dx / dist) * f * 2; this.y += (dy / dist) * f * 2
           }
         }
       }
@@ -134,8 +134,8 @@ useEffect(() => {
         for (let i = 0; i < spikes * 2; i++) {
           const r = i % 2 === 0 ? outerR : innerR
           const angle = (i * Math.PI) / spikes - Math.PI / 2
-          if (i === 0) ctx.moveTo(Math.cos(angle)*r, Math.sin(angle)*r)
-          else ctx.lineTo(Math.cos(angle)*r, Math.sin(angle)*r)
+          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r)
+          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r)
         }
         ctx.closePath(); ctx.fill(); ctx.restore()
       }
@@ -144,13 +144,13 @@ useEffect(() => {
     function init() { particlesArray = []; for (let i = 0; i < 60; i++) particlesArray.push(new Particle()) }
     function connect() {
       for (let a = 0; a < particlesArray.length; a++) for (let b = a; b < particlesArray.length; b++) {
-        let dx = particlesArray[a].x-particlesArray[b].x, dy = particlesArray[a].y-particlesArray[b].y, d = Math.sqrt(dx*dx+dy*dy)
-        if (d < 150) { ctx.strokeStyle = `rgba(251,191,36,${(1-d/150)*0.4})`; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(particlesArray[a].x,particlesArray[a].y); ctx.lineTo(particlesArray[b].x,particlesArray[b].y); ctx.stroke() }
+        let dx = particlesArray[a].x - particlesArray[b].x, dy = particlesArray[a].y - particlesArray[b].y, d = Math.sqrt(dx * dx + dy * dy)
+        if (d < 150) { ctx.strokeStyle = `rgba(251,191,36,${(1 - d / 150) * 0.4})`; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke() }
       }
     }
-    function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); particlesArray.forEach(p=>{p.update();p.draw()}); connect(); animationFrameId = requestAnimationFrame(animate) }
+    function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particlesArray.forEach(p => { p.update(); p.draw() }); connect(); animationFrameId = requestAnimationFrame(animate) }
     init(); animate()
-    return () => { window.removeEventListener('resize',handleResize); window.removeEventListener('mousemove',handleMouseMove); cancelAnimationFrame(animationFrameId) }
+    return () => { window.removeEventListener('resize', handleResize); window.removeEventListener('mousemove', handleMouseMove); cancelAnimationFrame(animationFrameId) }
   }, [dark])
 
   const currentRate = metalType === '22k' ? metalPrices.gold22k : metalPrices.gold24k
@@ -268,53 +268,62 @@ useEffect(() => {
 
         {/* Ring Cards Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px' }}>
-{loading ? (
-  <div style={{ gridColumn: 'span 3', textAlign: 'center', 
-    color: subtext, padding: '60px 0', fontSize: '15px' }}>
-    ⏳ Loading products...
-  </div>
-) : goldRings.length === 0 ? (
-  <div style={{ gridColumn: 'span 3', textAlign: 'center', 
-    color: subtext, padding: '60px 0', fontSize: '15px' }}>
-    No gold rings added yet.
-  </div>
-) : goldRings.map((ring) => {
-            const isHovered = hoveredRing === ring.id
-            const tag = tagStyle(ring.tag)
-            return (
-              <div
-                key={ring.id}
-                className="ring-card"
-                onClick={() => setSelectedRing(ring)}
-                onMouseEnter={() => setHoveredRing(ring.id)}
-                onMouseLeave={() => setHoveredRing(null)}
-                style={{
-                  borderRadius: '20px',
-                  overflow: 'hidden',
-                  border: `1px solid ${isHovered ? 'rgba(251,191,36,0.5)' : 'rgba(251,191,36,0.15)'}`,
-                  background: isHovered ? 'rgba(251,191,36,0.07)' : cardBg,
-                  cursor: 'pointer',
-                  position: 'relative',
-                  transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
-                  boxShadow: isHovered ? `0 20px 50px rgba(251,191,36,0.25), 0 0 0 1px rgba(251,191,36,0.1)` : 'none',
-                  transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
-                  animation: isHovered ? 'none' : undefined,
-                }}
-              >
+          {loading ? (
+            <div style={{
+              gridColumn: 'span 3', textAlign: 'center',
+              color: subtext, padding: '60px 0', fontSize: '15px'
+            }}>
+              ⏳ Loading products...
+            </div>
+          ) : goldRings.length === 0 ? (
+            <div style={{
+              gridColumn: 'span 3', textAlign: 'center',
+              color: subtext, padding: '60px 0', fontSize: '15px'
+            }}>
+              No gold rings added yet.
+            </div>
+          ) : (
+  goldRings.map((ring) => {
+    const isHovered = hoveredRing === ring.id
+    const tag = tagStyle(ring.tag)
+
+    return (
+      <div
+        key={ring.id}
+        className="ring-card"
+        onClick={() =>
+          navigate(`/product-display?category=rings&metal=gold&id=${ring.id}`)
+        }
+        onMouseEnter={() => setHoveredRing(ring.id)}
+        onMouseLeave={() => setHoveredRing(null)}
+        style={{
+          borderRadius: '20px',
+          overflow: 'hidden',
+          border: `1px solid ${isHovered ? 'rgba(251,191,36,0.5)' : 'rgba(251,191,36,0.15)'}`,
+          background: isHovered ? 'rgba(251,191,36,0.07)' : cardBg,
+          cursor: 'pointer',
+          position: 'relative',
+          transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
+          boxShadow: isHovered ? `0 20px 50px rgba(251,191,36,0.25), 0 0 0 1px rgba(251,191,36,0.1)` : 'none',
+          transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+          animation: isHovered ? 'none' : undefined,
+        }}
+      >
+
                 {/* Shine overlay */}
                 <div className="shine-overlay" />
 
                 {/* Image */}
                 <div className="ring-img-wrap" style={{ position: 'relative', height: '200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
-  <img
-  src={getImageUrl(ring.images?.[0]?.image)}
-  alt={ring.name}
-  onError={(e) => {
-    console.log('Image failed:', e.currentTarget.src)
-    e.currentTarget.src = '/img/gold/gold-ring-1.png'
-  }}
-  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-/>
+                  <img
+                    src={getImageUrl(ring.images?.[0]?.image)}
+                    alt={ring.name}
+                    onError={(e) => {
+                      console.log('Image failed:', e.currentTarget.src)
+                      e.currentTarget.src = '/img/gold/gold-ring-1.png'
+                    }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
 
                   {/* Tag */}
@@ -353,7 +362,8 @@ useEffect(() => {
                 )}
               </div>
             )
-          })}
+          })
+        )}
         </div>
 
         {/* Bottom info */}
@@ -366,65 +376,7 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* ── RING DETAIL MODAL ── */}
-      {selectedRing && (
-        <div onClick={() => setSelectedRing(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(14px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc', border: '1px solid rgba(251,191,36,0.35)', borderRadius: '28px', width: '95%', maxWidth: '560px', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.8)', animation: 'fadeInUp 0.3s ease' }}>
 
-            {/* Ring Image */}
-            <div style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
-             <img
-  src={getImageUrl(selectedRing.images?.[0]?.image)}
-  alt={selectedRing.name}
-  onError={(e) => {
-    console.log('Modal image failed:', e.currentTarget.src)
-    e.currentTarget.src = '/img/gold/gold-ring-1.png'
-  }}
-  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-/>
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.9) 0%, transparent 60%)' }} />
-              <button onClick={() => setSelectedRing(null)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', borderRadius: '10px', padding: '6px 14px', cursor: 'pointer', fontSize: '12px', backdropFilter: 'blur(8px)' }}>✕ Close</button>
-              <div style={{ position: 'absolute', top: '16px', left: '16px', background: tagStyle(selectedRing.tag).bg, border: `1px solid ${tagStyle(selectedRing.tag).border}`, borderRadius: '20px', padding: '5px 14px', color: tagStyle(selectedRing.tag).color, fontSize: '11px', fontWeight: 800, backdropFilter: 'blur(8px)' }}>{selectedRing.tag}</div>
-            </div>
-
-            {/* Details */}
-            <div style={{ padding: '28px 32px' }}>
-              <div style={{ color: goldColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px' }}>{selectedRing.name}</div>
-              <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedRing.description}</div>
-
-
-
-              <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
-                <button
-                  onClick={() => {
-                 addToCart({
-  id: selectedRing.id,
-  name: selectedRing.name,
-  desc: selectedRing.description,
- img: getImageUrl(selectedRing.images?.[0]?.image),
-  tag: selectedRing.tag,
-  metal: metalType,
-  metalLabel: `Gold ${metalType.toUpperCase()}`,
-  ringType: 'Gold Ring',
-})
-                    setSelectedRing(null)
-                    navigate('/cart')
-                  }}
-                  style={{ width:'100%', padding:'14px', background:'linear-gradient(90deg,#f59e0b,#fbbf24)', border:'none', borderRadius:'14px', color:'#000', fontWeight:900, fontSize:'14px', cursor:'pointer' }}
-                >
-                  🛒 Add to Cart
-                </button>
-                <button
-                  onClick={() => { setSelectedRing(null); navigate('/customer') }}
-                  style={{ width:'100%', padding:'12px', background:'rgba(251,191,36,0.08)', border:'1px solid rgba(251,191,36,0.3)', borderRadius:'14px', color:'#fbbf24', fontWeight:700, fontSize:'13px', cursor:'pointer' }}
-                >
-                  ⚡ Place Order on Dashboard
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

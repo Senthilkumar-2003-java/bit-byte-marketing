@@ -244,7 +244,7 @@ useEffect(() => {
             const tag = tagStyle(bangle.tag)
             return (
               <div key={bangle.id} className="sb-card"
-                onClick={() => setSelectedBangle(bangle)}
+                onClick={() => navigate(`/product-display?category=bangles&metal=silver&id=${bangle.id}`)}
                 onMouseEnter={() => setHoveredBangle(bangle.id)}
                 onMouseLeave={() => setHoveredBangle(null)}
                 style={{

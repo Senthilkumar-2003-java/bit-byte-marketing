@@ -724,7 +724,10 @@ class MetalOrderSummaryView(APIView):
 # ADD AT BOTTOM OF views.py (before the ping function):
 
 class JewelryProductView(APIView):
-    permission_classes = [IsAuthenticated]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]       # GET = anyone can view
+        return [IsAuthenticated()] 
 
     def post(self, request):
         if request.user.role != 'super_admin':

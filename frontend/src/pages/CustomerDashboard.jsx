@@ -2,8 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
 import logo from '../assets/logo.png'
-import goldCoin from '../assets/gold-coin.png'
-import silverCoin from '../assets/silver-coin.png'
+// import goldCoin from '../assets/gold-coin.png'
+// import silverCoin from '../assets/silver-coin.png'
+
+import goldCoin from '../assets/gold-coin-transparent.png'
+import silverCoin from '../assets/silver-coin-transparent.png'
+
 import { getCartCount } from '../collection/card_section'
 
 const PARTICLES = Array.from({ length: 15 }, (_, i) => ({
@@ -421,6 +425,8 @@ useEffect(() => {
 input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; appearance: textfield; }
       `}</style>
+
+      
 
       <canvas ref={canvasRef} style={{ position:'fixed', top:0, left:0, pointerEvents:'none', zIndex:1, opacity:0.45 }} />
       <div style={{ position:'absolute', borderRadius:'50%', filter:'blur(80px)', animation:'float-orb 20s infinite ease-in-out', zIndex:0, top:'8%', left:'8%', width:'380px', height:'380px', background: dark ? 'rgba(52,211,153,0.08)' : 'rgba(16,185,129,0.08)' }} />
@@ -1048,6 +1054,57 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
             </div>
           </div>
 
+
+              {/* SILVER 999 */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '16px' }}>🥈</span>
+                  <span style={{ color: '#c0c0c0', fontWeight: 800, fontSize: '12px', letterSpacing: '1px' }}>SILVER 999</span>
+                  {metalPrices.silver && <span style={{ color: 'rgba(192,192,192,0.55)', fontSize: '11px' }}>₹{metalPrices.silver.toFixed(2)}/gm</span>}
+                </div>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap' }}>
+{WEIGHTS.map(w => {
+  const priceSilver = metalPrices.silver != null ? (w.grams * metalPrices.silver).toFixed(2) : null
+  const hoveredSilver = hoveredJewel === `sv_${w.label}`
+  return (
+    <div key={w.label}
+      onMouseEnter={() => setHoveredJewel(`sv_${w.label}`)}
+      onMouseLeave={() => setHoveredJewel(null)}
+      style={{ flex: 1, minWidth: 0, position: 'relative', background: hoveredSilver ? 'rgba(192,192,192,0.18)' : (dark ? 'rgba(192,192,192,0.04)' : 'rgba(192,192,192,0.07)'), border: hoveredSilver ? '1px solid rgba(192,192,192,0.85)' : '1px solid rgba(192,192,192,0.25)', borderRadius: '14px', overflow: 'hidden', transition: 'all 0.25s ease', transform: hoveredSilver ? 'translateY(-6px) scale(1.04)' : 'translateY(0) scale(1)', boxShadow: hoveredSilver ? '0 12px 32px rgba(192,192,192,0.3)' : 'none', cursor: 'pointer' }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
+        <img src={silverCoin} alt="Silver 999" style={{ width: '70px', height: '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hoveredSilver ? 'drop-shadow(0 4px 12px rgba(192,192,192,0.9)) brightness(1.2)' : 'drop-shadow(0 2px 6px rgba(192,192,192,0.45))', transition: 'filter 0.25s ease' }} />
+      </div>
+      <div style={{ padding: '4px 6px 6px', textAlign: 'center' }}>
+        <div style={{ display: 'inline-block', fontSize: '9px', fontWeight: 800, color: hoveredSilver ? '#000' : '#c0c0c0', background: hoveredSilver ? '#c0c0c0' : 'rgba(192,192,192,0.1)', border: '1px solid rgba(192,192,192,0.25)', borderRadius: '20px', padding: '2px 6px', marginBottom: '4px', transition: 'all 0.2s' }}>{w.label}</div>
+        <div style={{ color: hoveredSilver ? '#e8e8e8' : '#c0c0c0', fontWeight: 900, fontSize: hoveredSilver ? '12px' : '11px', fontFamily: 'monospace', transition: 'all 0.2s' }}>
+          {priceSilver ? `₹${priceSilver}` : '—'}
+        </div>
+      </div>
+      {hoveredSilver && (
+        <div style={{ display: 'flex', gap: '4px', padding: '0 6px 8px', animation: 'fadeIn 0.2s ease' }}>
+          <button
+            onClick={e => { e.stopPropagation(); alert(`Added ${w.label} Silver 999 to cart`) }}
+            style={{ flex: 1, padding: '5px 0', background: 'rgba(192,192,192,0.15)', border: '1px solid rgba(192,192,192,0.45)', borderRadius: '8px', color: '#c0c0c0', fontSize: '9px', fontWeight: 800, cursor: 'pointer' }}
+          >🪙 Card</button>
+          <button
+            onClick={e => { e.stopPropagation(); setOrderMetal('silver_999'); setOrderWeight(w.label); setOrderCount(1); setOrderMsg(''); setOrderPopup(true) }}
+            style={{ flex: 1, padding: '5px 0', background: 'linear-gradient(90deg,#9ca3af,#e5e7eb)', border: 'none', borderRadius: '8px', color: '#000', fontSize: '9px', fontWeight: 900, cursor: 'pointer' }}
+          >🛒 Buy</button>
+        </div>
+      )}
+    </div>
+  )
+})}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
+                  <button onClick={() => { setOrderMetal('silver_999'); setOrderWeight(''); setOrderCount(''); setOrderMsg(''); setOrderPopup(true) }}
+                    style={{ padding: '10px 32px', background: 'linear-gradient(90deg,#9ca3af,#e5e7eb)', border: 'none', borderRadius: '20px', color: '#000', fontWeight: 800, fontSize: '13px', cursor: 'pointer', boxShadow: '0 4px 16px rgba(192,192,192,0.2)' }}>
+                    🛒 Place Order — Silver 999
+                  </button>
+                </div>
+              </div>          
+
          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* GOLD 22K */}
               <div>
@@ -1057,22 +1114,45 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
                   {metalPrices.gold22k && <span style={{ color: 'rgba(251,191,36,0.55)', fontSize: '11px' }}>₹{metalPrices.gold22k.toFixed(2)}/gm</span>}
                 </div>
                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap' }}>
-                  {WEIGHTS.map(w => (
-                    <div key={w.label} style={{ flex: 1, minWidth: 0, background: dark ? 'rgba(251,191,36,0.05)' : 'rgba(251,191,36,0.07)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '14px', overflow: 'hidden', transition: 'transform 0.2s ease, box-shadow 0.2s ease' }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(251,191,36,0.2)' }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
-                        <img src={goldCoin} alt="Gold 22K" style={{ width: '44px', height: '44px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
-                      </div>
-                      <div style={{ padding: '6px 6px 8px', textAlign: 'center' }}>
-                        <div style={{ display: 'inline-block', fontSize: '9px', fontWeight: 800, color: '#fbbf24', background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '20px', padding: '2px 6px', marginBottom: '4px' }}>{w.label}</div>
-                        <div style={{ color: '#fbbf24', fontWeight: 900, fontSize: '11px', fontFamily: 'monospace' }}>
-                          {metalPrices.gold22k != null ? `₹${(w.grams * metalPrices.gold22k).toFixed(2)}` : '—'}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  {WEIGHTS.map(w => {
+  const price22k = metalPrices.gold22k != null ? (w.grams * metalPrices.gold22k).toFixed(2) : null
+  const hovered22k = hoveredJewel === `g22_${w.label}`
+  return (
+    <div key={w.label}
+      onMouseEnter={() => setHoveredJewel(`g22_${w.label}`)}
+      onMouseLeave={() => setHoveredJewel(null)}
+      style={{ flex: 1, minWidth: 0, position: 'relative', background: hovered22k ? 'rgba(251,191,36,0.15)' : (dark ? 'rgba(251,191,36,0.05)' : 'rgba(251,191,36,0.07)'), border: hovered22k ? '1px solid rgba(251,191,36,0.8)' : '1px solid rgba(251,191,36,0.3)', borderRadius: '14px', overflow: 'hidden', transition: 'all 0.25s ease', transform: hovered22k ? 'translateY(-6px) scale(1.04)' : 'translateY(0) scale(1)', boxShadow: hovered22k ? '0 12px 32px rgba(251,191,36,0.35)' : 'none', cursor: 'pointer' }}
+    >
+      {/* Coin image */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
+        <img src={goldCoin} alt="Gold 22K" style={{ width: '70px', height: '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hovered22k ? 'drop-shadow(0 4px 12px rgba(251,191,36,0.9))' : 'drop-shadow(0 2px 6px rgba(251,191,36,0.5))', transition: 'filter 0.25s ease' }} />
+      </div>
+
+      {/* Weight + Rate — highlight on hover */}
+      <div style={{ padding: '4px 6px 6px', textAlign: 'center' }}>
+        <div style={{ display: 'inline-block', fontSize: '9px', fontWeight: 800, color: hovered22k ? '#000' : '#fbbf24', background: hovered22k ? '#fbbf24' : 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '20px', padding: '2px 6px', marginBottom: '4px', transition: 'all 0.2s' }}>{w.label}</div>
+        <div style={{ color: hovered22k ? '#ffd700' : '#fbbf24', fontWeight: 900, fontSize: hovered22k ? '12px' : '11px', fontFamily: 'monospace', transition: 'all 0.2s' }}>
+          {price22k ? `₹${price22k}` : '—'}
+        </div>
+      </div>
+
+      {/* Two buttons — visible on hover */}
+      {hovered22k && (
+        <div style={{ display: 'flex', gap: '4px', padding: '0 6px 8px', animation: 'fadeIn 0.2s ease' }}>
+          <button
+            onClick={e => { e.stopPropagation(); alert(`Added ${w.label} Gold 22K to cart`) }}
+            style={{ flex: 1, padding: '5px 0', background: 'rgba(251,191,36,0.2)', border: '1px solid rgba(251,191,36,0.5)', borderRadius: '8px', color: '#fbbf24', fontSize: '9px', fontWeight: 800, cursor: 'pointer' }}
+          >🪙 Card</button>
+          <button
+            onClick={e => { e.stopPropagation(); setOrderMetal('gold_22k'); setOrderWeight(w.label); setOrderCount(1); setOrderMsg(''); setOrderPopup(true) }}
+            style={{ flex: 1, padding: '5px 0', background: 'linear-gradient(90deg,#f59e0b,#fbbf24)', border: 'none', borderRadius: '8px', color: '#000', fontSize: '9px', fontWeight: 900, cursor: 'pointer' }}
+          >🛒 Buy</button>
+        </div>
+      )}
+    </div>
+  )
+})}
+
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
                   <button onClick={() => { setOrderMetal('gold_22k'); setOrderWeight(''); setOrderCount(''); setOrderMsg(''); setOrderPopup(true) }}
@@ -1090,22 +1170,39 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
                   {metalPrices.gold24k && <span style={{ color: 'rgba(255,215,0,0.55)', fontSize: '11px' }}>₹{metalPrices.gold24k.toFixed(2)}/gm</span>}
                 </div>
                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap' }}>
-                  {WEIGHTS.map(w => (
-                    <div key={w.label} style={{ flex: 1, minWidth: 0, background: dark ? 'rgba(255,215,0,0.05)' : 'rgba(255,215,0,0.07)', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '14px', overflow: 'hidden', transition: 'transform 0.2s ease, box-shadow 0.2s ease' }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(255,215,0,0.2)' }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
-                        <img src={goldCoin} alt="Gold 24K" style={{ width: '44px', height: '44px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
-                      </div>
-                      <div style={{ padding: '6px 6px 8px', textAlign: 'center' }}>
-                        <div style={{ display: 'inline-block', fontSize: '9px', fontWeight: 800, color: '#ffd700', background: 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '20px', padding: '2px 6px', marginBottom: '4px' }}>{w.label}</div>
-                        <div style={{ color: '#ffd700', fontWeight: 900, fontSize: '11px', fontFamily: 'monospace' }}>
-                          {metalPrices.gold24k != null ? `₹${(w.grams * metalPrices.gold24k).toFixed(2)}` : '—'}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                 {WEIGHTS.map(w => {
+  const price24k = metalPrices.gold24k != null ? (w.grams * metalPrices.gold24k).toFixed(2) : null
+  const hovered24k = hoveredJewel === `g24_${w.label}`
+  return (
+    <div key={w.label}
+      onMouseEnter={() => setHoveredJewel(`g24_${w.label}`)}
+      onMouseLeave={() => setHoveredJewel(null)}
+      style={{ flex: 1, minWidth: 0, position: 'relative', background: hovered24k ? 'rgba(255,215,0,0.15)' : (dark ? 'rgba(255,215,0,0.05)' : 'rgba(255,215,0,0.07)'), border: hovered24k ? '1px solid rgba(255,215,0,0.8)' : '1px solid rgba(255,215,0,0.3)', borderRadius: '14px', overflow: 'hidden', transition: 'all 0.25s ease', transform: hovered24k ? 'translateY(-6px) scale(1.04)' : 'translateY(0) scale(1)', boxShadow: hovered24k ? '0 12px 32px rgba(255,215,0,0.35)' : 'none', cursor: 'pointer' }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
+        <img src={goldCoin} alt="Gold 24K" style={{ width: '70px', height: '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hovered24k ? 'drop-shadow(0 4px 12px rgba(255,215,0,0.9))' : 'drop-shadow(0 2px 6px rgba(255,215,0,0.5))', transition: 'filter 0.25s ease' }} />
+      </div>
+      <div style={{ padding: '4px 6px 6px', textAlign: 'center' }}>
+        <div style={{ display: 'inline-block', fontSize: '9px', fontWeight: 800, color: hovered24k ? '#000' : '#ffd700', background: hovered24k ? '#ffd700' : 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '20px', padding: '2px 6px', marginBottom: '4px', transition: 'all 0.2s' }}>{w.label}</div>
+        <div style={{ color: hovered24k ? '#ffe44d' : '#ffd700', fontWeight: 900, fontSize: hovered24k ? '12px' : '11px', fontFamily: 'monospace', transition: 'all 0.2s' }}>
+          {price24k ? `₹${price24k}` : '—'}
+        </div>
+      </div>
+      {hovered24k && (
+        <div style={{ display: 'flex', gap: '4px', padding: '0 6px 8px', animation: 'fadeIn 0.2s ease' }}>
+          <button
+            onClick={e => { e.stopPropagation(); alert(`Added ${w.label} Gold 24K to cart`) }}
+            style={{ flex: 1, padding: '5px 0', background: 'rgba(255,215,0,0.2)', border: '1px solid rgba(255,215,0,0.5)', borderRadius: '8px', color: '#ffd700', fontSize: '9px', fontWeight: 800, cursor: 'pointer' }}
+          >🪙 Card</button>
+          <button
+            onClick={e => { e.stopPropagation(); setOrderMetal('gold_24k'); setOrderWeight(w.label); setOrderCount(1); setOrderMsg(''); setOrderPopup(true) }}
+            style={{ flex: 1, padding: '5px 0', background: 'linear-gradient(90deg,#d97706,#ffd700)', border: 'none', borderRadius: '8px', color: '#000', fontSize: '9px', fontWeight: 900, cursor: 'pointer' }}
+          >🛒 Buy</button>
+        </div>
+      )}
+    </div>
+  )
+})}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
                   <button onClick={() => { setOrderMetal('gold_24k'); setOrderWeight(''); setOrderCount(''); setOrderMsg(''); setOrderPopup(true) }}
@@ -1114,40 +1211,6 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
                   </button>
                 </div>
               </div>
-
-              {/* SILVER 999 */}
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '16px' }}>🥈</span>
-                  <span style={{ color: '#c0c0c0', fontWeight: 800, fontSize: '12px', letterSpacing: '1px' }}>SILVER 999</span>
-                  {metalPrices.silver && <span style={{ color: 'rgba(192,192,192,0.55)', fontSize: '11px' }}>₹{metalPrices.silver.toFixed(2)}/gm</span>}
-                </div>
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap' }}>
-                  {WEIGHTS.map(w => (
-                    <div key={w.label} style={{ flex: 1, minWidth: 0, background: dark ? 'rgba(192,192,192,0.04)' : 'rgba(192,192,192,0.07)', border: '1px solid rgba(192,192,192,0.25)', borderRadius: '14px', overflow: 'hidden', transition: 'transform 0.2s ease, box-shadow 0.2s ease' }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(192,192,192,0.15)' }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
-                        <img src={silverCoin} alt="Silver 999" style={{ width: '44px', height: '44px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
-                      </div>
-                      <div style={{ padding: '6px 6px 8px', textAlign: 'center' }}>
-                        <div style={{ display: 'inline-block', fontSize: '9px', fontWeight: 800, color: '#c0c0c0', background: 'rgba(192,192,192,0.1)', border: '1px solid rgba(192,192,192,0.25)', borderRadius: '20px', padding: '2px 6px', marginBottom: '4px' }}>{w.label}</div>
-                        <div style={{ color: '#c0c0c0', fontWeight: 900, fontSize: '11px', fontFamily: 'monospace' }}>
-                          {metalPrices.silver != null ? `₹${(w.grams * metalPrices.silver).toFixed(2)}` : '—'}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
-                  <button onClick={() => { setOrderMetal('silver_999'); setOrderWeight(''); setOrderCount(''); setOrderMsg(''); setOrderPopup(true) }}
-                    style={{ padding: '10px 32px', background: 'linear-gradient(90deg,#9ca3af,#e5e7eb)', border: 'none', borderRadius: '20px', color: '#000', fontWeight: 800, fontSize: '13px', cursor: 'pointer', boxShadow: '0 4px 16px rgba(192,192,192,0.2)' }}>
-                    🛒 Place Order — Silver 999
-                  </button>
-                </div>
-              </div>
-
             </div>
         </div>
       )
