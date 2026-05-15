@@ -8,7 +8,7 @@ import logo from '../assets/logo.png'
 import goldCoin from '../assets/gold-coin-transparent.png'
 import silverCoin from '../assets/silver-coin-transparent.png'
 
-import { getCartCount } from '../collection/card_section'
+import { getCartCount, addToCart } from '../collection/card_section'
 
 const PARTICLES = Array.from({ length: 15 }, (_, i) => ({
   id: i, size: Math.random() * 60 + 10, x: Math.random() * 100,
@@ -318,6 +318,26 @@ const fetchOrderSummary = async () => {
     const res = await api.get('/metal-orders/summary/')
     setOrderSummary(res.data)
   } catch {}
+}
+
+const addMetalToCart = (metalType, metalLabel, weightObj, price, img) => {
+  addToCart({
+    id: `${metalType}_${weightObj.label}`,
+    name: `${metalLabel} - ${weightObj.label}`,
+    desc: `${weightObj.label} coin saved from today's metal rate section`,
+    img,
+    tag: weightObj.label,
+    metal: metalType,
+    metalLabel,
+    ringType: 'Coin',
+    weightLabel: weightObj.label,
+    weightGrams: weightObj.grams,
+    price: price ? Number(price) : 0,
+  })
+
+  setCartCount(getCartCount())
+  setMsg(`✅ ${weightObj.label} ${metalLabel} added to cart`)
+  setMsgType('success')
 }
 
 
@@ -1084,7 +1104,16 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
       {hoveredSilver && (
         <div style={{ display: 'flex', gap: '4px', padding: '0 6px 8px', animation: 'fadeIn 0.2s ease' }}>
           <button
-            onClick={e => { e.stopPropagation(); alert(`Added ${w.label} Silver 999 to cart`) }}
+onClick={e => {
+  e.stopPropagation()
+  addMetalToCart(
+    'silver_999',
+    'Silver 999',
+    w,
+    priceSilver,
+    silverCoin
+  )
+}}
             style={{ flex: 1, padding: '5px 0', background: 'rgba(192,192,192,0.15)', border: '1px solid rgba(192,192,192,0.45)', borderRadius: '8px', color: '#c0c0c0', fontSize: '9px', fontWeight: 800, cursor: 'pointer' }}
           >🪙 Card</button>
           <button
@@ -1140,7 +1169,16 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
       {hovered22k && (
         <div style={{ display: 'flex', gap: '4px', padding: '0 6px 8px', animation: 'fadeIn 0.2s ease' }}>
           <button
-            onClick={e => { e.stopPropagation(); alert(`Added ${w.label} Gold 22K to cart`) }}
+onClick={e => {
+  e.stopPropagation()
+  addMetalToCart(
+    'gold_22k',
+    'Gold 22K',
+    w,
+    price22k,
+    goldCoin
+  )
+}}
             style={{ flex: 1, padding: '5px 0', background: 'rgba(251,191,36,0.2)', border: '1px solid rgba(251,191,36,0.5)', borderRadius: '8px', color: '#fbbf24', fontSize: '9px', fontWeight: 800, cursor: 'pointer' }}
           >🪙 Card</button>
           <button
@@ -1191,7 +1229,16 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
       {hovered24k && (
         <div style={{ display: 'flex', gap: '4px', padding: '0 6px 8px', animation: 'fadeIn 0.2s ease' }}>
           <button
-            onClick={e => { e.stopPropagation(); alert(`Added ${w.label} Gold 24K to cart`) }}
+onClick={e => {
+  e.stopPropagation()
+  addMetalToCart(
+    'gold_24k',
+    'Gold 24K',
+    w,
+    price24k,
+    goldCoin
+  )
+}}
             style={{ flex: 1, padding: '5px 0', background: 'rgba(255,215,0,0.2)', border: '1px solid rgba(255,215,0,0.5)', borderRadius: '8px', color: '#ffd700', fontSize: '9px', fontWeight: 800, cursor: 'pointer' }}
           >🪙 Card</button>
           <button

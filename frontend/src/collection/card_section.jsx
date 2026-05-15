@@ -268,15 +268,24 @@ export default function CardSection() {
                     </div>
                     <div style={{ color: subtext, fontSize: '11px', marginBottom: '6px', lineHeight: '1.5' }}>{item.desc}</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      {metalLabel(item) && (
-                        <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 10px', borderRadius: '20px', background: `rgba(${col === '#fbbf24' ? '251,191,36' : col === '#ffd700' ? '255,215,0' : '192,192,192'},0.1)`, color: col, border: `1px solid ${col}44` }}>
-                          {metalLabel(item)}
-                        </span>
-                      )}
-                      {item.ringType && (
-                        <span style={{ fontSize: '10px', color: subtext, fontWeight: 600 }}>{item.ringType}</span>
-                      )}
-                    </div>
+  {metalLabel(item) && (
+    <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 10px', borderRadius: '20px', background: `rgba(${col === '#fbbf24' ? '251,191,36' : col === '#ffd700' ? '255,215,0' : '192,192,192'},0.1)`, color: col, border: `1px solid ${col}44` }}>
+      {metalLabel(item)}
+    </span>
+  )}
+
+  {item.ringType && (
+    <span style={{ fontSize: '10px', color: subtext, fontWeight: 600 }}>
+      {item.ringType}
+    </span>
+  )}
+
+  {item.price > 0 && (
+    <span style={{ fontSize: '10px', color: '#4ade80', fontWeight: 800 }}>
+      ₹{Number(item.price).toFixed(2)}
+    </span>
+  )}
+</div>
                   </div>
 
                   {/* Qty Controls */}
