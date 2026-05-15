@@ -22,13 +22,7 @@ const WEIGHTS = [
   { label: '8 gm',   grams: 8    },
 ]
 
-const SILVER_BANGLES = [
-  { id: 1, name: 'Moonlit Kangan',    desc: 'Elegant silver kangan with moonlit finish — timeless classic',      img: '/img/silver/silver-bangle-1.png', tag: 'Bestseller' },
-  { id: 2, name: 'Oxidised Kada',     desc: 'Antique oxidised kada with tribal-inspired patterns',               img: '/img/silver/silver-bangle-2.png', tag: 'Antique'    },
-  { id: 3, name: 'Crystal Bangle',    desc: 'Sparkling crystal-embedded silver bangle for special occasions',    img: '/img/silver/silver-bangle-3.png', tag: 'Premium'    },
-  { id: 4, name: 'Slim Pearl Band',   desc: 'Delicate slim band with pearl accents — minimal & modern',          img: '/img/silver/silver-bangle-4.png', tag: 'Minimal'    },
-  { id: 5, name: 'Floral Stack Set',  desc: 'Floral motif stackable set — wear one or layer all five',           img: '/img/silver/silver-bangle-5.png', tag: 'Stackable'  },
-]
+
 
 const TAG_COLORS = {
   Bestseller: { bg: 'rgba(52,211,153,0.2)',   border: 'rgba(52,211,153,0.5)',   color: '#34d399' },
@@ -45,11 +39,13 @@ export default function SilverBangles() {
   const [hoveredBangle, setHoveredBangle]   = useState(null)
   const [silverPrice, setSilverPrice]       = useState(null)
   const [selectedBangle, setSelectedBangle] = useState(null)
+  const [silverBangles, setSilverBangles] = useState([])
+const [loading, setLoading] = useState(true)
   const canvasRef = useRef(null)
 
   /* ── theme tokens ── */
   const bg        = dark ? '#020617'                   : '#f8fafc'
-  const text      = dark ? '#f8fafc'                   : '#020617'
+  const text      = dark ? '#f8fafc'                   : '#030304'
   const subtext   = dark ? '#94a3b8'                   : '#64748b'
   const border    = dark ? 'rgba(255,255,255,0.1)'     : 'rgba(0,0,0,0.1)'
   const glass     = dark ? 'rgba(15,23,42,0.65)'       : 'rgba(255,255,255,0.7)'
@@ -61,14 +57,21 @@ export default function SilverBangles() {
   const silverColor = '#c0c0c0'
   const silverGlow  = 'rgba(192,192,192,0.28)'
 
-  /* ── fetch silver price ── */
-  useEffect(() => {
-    import('../api').then(({ default: api }) => {
-      api.get('/metal-rates/').then(res => {
-        setSilverPrice(parseFloat(res.data.silver_999))
-      }).catch(() => {})
-    }).catch(() => {})
-  }, [])
+const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
+
+const getImageUrl = (img) => {
+  if (!img) return '/img/silver/silver-bangle-1.png'
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  return `${API_BASE}/${img.replace(/^\/+/, '')}`
+}
+
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/jewelry-products/?category=bangles&metal=silver')
+      .then(res => { setSilverBangles(res.data); setLoading(false) })
+      .catch(() => setLoading(false))
+  })
+}, [])
 
   /* ── canvas particle animation ── */
   useEffect(() => {
@@ -228,7 +231,15 @@ export default function SilverBangles() {
 
         {/* ── Bangle Cards — 5 cards ── */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'18px' }}>
-          {SILVER_BANGLES.map(bangle => {
+          {loading ? (
+  <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'60px 0' }}>
+    ⏳ Loading products...
+  </div>
+) : silverBangles.length === 0 ? (
+  <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'60px 0' }}>
+    No silver bangles added yet.
+  </div>
+) : silverBangles.map((bangle) => {
             const isHovered = hoveredBangle === bangle.id
             const tag = tagStyle(bangle.tag)
             return (
@@ -248,7 +259,8 @@ export default function SilverBangles() {
 
                 {/* Image */}
                 <div className="sb-img-wrap" style={{ position:'relative', height:'200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
-                  <img src={bangle.img} alt={bangle.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+                  <img src={getImageUrl(bangle.images?.[0]?.image)} alt={bangle.name}
+                  onError={(e) => { e.currentTarget.src = '/img/silver/silver-bangle-1.png' }} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
                   <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
 
                   {/* tag */}
@@ -272,7 +284,7 @@ export default function SilverBangles() {
                 {/* Content */}
                 <div style={{ padding:'14px 16px' }}>
                   <div style={{ color: isHovered ? silverColor : text, fontWeight:800, fontSize:'13px', marginBottom:'4px', transition:'color 0.3s' }}>{bangle.name}</div>
-                  <div style={{ color:subtext, fontSize:'10px', lineHeight:'1.5', marginBottom:'10px' }}>{bangle.desc}</div>
+                  <div style={{ color:subtext, fontSize:'10px', lineHeight:'1.5', marginBottom:'10px' }}>{bangle.description}</div>
 
 
                 </div>
@@ -307,7 +319,8 @@ export default function SilverBangles() {
 
             {/* image */}
             <div style={{ position:'relative', height:'200px', overflow:'hidden' }}>
-              <img src={selectedBangle.img} alt={selectedBangle.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+              <img src={getImageUrl(selectedBangle.images?.[0]?.image)} alt={selectedBangle.name}
+  onError={(e) => { e.currentTarget.src = '/img/silver/silver-bangle-1.png' }} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(2,6,23,0.9) 0%,transparent 60%)' }} />
               <button onClick={() => setSelectedBangle(null)} style={{ position:'absolute', top:'16px', right:'16px', background:'rgba(239,68,68,0.15)', border:'1px solid rgba(239,68,68,0.4)', color:'#f87171', borderRadius:'10px', padding:'6px 14px', cursor:'pointer', fontSize:'12px', backdropFilter:'blur(8px)' }}>✕ Close</button>
               <div style={{ position:'absolute', top:'16px', left:'16px', background:tagStyle(selectedBangle.tag).bg, border:`1px solid ${tagStyle(selectedBangle.tag).border}`, borderRadius:'20px', padding:'5px 14px', color:tagStyle(selectedBangle.tag).color, fontSize:'11px', fontWeight:800, backdropFilter:'blur(8px)' }}>{selectedBangle.tag}</div>
@@ -316,7 +329,7 @@ export default function SilverBangles() {
             {/* details */}
             <div style={{ padding:'28px 32px' }}>
               <div style={{ color:silverColor, fontWeight:900, fontSize:'24px', marginBottom:'6px' }}>{selectedBangle.name}</div>
-              <div style={{ color:subtext, fontSize:'13px', lineHeight:'1.6', marginBottom:'24px' }}>{selectedBangle.desc}</div>
+              <div style={{ color:subtext, fontSize:'13px', lineHeight:'1.6', marginBottom:'24px' }}>{selectedBangle.description}</div>
 
 
              <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
@@ -325,8 +338,8 @@ export default function SilverBangles() {
       addToCart({
         id: selectedBangle.id,
         name: selectedBangle.name,
-        desc: selectedBangle.desc,
-        img: selectedBangle.img,
+        description: selectedBangle.description,
+        img: getImageUrl(selectedBangle.images?.[0]?.image),
         tag: selectedBangle.tag,
         metal: 'silver',
         metalLabel: 'Silver 999',

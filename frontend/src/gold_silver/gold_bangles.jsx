@@ -21,14 +21,6 @@ const WEIGHTS = [
   { label: '8 gm',   grams: 8    },
 ]
 
-const GOLD_BANGLES = [
-  { id: 1, name: 'Royal Kangan',      desc: 'Traditional kangan with intricate gold filigree work',          img: '/img/gold/gold-bangles-1.png', tag: 'Bestseller' },
-  { id: 2, name: 'Bridal Splendour',  desc: 'Heavy bridal bangle with gemstone accents — made for queens',  img: '/img/gold/gold-bangles-2.png', tag: 'Bridal'     },
-  { id: 3, name: 'Temple Heritage',   desc: 'South Indian temple-style bangle with divine motifs',           img: '/img/gold/gold-bangles-3.png', tag: 'Premium'   },
-  { id: 4, name: 'Floral Kada',       desc: 'Floral pattern kada — perfect for festivals and occasions',     img: '/img/gold/gold-bangles-4.png', tag: 'Statement' },
-  { id: 5, name: 'Slim Elegance',     desc: 'Minimalist slim bangle for everyday gold elegance',             img: '/img/gold/gold-bangles-5.png', tag: 'Minimal'   },
-  { id: 6, name: 'Antique Duo Stack', desc: 'Antique-finish stackable duo — layer them your way',            img: '/img/gold/gold-bangles-6.png', tag: 'Stackable' },
-]
 
 const TAG_COLORS = {
   Bestseller: { bg: 'rgba(52,211,153,0.2)',   border: 'rgba(52,211,153,0.5)',   color: '#34d399' },
@@ -46,6 +38,8 @@ export default function GoldBangles() {
   const [hoveredBangle, setHoveredBangle]   = useState(null)
   const [goldPrice, setGoldPrice]           = useState(null)
   const [selectedBangle, setSelectedBangle] = useState(null)
+  const [goldBangles, setGoldBangles] = useState([])
+const [loading, setLoading] = useState(true)
   const [metalType, setMetalType]           = useState('gold_22k') // '22k' | '24k'
   const canvasRef = useRef(null)
 
@@ -63,18 +57,21 @@ export default function GoldBangles() {
   const goldColor = metalType === 'gold_24k' ? '#ffd700' : '#fbbf24'
   const goldGlow  = metalType === 'gold_24k' ? 'rgba(255,215,0,0.28)' : 'rgba(251,191,36,0.28)'
 
-  /* ── fetch gold price ── */
-  useEffect(() => {
-    import('../api').then(({ default: api }) => {
-      api.get('/metal-rates/').then(res => {
-        const d = res.data
-        setGoldPrice({
-          gold22k: parseFloat(d.gold_22k),
-          gold24k: parseFloat(d.gold_24k),
-        })
-      }).catch(() => {})
-    }).catch(() => {})
-  }, [])
+const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
+
+const getImageUrl = (img) => {
+  if (!img) return '/img/gold/gold-bangles-1.png'
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  return `${API_BASE}/${img.replace(/^\/+/, '')}`
+}
+
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/jewelry-products/?category=bangles&metal=gold')
+      .then(res => { setGoldBangles(res.data); setLoading(false) })
+      .catch(() => setLoading(false))
+  })
+}, [])
 
   const currentRate = goldPrice ? (metalType === 'gold_24k' ? goldPrice.gold24k : goldPrice.gold22k) : null
 
@@ -248,7 +245,15 @@ export default function GoldBangles() {
 
         {/* ── Bangle Cards — 6 cards, 3 columns ── */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'20px' }}>
-          {GOLD_BANGLES.map(bangle => {
+          {loading ? (
+  <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'60px 0' }}>
+    ⏳ Loading products...
+  </div>
+) : goldBangles.length === 0 ? (
+  <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'60px 0' }}>
+    No gold bangles added yet.
+  </div>
+) : goldBangles.map((bangle) => {
             const isHovered = hoveredBangle === bangle.id
             const tag = tagStyle(bangle.tag)
             return (
@@ -268,7 +273,12 @@ export default function GoldBangles() {
 
                 {/* Image */}
                 <div className="gb-img-wrap" style={{ position:'relative', height:'240px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
-                  <img src={bangle.img} alt={bangle.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+<img
+  src={getImageUrl(bangle.images?.[0]?.image)}
+  alt={bangle.name}
+  onError={(e) => { e.currentTarget.src = '/img/gold/gold-bangles-1.png' }}
+  style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
+/>
                   <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
 
                   {/* tag */}
@@ -292,7 +302,7 @@ export default function GoldBangles() {
                 {/* Content */}
                 <div style={{ padding:'14px 16px' }}>
                   <div style={{ color: isHovered ? goldColor : text, fontWeight:800, fontSize:'14px', marginBottom:'4px', transition:'color 0.3s' }}>{bangle.name}</div>
-                  <div style={{ color:subtext, fontSize:'11px', lineHeight:'1.5', marginBottom:'10px' }}>{bangle.desc}</div>
+                  <div style={{ color:subtext, fontSize:'11px', lineHeight:'1.5', marginBottom:'10px' }}>{bangle.description}</div>
 
 
                 </div>
@@ -327,7 +337,12 @@ export default function GoldBangles() {
 
             {/* image */}
             <div style={{ position:'relative', height:'180px', overflow:'hidden' }}>
-              <img src={selectedBangle.img} alt={selectedBangle.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+              <img
+  src={getImageUrl(selectedBangle.images?.[0]?.image)}
+  alt={selectedBangle.name}
+  onError={(e) => { e.currentTarget.src = '/img/gold/gold-bangles-1.png' }}
+  style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
+/>
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(2,6,23,0.9) 0%,transparent 60%)' }} />
               <button onClick={() => setSelectedBangle(null)} style={{ position:'absolute', top:'16px', right:'16px', background:'rgba(239,68,68,0.15)', border:'1px solid rgba(239,68,68,0.4)', color:'#f87171', borderRadius:'10px', padding:'6px 14px', cursor:'pointer', fontSize:'12px', backdropFilter:'blur(8px)' }}>✕ Close</button>
               <div style={{ position:'absolute', top:'16px', left:'16px', background:tagStyle(selectedBangle.tag).bg, border:`1px solid ${tagStyle(selectedBangle.tag).border}`, borderRadius:'20px', padding:'5px 14px', color:tagStyle(selectedBangle.tag).color, fontSize:'11px', fontWeight:800, backdropFilter:'blur(8px)' }}>{selectedBangle.tag}</div>
@@ -336,7 +351,7 @@ export default function GoldBangles() {
             {/* details */}
             <div style={{ padding:'28px 32px' }}>
               <div style={{ color:goldColor, fontWeight:900, fontSize:'24px', marginBottom:'6px' }}>{selectedBangle.name}</div>
-              <div style={{ color:subtext, fontSize:'13px', lineHeight:'1.6', marginBottom:'24px' }}>{selectedBangle.desc}</div>
+              <div style={{ color:subtext, fontSize:'13px', lineHeight:'1.6', marginBottom:'24px' }}>{selectedBangle.description}</div>
 
               {/* Metal type toggle in modal */}
               <div style={{ display:'flex', gap:'8px', marginBottom:'16px' }}>
@@ -355,8 +370,8 @@ export default function GoldBangles() {
       addToCart({
         id: selectedBangle.id,
         name: selectedBangle.name,
-        desc: selectedBangle.desc,
-        img: selectedBangle.img,
+       desc: selectedBangle.description,
+       img: getImageUrl(selectedBangle.images?.[0]?.image),
         tag: selectedBangle.tag,
         metal: metalType,
         metalLabel: metalType === 'gold_24k' ? 'Gold 24K' : 'Gold 22K',

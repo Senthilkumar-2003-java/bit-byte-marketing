@@ -1130,7 +1130,9 @@ export default function SuperAdminDashboard() {
       setMetalPrices({ gold22k: null, gold24k: null, silver: null })
       setDbRateDate(null)
     }
+    finally {
     setMetalLoading(false)
+    }
   }
 
   const formatWeight = (grams) => {

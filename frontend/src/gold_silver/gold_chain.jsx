@@ -48,6 +48,8 @@ export default function GoldChain() {
   const [hoveredItem, setHoveredItem] = useState(null)
   const [goldPrice, setGoldPrice] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
+  const [goldChains, setGoldChains] = useState([])
+  const [loading, setLoading] = useState(true)
   const canvasRef = useRef(null)
 
   const bg = dark ? '#020617' : '#f8fafc'
@@ -61,13 +63,19 @@ export default function GoldChain() {
   const optionBg = dark ? '#1a2035' : '#ffffff'
   const goldColor = '#fbbf24'
 
-  useEffect(() => {
-    import('../api').then(({ default: api }) => {
-      api.get('/metal-rates/').then(res => {
-        setGoldPrice(parseFloat(res.data.gold_22k))
-      }).catch(() => {})
-    }).catch(() => {})
-  }, [])
+const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
+const getImageUrl = (img) => {
+  if (!img) return '/img/gold/gold chain-1.png'
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  return `${API_BASE}/${img.replace(/^\/+/, '')}`
+}
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/jewelry-products/?category=chains&metal=gold')
+      .then(res => { setGoldChains(res.data); setLoading(false) })
+      .catch(() => setLoading(false))
+  })
+}, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -282,7 +290,11 @@ export default function GoldChain() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '18px' }}>
-          {GOLD_CHAINS.map(item => {
+          {loading ? (
+  <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'60px 0' }}>⏳ Loading...</div>
+) : goldChains.length === 0 ? (
+  <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'60px 0' }}>No gold chains yet.</div>
+) : goldChains.map((item) => {
             const isHovered = hoveredItem === item.id
             const tag = tagStyle(item.tag)
 
@@ -308,7 +320,8 @@ export default function GoldChain() {
                 <div className="gc-shine" />
 
                 <div className="gc-img-wrap" style={{ position: 'relative', height: '200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
-                  <img src={item.img} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  <img src={getImageUrl(item.images?.[0]?.image)}
+  onError={(e) => { e.currentTarget.src = '/img/gold/gold chain-1.png' }}style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
 
                   <div style={{ position: 'absolute', top: '10px', left: '10px', background: tag.bg, border: `1px solid ${tag.border}`, borderRadius: '16px', padding: '3px 10px', color: tag.color, fontSize: '9px', fontWeight: 800, letterSpacing: '0.5px', backdropFilter: 'blur(8px)' }}>
@@ -328,7 +341,7 @@ export default function GoldChain() {
 
                 <div style={{ padding: '14px 16px' }}>
                   <div style={{ color: isHovered ? goldColor : text, fontWeight: 800, fontSize: '13px', marginBottom: '4px', transition: 'color 0.3s' }}>{item.name}</div>
-                  <div style={{ color: subtext, fontSize: '10px', lineHeight: '1.5', marginBottom: '10px' }}>{item.desc}</div>
+                  <div style={{ color: subtext, fontSize: '10px', lineHeight: '1.5', marginBottom: '10px' }}>{item.description}</div>
 
       
                 </div>
@@ -350,7 +363,12 @@ export default function GoldChain() {
         <div onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(14px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div onClick={e => e.stopPropagation()} style={{ background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc', border: '1px solid rgba(251,191,36,0.35)', borderRadius: '28px', width: '95%', maxWidth: '560px', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.8)', animation: 'fadeInUp 0.3s ease' }}>
             <div style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
-              <img src={selectedItem.img} alt={selectedItem.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+<img
+  src={getImageUrl(selectedItem.images?.[0]?.image)}
+  alt={selectedItem.name}
+  onError={(e) => { e.currentTarget.src = '/img/gold/gold chain-1.png' }}
+  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+/>
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(2,6,23,0.9) 0%,transparent 60%)' }} />
 
               <button onClick={() => setSelectedItem(null)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', borderRadius: '10px', padding: '6px 14px', cursor: 'pointer', fontSize: '12px', backdropFilter: 'blur(8px)' }}>
@@ -364,7 +382,7 @@ export default function GoldChain() {
 
             <div style={{ padding: '28px 32px' }}>
               <div style={{ color: goldColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px' }}>{selectedItem.name}</div>
-              <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedItem.desc}</div>
+              <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedItem.description}</div>
 
              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
   <button
@@ -372,8 +390,8 @@ export default function GoldChain() {
       addToCart({
         id: selectedItem.id,
         name: selectedItem.name,
-        desc: selectedItem.desc,
-        img: selectedItem.img,
+        desc: selectedItem.description,
+        img: getImageUrl(selectedItem.images?.[0]?.image),
         tag: selectedItem.tag,
         metal: 'gold_22k',
         metalLabel: 'Gold 22K',

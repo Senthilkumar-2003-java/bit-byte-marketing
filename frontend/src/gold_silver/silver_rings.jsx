@@ -44,7 +44,9 @@ export default function SilverRings() {
   const [selectedWeight, setSelectedWeight] = useState('All Weights')
   const [hoveredRing, setHoveredRing]     = useState(null)
   const [silverPrice, setSilverPrice]     = useState(null)
-  const [selectedRing, setSelectedRing]   = useState(null)
+  const [silverRings, setSilverRings] = useState([])
+const [loading, setLoading] = useState(true)
+const [selectedRing, setSelectedRing] = useState(null)
   const canvasRef = useRef(null)
 
   /* ── theme tokens ── */
@@ -62,14 +64,23 @@ export default function SilverRings() {
   const silverColor = '#c0c0c0'
   const silverGlow  = 'rgba(192,192,192,0.28)'
 
-  /* ── fetch silver price ── */
-  useEffect(() => {
-    import('../api').then(({ default: api }) => {
-      api.get('/metal-rates/').then(res => {
-        setSilverPrice(parseFloat(res.data.silver_999))
-      }).catch(() => {})
-    }).catch(() => {})
-  }, [])
+
+
+const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
+
+const getImageUrl = (img) => {
+  if (!img) return '/img/silver/silver-ring-1.png'
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  return `${API_BASE}/${img.replace(/^\/+/, '')}`
+}
+
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/jewelry-products/?category=rings&metal=silver')
+      .then(res => { setSilverRings(res.data); setLoading(false) })
+      .catch(() => setLoading(false))
+  })
+}, [])
 
   /* ── canvas particle animation ── */
   useEffect(() => {
@@ -230,7 +241,15 @@ export default function SilverRings() {
 
         {/* ── Ring Cards ── */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'18px' }}>
-          {SILVER_RINGS.map(ring => {
+          {loading ? (
+  <div style={{ gridColumn: 'span 3', textAlign: 'center', color: subtext, padding: '60px 0' }}>
+    ⏳ Loading products...
+  </div>
+) : silverRings.length === 0 ? (
+  <div style={{ gridColumn: 'span 3', textAlign: 'center', color: subtext, padding: '60px 0' }}>
+    No silver rings added yet.
+  </div>
+) : silverRings.map((ring) => {
             const isHovered = hoveredRing === ring.id
             const tag = tagStyle(ring.tag)
             return (
@@ -253,7 +272,10 @@ export default function SilverRings() {
 
                 {/* Image */}
                 <div className="sr-img-wrap" style={{ position:'relative', height:'200px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
-                  <img src={ring.img} alt={ring.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+                  <img
+  src={getImageUrl(ring.images?.[0]?.image)}
+  alt={ring.name}
+  onError={(e) => { e.currentTarget.src = '/img/silver/silver-ring-1.png' }} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
                   <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
 
                   {/* tag */}
@@ -277,7 +299,7 @@ export default function SilverRings() {
                 {/* Content */}
                 <div style={{ padding:'14px 16px' }}>
                   <div style={{ color: isHovered ? silverColor : text, fontWeight:800, fontSize:'13px', marginBottom:'4px', transition:'color 0.3s' }}>{ring.name}</div>
-                  <div style={{ color:subtext, fontSize:'10px', lineHeight:'1.5', marginBottom:'10px' }}>{ring.desc}</div>
+                  <div style={{ color:subtext, fontSize:'10px', lineHeight:'1.5', marginBottom:'10px' }}>{ring.description}</div>
 
  
                 </div>
@@ -312,7 +334,8 @@ export default function SilverRings() {
 
             {/* image */}
             <div style={{ position:'relative', height:'200px', overflow:'hidden' }}>
-              <img src={selectedRing.img} alt={selectedRing.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+              <img src={getImageUrl(selectedRing.images?.[0]?.image)} 
+  onError={(e) => { e.currentTarget.src = '/img/silver/silver-ring-1.png' }} alt={selectedRing.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(2,6,23,0.9) 0%,transparent 60%)' }} />
               <button onClick={() => setSelectedRing(null)} style={{ position:'absolute', top:'16px', right:'16px', background:'rgba(239,68,68,0.15)', border:'1px solid rgba(239,68,68,0.4)', color:'#f87171', borderRadius:'10px', padding:'6px 14px', cursor:'pointer', fontSize:'12px', backdropFilter:'blur(8px)' }}>✕ Close</button>
               <div style={{ position:'absolute', top:'16px', left:'16px', background:tagStyle(selectedRing.tag).bg, border:`1px solid ${tagStyle(selectedRing.tag).border}`, borderRadius:'20px', padding:'5px 14px', color:tagStyle(selectedRing.tag).color, fontSize:'11px', fontWeight:800, backdropFilter:'blur(8px)' }}>{selectedRing.tag}</div>
@@ -321,7 +344,7 @@ export default function SilverRings() {
             {/* details */}
             <div style={{ padding:'28px 32px' }}>
               <div style={{ color:silverColor, fontWeight:900, fontSize:'24px', marginBottom:'6px' }}>{selectedRing.name}</div>
-              <div style={{ color:subtext, fontSize:'13px', lineHeight:'1.6', marginBottom:'24px' }}>{selectedRing.desc}</div>
+              <div style={{ color:subtext, fontSize:'13px', lineHeight:'1.6', marginBottom:'24px' }}>{selectedRing.description}</div>
 
 
               <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
@@ -330,8 +353,8 @@ export default function SilverRings() {
                     addToCart({
                       id: selectedRing.id,
                       name: selectedRing.name,
-                      desc: selectedRing.desc,
-                      img: selectedRing.img,
+                      img: getImageUrl(selectedRing.images?.[0]?.image),
+                      desc: selectedRing.description,
                       tag: selectedRing.tag,
                       metal: 'silver',
                       metalLabel: 'Silver 999',

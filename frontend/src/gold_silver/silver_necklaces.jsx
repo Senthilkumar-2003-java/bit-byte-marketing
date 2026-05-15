@@ -25,14 +25,7 @@ const WEIGHTS = [
   { label: '8 gm', grams: 8 },
 ]
 
-const SILVER_NECKLACES = [
-  { id: 1, name: 'Silver Royal Necklace', desc: 'Premium silver necklace with elegant handcrafted finish', img: '/img/silver/silver-necklace-1.png', tag: 'Bestseller' },
-  { id: 2, name: 'Moonlight Necklace', desc: 'Smooth silver shine with modern premium styling', img: '/img/silver/silver-necklace-2.png', tag: 'Premium' },
-  { id: 3, name: 'Floral Silver Necklace', desc: 'Floral silver design for special occasions', img: '/img/silver/silver-necklace-3.png', tag: 'Statement' },
-  { id: 4, name: 'Minimal Silver Necklace', desc: 'Lightweight necklace for daily wear', img: '/img/silver/silver-necklace-4.png', tag: 'Minimal' },
-  { id: 5, name: 'Classic Silver Charm', desc: 'Classic necklace with premium polished finish', img: '/img/silver/silver-necklace-5.png', tag: 'New' },
-  { id: 6, name: 'Heritage Silver Necklace', desc: 'Traditional silver necklace with detailed craftsmanship', img: '/img/silver/silver-necklace-6.png', tag: 'Premium' },
-]
+
 
 const TAG_COLORS = {
   Bestseller: { bg: 'rgba(52,211,153,0.2)', border: 'rgba(52,211,153,0.5)', color: '#34d399' },
@@ -49,6 +42,8 @@ export default function SilverNecklaces() {
   const [hoveredItem, setHoveredItem] = useState(null)
   const [silverPrice, setSilverPrice] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
+  const [silverNecklaces, setSilverNecklaces] = useState([])
+const [loading, setLoading] = useState(true)
   const canvasRef = useRef(null)
 
   const bg = dark ? '#020617' : '#f8fafc'
@@ -62,13 +57,25 @@ export default function SilverNecklaces() {
   const optionBg = dark ? '#1a2035' : '#ffffff'
   const silverColor = '#c0c0c0'
 
-  useEffect(() => {
-    import('../api').then(({ default: api }) => {
-      api.get('/metal-rates/').then(res => {
-        setSilverPrice(parseFloat(res.data.silver_999))
-      }).catch(() => {})
-    }).catch(() => {})
-  }, [])
+
+const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
+
+const getImageUrl = (img) => {
+  if (!img) return '/img/silver/silver-necklace-1.png'
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  return `${API_BASE}/${img.replace(/^\/+/, '')}`
+}
+
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/jewelry-products/?category=necklaces&metal=silver')
+      .then(res => {
+        setSilverNecklaces(res.data)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  })
+}, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -279,7 +286,15 @@ export default function SilverNecklaces() {
 
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
-          {SILVER_NECKLACES.map(item => {
+          {loading ? (
+  <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'60px 0' }}>
+    ⏳ Loading...
+  </div>
+) : silverNecklaces.length === 0 ? (
+  <div style={{ gridColumn:'span 3', textAlign:'center', color:subtext, padding:'60px 0' }}>
+    No silver necklaces yet.
+  </div>
+) : silverNecklaces.map((item) => {
             const isHovered = hoveredItem === item.id
             const tag = tagStyle(item.tag)
 
@@ -305,7 +320,12 @@ export default function SilverNecklaces() {
                 <div className="sn-shine" />
 
                 <div className="sn-img-wrap" style={{ position: 'relative', height: '190px', background: dark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.04)' }}>
-                  <img src={item.img} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+<img
+  src={getImageUrl(item.images?.[0]?.image)}
+  alt={item.name}
+  onError={(e) => { e.currentTarget.src = '/img/silver/silver-necklace-1.png' }}
+  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+/>
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.8) 0%, transparent 60%)' }} />
 
                   <div style={{ position: 'absolute', top: '10px', left: '10px', background: tag.bg, border: `1px solid ${tag.border}`, borderRadius: '16px', padding: '3px 10px', color: tag.color, fontSize: '9px', fontWeight: 800, letterSpacing: '0.5px', backdropFilter: 'blur(8px)' }}>
@@ -325,7 +345,7 @@ export default function SilverNecklaces() {
 
                 <div style={{ padding: '14px 14px' }}>
                   <div style={{ color: isHovered ? silverColor : text, fontWeight: 800, fontSize: '12px', marginBottom: '4px', transition: 'color 0.3s' }}>{item.name}</div>
-                  <div style={{ color: subtext, fontSize: '10px', lineHeight: '1.5', marginBottom: '10px' }}>{item.desc}</div>
+                  <div style={{ color: subtext, fontSize: '10px', lineHeight: '1.5', marginBottom: '10px' }}>{item.description}</div>
 
 
                 </div>
@@ -339,7 +359,12 @@ export default function SilverNecklaces() {
         <div onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(14px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div onClick={e => e.stopPropagation()} style={{ background: dark ? 'linear-gradient(145deg,#0a1628,#060e1c)' : '#f8fafc', border: '1px solid rgba(192,192,192,0.35)', borderRadius: '28px', width: '95%', maxWidth: '560px', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.8)', animation: 'fadeInUp 0.3s ease' }}>
             <div style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
-              <img src={selectedItem.img} alt={selectedItem.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+<img
+  src={getImageUrl(selectedItem.images?.[0]?.image)}
+  alt={selectedItem.name}
+  onError={(e) => { e.currentTarget.src = '/img/silver/silver-necklace-1.png' }}
+  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+/>
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(2,6,23,0.9) 0%,transparent 60%)' }} />
 
               <button onClick={() => setSelectedItem(null)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', borderRadius: '10px', padding: '6px 14px', cursor: 'pointer', fontSize: '12px', backdropFilter: 'blur(8px)' }}>
@@ -353,7 +378,7 @@ export default function SilverNecklaces() {
 
             <div style={{ padding: '28px 32px' }}>
               <div style={{ color: silverColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px' }}>{selectedItem.name}</div>
-              <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedItem.desc}</div>
+              <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedItem.description}</div>
 
 
 
@@ -363,8 +388,8 @@ export default function SilverNecklaces() {
       addToCart({
         id: selectedItem.id,
         name: selectedItem.name,
-        desc: selectedItem.desc,
-        img: selectedItem.img,
+        desc: selectedItem.description,
+        img: getImageUrl(selectedItem.images?.[0]?.image),
         tag: selectedItem.tag,
         metal: 'silver',
         metalLabel: 'Silver 999',
