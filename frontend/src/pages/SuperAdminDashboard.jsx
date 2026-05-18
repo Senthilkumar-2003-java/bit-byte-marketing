@@ -1444,14 +1444,7 @@ const buildHierarchyOrders = (period, metalKey) => {
 
             {/* 🛍️ Add Product Button */}
           <div
-            onClick={() => {
-              setShowAddProduct(true)
-              setProductMsg('')
-              setProductForm({ category: '', metal: '', grade: '', name: '', description: '', weight_grams: '', tag: '' })
-              setProductImages([])
-              setProductPreviewUrls([])
-              setLivePrice(null)
-            }}
+            onClick={() => navigate('/add-product')}
             title="Add Jewelry Product"
             style={{
               cursor: 'pointer', padding: '6px 12px', borderRadius: '10px',

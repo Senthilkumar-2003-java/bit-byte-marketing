@@ -760,6 +760,50 @@ class JewelryProductView(APIView):
         return Response(serializer.data)
 
 
+class JewelryProductDetailView(APIView):
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    def patch(self, request, pk):
+        if request.user.role != 'super_admin':
+            return Response({'error': 'Permission denied'}, status=403)
+        try:
+            product = JewelryProduct.objects.get(id=pk)
+        except JewelryProduct.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)
+
+        for field in ['category', 'metal', 'grade', 'name', 'description', 'weight_grams', 'price', 'tag']:
+            if field in request.data:
+                setattr(product, field, request.data[field])
+        product.save()
+
+        new_images = request.FILES.getlist('uploaded_images')
+        if new_images:
+            last_order = product.images.count()
+            for i, img in enumerate(new_images):
+                JewelryProductImage.objects.create(product=product, image=img, order=last_order + i)
+
+        serializer = JewelryProductSerializer(product, context={'request': request})
+        return Response(serializer.data)
+
+
+class JewelryProductImageDeleteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        if request.user.role != 'super_admin':
+            return Response({'error': 'Permission denied'}, status=403)
+        try:
+            img = JewelryProductImage.objects.get(id=pk)
+            img.image.delete()
+            img.delete()
+            return Response({'message': 'Image deleted'})
+        except JewelryProductImage.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)        
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def ping(request):

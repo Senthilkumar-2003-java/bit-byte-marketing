@@ -14,18 +14,6 @@ const PARTICLES = Array.from({ length: 14 }, (_, i) => ({
   opacity: Math.random() * 0.18 + 0.04,
 }))
 
-const WEIGHTS = [
-  { label: '50 mg', grams: 0.05 },
-  { label: '100 mg', grams: 0.1 },
-  { label: '150 mg', grams: 0.15 },
-  { label: '200 mg', grams: 0.2 },
-  { label: '500 mg', grams: 0.5 },
-  { label: '1 gm', grams: 1 },
-  { label: '2 gm', grams: 2 },
-  { label: '4 gm', grams: 4 },
-  { label: '8 gm', grams: 8 },
-]
-
 const CATEGORY_LABELS = {
   rings: 'Rings',
   bangles: 'Bangles',
@@ -62,7 +50,6 @@ export default function ProductDisplay() {
   const [dark, setDark] = useState(true)
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState([])
-  const [selectedWeight, setSelectedWeight] = useState('1 gm')
   const [qty, setQty] = useState(1)
   const [mainImage, setMainImage] = useState(null)
   const [showAdded, setShowAdded] = useState(false)
@@ -279,7 +266,7 @@ const productImages = useMemo(() => {
     }
   }, [dark, metal])
 
-  const selectedW = WEIGHTS.find(w => w.label === selectedWeight)
+  
   const basePrice =
     Number(product?.price) ||
     Number(product?.selling_price) ||
@@ -288,7 +275,7 @@ const productImages = useMemo(() => {
     0
 
   const displayPrice = basePrice > 0 ? basePrice : null
-  const calculatedWeightText = selectedW ? `${selectedW.grams} gm` : '1 gm'
+  const calculatedWeightText = product?.weight_grams ? `${parseFloat(product.weight_grams)} gm` : '—'
 
   const productName = product?.name || product?.title || 'Jewellery Product'
   const productDesc =
@@ -318,7 +305,6 @@ const productImages = useMemo(() => {
       image: mainImage,
       metal,
       category,
-      weight: selectedWeight,
       quantity: qty,
       price: displayPrice || 0,
     }
@@ -907,44 +893,9 @@ const productImages = useMemo(() => {
                 }}
               >
                 <div style={{ color: subtext, fontSize: 12, fontWeight: 800 }}>Weight</div>
-                <div style={{ color: text, fontSize: 18, fontWeight: 950 }}>
+                {/* <div style={{ color: text, fontSize: 18, fontWeight: 950 }}>
                   {calculatedWeightText}
-                </div>
-              </div>
-            </div>
-
-            <div style={{ marginBottom: 24 }}>
-              <div
-                style={{
-                  color: text,
-                  fontSize: 16,
-                  fontWeight: 950,
-                  marginBottom: 12,
-                }}
-              >
-                Select Weight
-              </div>
-
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                {WEIGHTS.map(w => (
-                  <button
-                    key={w.label}
-                    className="weight-btn"
-                    onClick={() => setSelectedWeight(w.label)}
-                    style={{
-                      border: selectedWeight === w.label ? `2px solid ${accentColor}` : `1px solid ${border}`,
-                      background: selectedWeight === w.label ? accentSoft : inputBg,
-                      color: selectedWeight === w.label ? accentColor : text,
-                      borderRadius: 999,
-                      padding: '10px 14px',
-                      fontWeight: 900,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    {w.label}
-                  </button>
-                ))}
+                </div> */}
               </div>
             </div>
 
