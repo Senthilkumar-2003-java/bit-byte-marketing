@@ -68,25 +68,12 @@ export default function ProductDisplay() {
   const inputBg = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'
 
 const getImageUrl = img => {
-  const fallback = isGold
-    ? '/img/gold/gold-ring-1.png'
-    : '/img/silver/silver-ring-1.png'
-
-  if (!img) return fallback
-
-  // If the object has an .image field, extract it
+  if (!img) return null
   let imagePath = typeof img === 'object'
     ? (img.image || img.url || img.file || img.path || img.image_url || img.product_image || '')
     : img
-
-  if (!imagePath || typeof imagePath !== 'string') return fallback
-
-  // Already a full URL — return as-is, no prefix
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    return imagePath
-  }
-
-  // Relative media path
+  if (!imagePath || typeof imagePath !== 'string') return null
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath
   return `${API_BASE}/${imagePath.replace(/^\/+/, '')}`
 }
 
@@ -121,17 +108,10 @@ const getImageUrl = img => {
 
 const productImages = useMemo(() => {
   if (!product) return []
-
   if (Array.isArray(product.images) && product.images.length > 0) {
-    return product.images.map(img => getImageUrl(img))
+    return product.images.map(img => getImageUrl(img)).filter(Boolean)
   }
-
-  if (product.image) return [getImageUrl(product.image)]
-  if (product.img) return [getImageUrl(product.img)]
-  if (product.image_url) return [getImageUrl(product.image_url)]
-  if (product.product_image) return [getImageUrl(product.product_image)]
-
-  return [getImageUrl(null)]
+  return []
 }, [product, metal])
 
   useEffect(() => {
@@ -266,7 +246,7 @@ const productImages = useMemo(() => {
     }
   }, [dark, metal])
 
-  
+
   const basePrice =
     Number(product?.price) ||
     Number(product?.selling_price) ||
@@ -726,18 +706,10 @@ const productImages = useMemo(() => {
                 padding: 30,
               }}
             >
-              <img
+<img
   className="pd-main-img"
-  src={mainImage}
-  alt={productName}
-  onError={e => {
-    const fallback = isGold
-      ? '/img/gold/gold-ring-1.png'
-      : '/img/silver/silver-ring-1.png'
-    if (e.currentTarget.src !== window.location.origin + fallback) {
-      e.currentTarget.src = fallback
-    }
-  }}
+  src={mainImage || ''}
+  onError={e => { e.currentTarget.style.display = 'none' }}
                 style={{
                   maxWidth: '100%',
                   maxHeight: '100%',
@@ -775,19 +747,19 @@ const productImages = useMemo(() => {
                     boxShadow: mainImage === img ? `0 0 25px ${accentGlow}` : 'none',
                   }}
                 >
-              <img
-  src={img}
-  alt={`${productName} ${index + 1}`}
-  onError={e => {
-    const fallback = isGold
-      ? '/img/gold/gold-ring-1.png'
-      : '/img/silver/silver-ring-1.png'
-    if (e.currentTarget.src !== window.location.origin + fallback) {
-      e.currentTarget.src = fallback
-    }
-  }}
-  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-/>
+                  <img
+                    src={img}
+                    alt={`${productName} ${index + 1}`}
+                    onError={e => {
+                      const fallback = isGold
+                        ? '/img/gold/gold-ring-1.png'
+                        : '/img/silver/silver-ring-1.png'
+                      if (e.currentTarget.src !== window.location.origin + fallback) {
+                        e.currentTarget.src = fallback
+                      }
+                    }}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
                 </button>
               ))}
             </div>
@@ -893,9 +865,9 @@ const productImages = useMemo(() => {
                 }}
               >
                 <div style={{ color: subtext, fontSize: 12, fontWeight: 800 }}>Weight</div>
-                {/* <div style={{ color: text, fontSize: 18, fontWeight: 950 }}>
+                <div style={{ color: text, fontSize: 18, fontWeight: 950 }}>
                   {calculatedWeightText}
-                </div> */}
+                </div>
               </div>
             </div>
 
