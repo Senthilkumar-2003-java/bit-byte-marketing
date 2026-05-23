@@ -728,7 +728,7 @@ onClick={() => {
               background: glass,
               border: `1px solid ${border}`,
               borderRadius: 34,
-              overflow: 'hidden',
+              overflow: 'visible', 
               minHeight: 540,
               backdropFilter: 'blur(18px)',
               boxShadow: `0 24px 80px ${dark ? 'rgba(0,0,0,0.35)' : 'rgba(15,23,42,0.12)'}`,
@@ -791,16 +791,18 @@ onClick={() => {
 )}
             </div>
 
-            <div
-              style={{
-                position: 'relative',
-                padding: '0 24px 26px',
-                display: 'flex',
-                gap: 12,
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-              }}
-            >
+
+<div style={{
+  position: 'absolute',
+  bottom: '-110px',
+  left: 0,
+  right: 0,
+  padding: '12px 24px',
+  display: 'flex',
+  gap: 12,
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+}}>
               {productImages.map((img, index) => (
                 <button
                   key={index}
