@@ -281,15 +281,10 @@ const handleBuy = async () => {
 }  
 
 
-  const basePrice =
-    Number(product?.price) ||
-    Number(product?.selling_price) ||
-    Number(product?.offer_price) ||
-    Number(product?.amount) ||
-    0
+const basePrice = Number(product?.price) || 0
 
   const displayPrice = basePrice > 0 ? basePrice : null
-  const calculatedWeightText = product?.weight_grams ? `${parseFloat(product.weight_grams)} gm` : '—'
+  const calculatedWeightText = product?.net_weight ? `${parseFloat(product.net_weight)} gm` : '—'
 
   const productName = product?.name || product?.title || 'Jewellery Product'
   const productDesc =
