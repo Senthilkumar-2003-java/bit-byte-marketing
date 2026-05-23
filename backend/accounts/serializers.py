@@ -433,15 +433,17 @@ class JewelryProductSerializer(serializers.ModelSerializer):
         child=serializers.ImageField(), write_only=True, required=False
     )
 
-    class Meta:
+    class Meta:    # ← 4 spaces — CORRECT
         model = JewelryProduct
         fields = [
             'id', 'category', 'metal', 'grade', 'name', 'description',
-            'weight_grams', 'price', 'tag', 'is_active',
+            'cross_weight', 'stone_weight', 'net_weight',
+            'making_charge', 'stone_value', 'tax_percent',
+            'price', 'tag', 'is_active',
             'created_at', 'images', 'uploaded_images'
         ]
         read_only_fields = ['created_at']
-
+        
     def create(self, validated_data):
         uploaded_images = validated_data.pop('uploaded_images', [])
         request = self.context.get('request')

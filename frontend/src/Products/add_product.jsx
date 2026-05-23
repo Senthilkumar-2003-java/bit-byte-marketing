@@ -16,6 +16,34 @@ const CATEGORIES = [
 
 const TAGS = ['Bestseller', 'Bridal', 'Premium', 'Statement', 'Stackable', 'New', 'Limited']
 
+
+const SUBCATEGORIES = {
+  rings: {
+    gold: ["Men's Gold Ring","Women's Gold Ring","Couple Gold Ring","Kids Gold Ring","Gold Engagement Ring","Gold Wedding Ring","Gold Stone Ring","Gold Plain Ring"],
+    silver: ["Men's Silver Ring","Women's Silver Ring","Couple Silver Ring","Kids Silver Ring","Silver Engagement Ring","Silver Wedding Ring","Silver Stone Ring","Silver Plain Ring"],
+  },
+  necklaces: {
+    gold: ["Men's Gold Necklace","Women's Gold Necklace","Couple Gold Necklace","Kids Gold Necklace","Gold Bridal Necklace","Gold Wedding Necklace","Gold Stone Necklace","Gold Plain Necklace"],
+    silver: ["Men's Silver Necklace","Women's Silver Necklace","Couple Silver Necklace","Kids Silver Necklace","Silver Bridal Necklace","Silver Wedding Necklace","Silver Stone Necklace","Silver Plain Necklace"],
+  },
+  bangles: {
+    gold: ["Men's Gold Bangle","Women's Gold Bangle","Couple Gold Bangle","Kids Gold Bangle","Gold Bridal Bangle","Gold Wedding Bangle","Gold Stone Bangle","Gold Plain Bangle"],
+    silver: ["Men's Silver Bangle","Women's Silver Bangle","Couple Silver Bangle","Kids Silver Bangle","Silver Bridal Bangle","Silver Wedding Bangle","Silver Stone Bangle","Silver Plain Bangle"],
+  },
+  earrings: {
+    gold: ["Men's Gold Earring","Women's Gold Earring","Kids Gold Earring","Gold Stud Earring","Gold Hoop Earring","Gold Drop Earring","Gold Stone Earring","Gold Plain Earring"],
+    silver: ["Men's Silver Earring","Women's Silver Earring","Kids Silver Earring","Silver Stud Earring","Silver Hoop Earring","Silver Drop Earring","Silver Stone Earring","Silver Plain Earring"],
+  },
+  chains: {
+    gold: ["Men's Gold Chain","Women's Gold Chain","Kids Gold Chain","Gold Wedding Chain","Gold Rope Chain","Gold Box Chain","Gold Stone Chain","Gold Plain Chain"],
+    silver: ["Men's Silver Chain","Women's Silver Chain","Kids Silver Chain","Silver Wedding Chain","Silver Rope Chain","Silver Box Chain","Silver Stone Chain","Silver Plain Chain"],
+  },
+  coins: {
+    gold: ["Gold 1 Gram Coin","Gold 2 Gram Coin","Gold 5 Gram Coin","Gold 10 Gram Coin","Gold Lakshmi Coin","Gold Ganesha Coin","Gold Plain Coin","Gold Gift Coin"],
+    silver: ["Silver 1 Gram Coin","Silver 2 Gram Coin","Silver 5 Gram Coin","Silver 10 Gram Coin","Silver Lakshmi Coin","Silver Ganesha Coin","Silver Plain Coin","Silver Gift Coin"],
+  },
+}
+
 const getImageUrl = img => {
   if (!img) return null
   let p = typeof img === 'object' ? (img.image || img.url || '') : img
@@ -34,12 +62,18 @@ export default function AddProduct() {
   const [metalPrices, setMetalPrices]     = useState({ gold22k: null, gold24k: null, silver: null })
 
   // Add form
-  const [productForm, setProductForm] = useState({ category: '', metal: '', grade: '', name: '', description: '', weight_grams: '', tag: '' })
+
   const [productImages, setProductImages]     = useState([])
   const [productPreviewUrls, setProductPreviewUrls] = useState([])
   const [productMsg, setProductMsg]   = useState('')
-  const [productSaving, setProductSaving] = useState(false)
-  const [livePrice, setLivePrice]     = useState(null)
+  const [productForm, setProductForm] = useState({
+  category: '', metal: '', grade: '', name: '', description: '',
+  cross_weight: '', stone_weight: '', making_charge: '', stone_value: '', tag: ''
+})
+const [productSaving, setProductSaving] = useState(false)
+const [livePrice, setLivePrice] = useState(null)   // final price with tax
+const [netWeight, setNetWeight] = useState(null)    // cross - stone
+const [baseMetalAmt, setBaseMetalAmt] = useState(null) // netWeight × rate
 
   // Edit modal
   const [editProduct, setEditProduct] = useState(null)
@@ -84,17 +118,38 @@ export default function AddProduct() {
     setLoadingProducts(false)
   }
 
-  const calcPrice = (weight, metal, grade, setter) => {
-    const w = parseFloat(weight)
-    if (!w || w <= 0 || !metal) { setter(null); return }
-    const rate = metal === 'gold' ? (grade === '22k' ? metalPrices.gold22k : metalPrices.gold24k) : metalPrices.silver
-    setter(rate ? (w * rate).toFixed(2) : null)
+const calcAll = (crossW, stoneW, metal, grade, makingCharge, stoneVal) => {
+  const cw = parseFloat(crossW) || 0
+  const sw = parseFloat(stoneW) || 0
+  const mc = parseFloat(makingCharge) || 0
+  const sv = parseFloat(stoneVal) || 0
+
+  if (!cw || cw <= 0 || !metal) {
+    setNetWeight(null); setBaseMetalAmt(null); setLivePrice(null); return
   }
+
+  const nw = cw - sw
+  if (nw <= 0) { setNetWeight(null); setBaseMetalAmt(null); setLivePrice(null); return }
+
+  const rate = metal === 'gold'
+    ? (grade === '22k' ? metalPrices.gold22k : metalPrices.gold24k)
+    : metalPrices.silver
+
+  if (!rate) { setNetWeight(nw); setBaseMetalAmt(null); setLivePrice(null); return }
+
+  const base = nw * rate                        // net weight × today rate
+  const sub  = base + mc + sv                   // + making charge + stone value
+  const total = (sub * 1.03).toFixed(2)         // + 3% tax
+
+  setNetWeight(nw)
+  setBaseMetalAmt(base.toFixed(2))
+  setLivePrice(total)
+}
 
   // ── ADD ──
   const handleSave = async () => {
     if (!productForm.name.trim())    { setProductMsg('❌ Name required');     return }
-    if (!productForm.weight_grams)   { setProductMsg('❌ Weight required');   return }
+    if (!productForm.cross_weight)   { setProductMsg('❌ Cross Weight required');   return }
     if (!productForm.category)       { setProductMsg('❌ Category required'); return }
     if (!productForm.metal)          { setProductMsg('❌ Metal required');    return }
     if (!productForm.grade)          { setProductMsg('❌ Grade required');    return }
@@ -102,12 +157,17 @@ export default function AddProduct() {
     try {
       const fd = new FormData()
       Object.entries(productForm).forEach(([k, v]) => fd.append(k, v))
-      if (livePrice) fd.append('price', livePrice)
+//       fd.append('cross_weight', productForm.cross_weight || 0)
+// fd.append('stone_weight', productForm.stone_weight || 0)
+fd.append('net_weight', netWeight || 0)
+// fd.append('making_charge', productForm.making_charge || 0)
+// fd.append('stone_value', productForm.stone_value || 0)
+if (livePrice) fd.append('price', livePrice)
       productImages.forEach(img => fd.append('uploaded_images', img))
       await api.post('/jewelry-products/', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
       setProductMsg('✅ Product added!')
-      setProductForm({ category: '', metal: '', grade: '', name: '', description: '', weight_grams: '', tag: '' })
-      setProductImages([]); setProductPreviewUrls([]); setLivePrice(null)
+      setProductForm({ category: '', metal: '', grade: '', name: '', description: '', cross_weight: '', stone_weight: '', making_charge: '', stone_value: '', tag: '' })
+setProductImages([]); setProductPreviewUrls([]); setLivePrice(null); setNetWeight(null); setBaseMetalAmt(null)
       setShowAddForm(false)
       fetchProducts()
     } catch (err) { setProductMsg('❌ ' + JSON.stringify(err.response?.data || err.message)) }
@@ -236,7 +296,7 @@ const handleDelete = async (id) => {
             {/* Row 1 - category/metal/grade */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px', marginBottom: '14px' }}>
               <div>
-                <label style={lblStyle}>Category *</label>
+                <label style={lblStyle}>Product *</label>
                 <select value={productForm.category} onChange={e => setProductForm(f => ({ ...f, category: e.target.value }))} style={{ ...inpStyle, cursor: 'pointer' }}>
                   <option value="" style={{ background: optionBg }}>-- Select --</option>
                   {CATEGORIES.map(c => <option key={c.key} value={c.key} style={{ background: optionBg }}>{c.emoji} {c.label}</option>)}
@@ -261,12 +321,26 @@ const handleDelete = async (id) => {
               </div>
             </div>
 
-            {/* Row 2 - name/tag */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-              <div>
-                <label style={lblStyle}>Product Name *</label>
-                <input value={productForm.name} onChange={e => setProductForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Bridal Necklace" style={inpStyle} />
-              </div>
+{/* Row 2 - name/tag */}
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+  <div>
+    <label style={lblStyle}>Product Name *</label>
+    <select
+      value={productForm.name}
+      onChange={e => setProductForm(f => ({ ...f, name: e.target.value }))}
+      style={{ ...inpStyle, cursor: 'pointer' }}
+    >
+      <option value="" style={{ background: optionBg }}>-- Select --</option>
+      {(SUBCATEGORIES[productForm.category]?.[productForm.metal] || []).map(n => (
+        <option key={n} value={n} style={{ background: optionBg }}>{n}</option>
+      ))}
+    </select>
+    {(!productForm.category || !productForm.metal) && (
+      <div style={{ color: '#f59e0b', fontSize: '11px', marginTop: '4px' }}>
+        ⚠️ First select Product & Metal above
+      </div>
+    )}
+  </div>
               <div>
                 <label style={lblStyle}>Tag</label>
                 <select value={productForm.tag} onChange={e => setProductForm(f => ({ ...f, tag: e.target.value }))} style={{ ...inpStyle, cursor: 'pointer' }}>
@@ -282,22 +356,92 @@ const handleDelete = async (id) => {
               <textarea value={productForm.description} onChange={e => setProductForm(f => ({ ...f, description: e.target.value }))} rows={2} placeholder="Product description..." style={{ ...inpStyle, resize: 'vertical' }} />
             </div>
 
-            {/* Weight + Live Price */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '16px' }}>
-              <div>
-                <label style={lblStyle}>Weight (grams) *</label>
-                <input type="number" step="0.0001" value={productForm.weight_grams}
-                  onChange={e => { const v = e.target.value; setProductForm(f => ({ ...f, weight_grams: v })); calcPrice(v, productForm.metal, productForm.grade, setLivePrice) }}
-                  placeholder="e.g. 5.5" style={inpStyle} />
-              </div>
-              <div>
-                <label style={lblStyle}>Live Rate Price</label>
-                <div style={{ ...inpStyle, color: livePrice ? '#4ade80' : subtext, fontWeight: 800, fontFamily: 'monospace', border: `1px solid ${livePrice ? 'rgba(74,222,128,0.5)' : inpBorder}` }}>
-                  {livePrice ? `₹ ${livePrice}` : '—'}
-                </div>
-              </div>
-            </div>
+{/* Weight Section */}
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+  {/* Cross Weight */}
+  <div>
+    <label style={lblStyle}>Cross Weight (g) *</label>
+    <input type="number" step="0.0001" value={productForm.cross_weight}
+      onChange={e => {
+        const v = e.target.value
+        setProductForm(f => ({ ...f, cross_weight: v }))
+        calcAll(v, productForm.stone_weight, productForm.metal, productForm.grade, productForm.making_charge, productForm.stone_value)
+      }}
+      placeholder="e.g. 10" style={inpStyle} />
+  </div>
 
+  {/* Stone Weight */}
+  <div>
+    <label style={lblStyle}>Stone Weight (g)</label>
+    <input type="number" step="0.0001" value={productForm.stone_weight}
+      onChange={e => {
+        const v = e.target.value
+        setProductForm(f => ({ ...f, stone_weight: v }))
+        calcAll(productForm.cross_weight, v, productForm.metal, productForm.grade, productForm.making_charge, productForm.stone_value)
+      }}
+      placeholder="e.g. 2 (0 if none)" style={inpStyle} />
+  </div>
+
+  {/* Net Weight Display */}
+  <div>
+    <label style={lblStyle}>Net Weight (auto)</label>
+    <div style={{
+      ...inpStyle,
+      border: `1px solid ${netWeight ? 'rgba(34,211,238,0.5)' : inpBorder}`,
+      color: netWeight ? '#22d3ee' : subtext,
+      fontWeight: 800, fontFamily: 'monospace'
+    }}>
+      {netWeight
+        ? `${netWeight}g${baseMetalAmt ? ` (₹${Number(baseMetalAmt).toLocaleString('en-IN')})` : ''}`
+        : '—'}
+    </div>
+  </div>
+</div>
+
+{/* Making Charge + Stone Value + Final Price */}
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px', marginBottom: '16px' }}>
+  {/* Making Charge */}
+  <div>
+    <label style={lblStyle}>Making Charge (₹)</label>
+    <input type="number" step="1" value={productForm.making_charge}
+      onChange={e => {
+        const v = e.target.value
+        setProductForm(f => ({ ...f, making_charge: v }))
+        calcAll(productForm.cross_weight, productForm.stone_weight, productForm.metal, productForm.grade, v, productForm.stone_value)
+      }}
+      placeholder="e.g. 1800" style={inpStyle} />
+  </div>
+
+  {/* Stone Value */}
+  <div>
+    <label style={lblStyle}>Stone Value (₹)</label>
+    <input type="number" step="1" value={productForm.stone_value}
+      onChange={e => {
+        const v = e.target.value
+        setProductForm(f => ({ ...f, stone_value: v }))
+        calcAll(productForm.cross_weight, productForm.stone_weight, productForm.metal, productForm.grade, productForm.making_charge, v)
+      }}
+      placeholder="e.g. 2000" style={inpStyle} />
+  </div>
+
+  {/* Live Rate Price (with 3% tax) */}
+  <div>
+    <label style={lblStyle}>Total Price (with 3% tax)</label>
+    <div style={{
+      ...inpStyle,
+      color: livePrice ? '#4ade80' : subtext,
+      fontWeight: 800, fontFamily: 'monospace',
+      border: `1px solid ${livePrice ? 'rgba(74,222,128,0.5)' : inpBorder}`
+    }}>
+      {livePrice ? `₹ ${Number(livePrice).toLocaleString('en-IN')}` : '—'}
+    </div>
+    {livePrice && (
+      <div style={{ fontSize: '10px', color: '#6ee7b7', marginTop: '4px' }}>
+        ✅ Includes 3% GST
+      </div>
+    )}
+  </div>
+</div>
             {/* Images */}
             <div style={{ marginBottom: '18px' }}>
               <label style={lblStyle}>Product Images</label>
@@ -500,7 +644,7 @@ const handleDelete = async (id) => {
                 <div>
                   <label style={lblStyle}>Weight (grams)</label>
                   <input type="number" step="0.0001" value={editForm.weight_grams}
-                    onChange={e => { const v = e.target.value; setEditForm(f => ({ ...f, weight_grams: v })); calcPrice(v, editForm.metal, editForm.grade, setEditLivePrice) }}
+                    onChange={e => { const v = e.target.value; setEditForm(f => ({ ...f, weight_grams: v })); setEditLivePrice(null) }}
                     style={inpStyle} />
                 </div>
                 <div>

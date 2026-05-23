@@ -47,7 +47,7 @@ function HomeBannerSlider() {
   if (!banners.length) return null
 
   return (
-    <div style={{ width: '100%', overflow: 'hidden', position: 'relative', height: '320px', background: '#f5f0e8' }}>
+    <div style={{ width: '100%', overflow: 'hidden', position: 'relative', height: '850px', background: '#f5f0e8' }}>
       <style>{`
         @keyframes slideLeft {
           from { transform: translateX(0); }
@@ -499,7 +499,7 @@ export default function CustomerDashboard() {
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: bg, color: text, transition: 'background 0.8s ease, color 0.4s ease', fontFamily: '"Inter",system-ui,sans-serif', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ minHeight: '100vh', background: bg, color: text, transition: 'background 0.8s ease, color 0.4s ease', fontFamily: '"Inter",system-ui,sans-serif', position: 'relative', }}>
       <style>{`
         @keyframes float-orb{0%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-50px) scale(1.1)}66%{transform:translate(-20px,20px) scale(0.9)}100%{transform:translate(0,0) scale(1)}}
         @keyframes antigravity{0%{transform:translateY(110vh) rotate(0deg);opacity:0}10%{opacity:var(--op)}90%{opacity:var(--op)}100%{transform:translateY(-20vh) rotate(360deg);opacity:0}}
@@ -543,7 +543,10 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
     display: 'grid',
     gridTemplateColumns: '260px 1fr 260px',
     alignItems: 'center',
-    gap: '24px'
+    gap: '24px',
+    position: 'sticky',
+    top: 0,
+    zIndex: 300
   }}
 >
   {/* Logo */}
@@ -599,7 +602,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 </div>
 
 {/* CATEGORY NAV WITH DROPDOWN */}
-<div style={{ position: 'relative' }} onMouseLeave={() => { setShowDropdown(false) }}>
+<div style={{ position: 'sticky', top: '73px', zIndex: 250, background: '#fff' }} onMouseLeave={() => { setShowDropdown(false) }}>
 
   {/* Top category bar */}
 <div
@@ -1096,7 +1099,7 @@ const sectionTitles = {
 
 <HomeBannerSlider />
 
-      <div style={{ position: 'relative', zIndex: 10, padding: '36px 40px', maxWidth: '1400px', margin: '0 auto' }}>
+      <div style={{ position: 'relative', zIndex: 10, padding: '28px 40px', maxWidth: '1400px', margin: '0 auto' }}>
 
 
 

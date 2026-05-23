@@ -774,7 +774,9 @@ class JewelryProductDetailView(APIView):
         except JewelryProduct.DoesNotExist:
             return Response({'error': 'Not found'}, status=404)
 
-        for field in ['category', 'metal', 'grade', 'name', 'description', 'weight_grams', 'price', 'tag']:
+        for field in ['category', 'metal', 'grade', 'name', 'description',
+                      'cross_weight', 'stone_weight', 'net_weight',
+                      'making_charge', 'stone_value', 'price', 'tag', 'is_active']:
             if field in request.data:
                 setattr(product, field, request.data[field])
         product.save()
