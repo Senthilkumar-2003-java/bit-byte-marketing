@@ -17,13 +17,13 @@ export default function ChainsCollection() {
   const [hoveredCard, setHoveredCard] = useState(null)
   const canvasRef = useRef(null)
 
-  const bg = dark ? '#020617' : '#f8fafc'
-  const text = dark ? '#f8fafc' : '#020617'
-  const subtext = dark ? '#94a3b8' : '#64748b'
-  const accent = dark ? '#22d3ee' : '#2563eb'
-  const border = dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-  const glass = dark ? 'rgba(15,23,42,0.65)' : 'rgba(255,255,255,0.7)'
-  const cardBg = dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'
+ const bg = '#FDF5EE'
+const text = '#020617'
+const subtext = '#64748b'
+const accent = '#8B1A1A'
+const border = 'rgba(0,0,0,0.1)'
+const glass = '#fff'
+const cardBg = 'rgba(0,0,0,0.03)'
 
   useEffect(() => {
     const canvas = canvasRef.current

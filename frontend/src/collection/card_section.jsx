@@ -190,30 +190,49 @@ export default function CardSection() {
       {/* Main */}
       <div style={{ position: 'relative', zIndex: 10, padding: '40px', maxWidth: '1000px', margin: '0 auto' }}>
 
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', animation: 'fadeInUp 0.4s ease both' }}>
-          <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.25)', borderRadius: '30px', padding: '5px 16px', marginBottom: '12px' }}>
-              <span className="sparkle-dot" style={{ color: '#34d399', fontSize: '11px' }}>✦</span>
-              <span style={{ color: '#34d399', fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Cart</span>
-            </div>
-            <h1 style={{ margin: 0, fontSize: '32px', fontWeight: 900, letterSpacing: '-0.5px' }}>
-              🛒 <span style={{ background: 'linear-gradient(90deg,#34d399,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>My Cart</span>
-            </h1>
-            <p style={{ color: subtext, fontSize: '13px', margin: '6px 0 0' }}>
-              {totalItems} item{totalItems !== 1 ? 's' : ''} saved
-            </p>
-          </div>
 
-          {cart.length > 0 && (
-            <button
-              onClick={clearCart}
-              style={{ padding: '10px 20px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', borderRadius: '12px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
-            >
-              🗑 Clear All
-            </button>
-          )}
+<div style={{ animation: 'fadeInUp 0.4s ease both', marginBottom: '32px' }}>
+  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.25)', borderRadius: '30px', padding: '5px 16px', marginBottom: '12px' }}>
+    <span className="sparkle-dot" style={{ color: '#34d399', fontSize: '11px' }}>✦</span>
+    <span style={{ color: '#34d399', fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Cart</span>
+  </div>
+
+  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+    <div>
+      <h1 style={{ margin: 0, fontSize: '32px', fontWeight: 900, letterSpacing: '-0.5px' }}>
+        🛒 <span style={{ background: 'linear-gradient(90deg,#34d399,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>My Cart</span>
+      </h1>
+      <p style={{ color: subtext, fontSize: '13px', margin: '6px 0 0' }}>
+        {totalItems} item{totalItems !== 1 ? 's' : ''} saved
+      </p>
+
+      {/* ── TOTAL PRICE ── */}
+      {cart.length > 0 && (() => {
+        const totalPrice = cart.reduce((acc, item) => acc + (Number(item.price) || 0) * (item.qty || 1), 0)
+        return totalPrice > 0 ? (
+          <div style={{ marginTop: '12px', display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.25)', borderRadius: '14px', padding: '8px 16px' }}>
+            <span style={{ color: subtext, fontSize: '11px', fontWeight: 600 }}>Total Value</span>
+            <span style={{ color: '#4ade80', fontWeight: 900, fontSize: '18px', fontFamily: 'monospace' }}>
+              ₹{totalPrice.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+            </span>
+          </div>
+        ) : null
+      })()}
+
+      {/* ── CLEAR ALL — left side ── */}
+      {cart.length > 0 && (
+        <div style={{ marginTop: '14px' }}>
+          <button
+            onClick={clearCart}
+            style={{ padding: '8px 18px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', borderRadius: '12px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+          >
+            🗑 Clear All
+          </button>
         </div>
+      )}
+    </div>
+  </div>
+</div>
 
         {/* Empty State */}
         {cart.length === 0 && (

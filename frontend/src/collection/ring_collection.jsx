@@ -13,14 +13,14 @@ export default function RingCollection() {
   const [hoveredCard, setHoveredCard] = useState(null)
   const canvasRef = useRef(null)
 
-  const bg      = dark ? '#020617' : '#f8fafc'
-  const text    = dark ? '#f8fafc' : '#020617'
-  const subtext = dark ? '#94a3b8' : '#64748b'
-  const accent  = dark ? '#22d3ee' : '#2563eb'
-  const border  = dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-  const glass   = dark ? 'rgba(15,23,42,0.65)' : 'rgba(255,255,255,0.7)'
-  const cardBg  = dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'
-  const cardBorder = dark ? '1px solid rgba(103,232,249,0.1)' : '1px solid rgba(0,0,0,0.1)'
+ const bg      = '#FDF5EE'
+const text    = '#020617'
+const subtext = '#64748b'
+const accent  = '#8B1A1A'
+const border  = 'rgba(0,0,0,0.1)'
+const glass   = 'rgba(255,255,255,0.85)'
+const cardBg  = 'rgba(0,0,0,0.03)'
+const cardBorder = '1px solid rgba(0,0,0,0.1)'
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -131,6 +131,11 @@ export default function RingCollection() {
         .explore-btn::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,0.1); transform:translateX(-100%); transition:transform 0.3s ease; }
         .explore-btn:hover::after { transform:translateX(0); }
         .sparkle-dot { animation: sparkle 2s ease infinite; }
+
+        body { background: #FDF5EE; font-family: 'Inter','Segoe UI',system-ui,sans-serif; color: #3d2b1f; -webkit-font-smoothing: antialiased; }
+h1,h2,h3 { color: #1a0a0a; font-weight: 700; }
+p { color: #3d2b1f; line-height: 1.7; }
+
       `}</style>
 
       <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 1, opacity: 0.4 }} />
@@ -144,7 +149,7 @@ export default function RingCollection() {
       ))}
 
       {/* Navbar */}
-      <div style={{ position: 'relative', zIndex: 10, background: glass, borderBottom: `1px solid ${border}`, padding: '18px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(16px)' }}>
+      <div style={{ position: 'relative', zIndex: 10, background: '#fff', borderBottom: '0.5px solid #e5e7eb', padding: '18px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(16px)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img src={logo} alt="BitByte Logo" style={{ width: 60, height: 50, borderRadius: '10px', objectFit: 'contain' }} />
           <span style={{ color: '#6ee7b7', fontWeight: 700, fontSize: '14px' }}>💍 Ring Collections</span>
@@ -152,7 +157,7 @@ export default function RingCollection() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <button
             onClick={() => navigate('/customer')}
-            style={{ padding: '8px 18px', background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.35)', color: '#34d399', borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
+            style={{ padding: '8px 18px', background: 'rgba(139,26,26,0.08)', border: '1px solid rgba(139,26,26,0.3)', color: '#8B1A1A', borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
           >
             ← Back to Dashboard
           </button>

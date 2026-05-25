@@ -315,20 +315,23 @@ const handleMouseMove = (e) => {
   const handleAddToCart = () => {
     if (!product) return
 
-    const cartProduct = {
-      ...product,
-      id: product.id,
-      name: productName,
-      title: productName,
-      desc: productDesc,
-      description: productDesc,
-      img: mainImage,
-      image: mainImage,
-      metal,
-      category,
-      quantity: qty,
-      price: displayPrice || 0,
-    }
+// AFTER — metalLabel and ringType add பண்ணுங்க
+const cartProduct = {
+  ...product,
+  id: product.id,
+  name: productName,
+  title: productName,
+  desc: productDesc,
+  description: productDesc,
+  img: mainImage,
+  image: mainImage,
+  metal,
+  metalLabel: metal === 'gold' ? 'Gold' : 'Silver',
+  category,
+  ringType: category,
+  quantity: qty,
+  price: displayPrice || 0,
+}
 
     addToCart(cartProduct)
     setShowAdded(true)

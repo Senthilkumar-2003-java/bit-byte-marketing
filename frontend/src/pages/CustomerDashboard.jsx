@@ -136,6 +136,9 @@ export default function CustomerDashboard() {
   const [showDropdown, setShowDropdown] = useState(false)
   const [activeFilter, setActiveFilter] = useState('category')
   const [activeCategory, setActiveCategory] = useState('all')
+  const [showOrderSummary, setShowOrderSummary] = useState(false)
+  const [showTodayRate, setShowTodayRate] = useState(false)
+  const [showChatWidget, setShowChatWidget] = useState(true)
   // const canvasRef = useRef(null)
 
   const bg = '#FDF5EE' 
@@ -234,17 +237,28 @@ export default function CustomerDashboard() {
   }, [])
 
 
-  const WEIGHTS = [
-    { label: '50 mg', grams: 0.05 },
-    { label: '100 mg', grams: 0.10 },
-    { label: '150 mg', grams: 0.15 },
-    { label: '200 mg', grams: 0.20 },
-    { label: '500 mg', grams: 0.50 },
-    { label: '1 gm', grams: 1 },
-    { label: '2 gm', grams: 2 },
-    { label: '4 gm', grams: 4 },
-    { label: '8 gm', grams: 8 },
-  ]
+const WEIGHTS_SILVER = [
+  { label: '500 mg', grams: 0.50 },
+  { label: '1 gm',  grams: 1 },
+  { label: '2 gm',  grams: 2 },
+  { label: '5 gm',  grams: 5 },
+  { label: '10 gm', grams: 10 },
+  { label: '20 gm', grams: 20 },
+  { label: '50 gm', grams: 50 },
+  { label: '100 gm',grams: 100 },
+]
+
+const WEIGHTS_GOLD = [
+  { label: '100 mg', grams: 0.10 },
+  { label: '200 mg', grams: 0.20 },
+  { label: '500 mg', grams: 0.50 },
+  { label: '1 gm',  grams: 1 },
+  { label: '2 gm',  grams: 2 },
+  { label: '4 gm',  grams: 4 },
+  { label: '8 gm',  grams: 8 },
+  { label: '16 gm', grams: 16 },
+  { label: '40 gm', grams: 40 },
+]
 
   const PROFILE_FIELDS = [
     ['initial', 'Initial'],
@@ -346,7 +360,8 @@ export default function CustomerDashboard() {
     if (!orderWeight) { alert('Weight select pannunga'); return }
     if (!orderCount || orderCount < 1) { alert('Count enter pannunga'); return }
 
-    const w = WEIGHTS.find(x => x.label === orderWeight)
+    const weightsArr = orderMetal === 'silver_999' ? WEIGHTS_SILVER : WEIGHTS_GOLD
+const w = weightsArr.find(x => x.label === orderWeight)
     if (!w) return
 
     const rateMap = {
@@ -521,6 +536,116 @@ export default function CustomerDashboard() {
         input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+
+  /* ── GLOBAL TYPOGRAPHY FOR #FDF5EE BACKGROUND ── */
+  * { box-sizing: border-box; }
+
+  body {
+    background: #FDF5EE;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    color: #3d2b1f;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    color: #1a0a0a;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  /* Body paragraphs */
+  p {
+    color: #3d2b1f;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  /* Labels / captions */
+  label, .caption {
+    color: #7c5c4a;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  /* Price / highlight text */
+  .price-text {
+    color: #b8860b;
+    font-weight: 800;
+    font-family: 'monospace';
+  }
+
+  /* Primary button */
+  .btn-primary {
+    background: #8B1A1A;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .btn-primary:hover {
+    background: #6b1212;
+  }
+
+  /* Secondary/outline button */
+  .btn-secondary {
+    background: transparent;
+    color: #8B1A1A;
+    border: 1.5px solid #8B1A1A;
+    border-radius: 12px;
+    padding: 11px 24px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-secondary:hover {
+    background: #8B1A1A;
+    color: #fff;
+  }
+
+  /* Card on cream bg */
+  .bb-card {
+    background: #fff;
+    border: 1px solid #e8ddd5;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(139,26,26,0.06);
+  }
+
+  /* Input fields */
+  input, textarea, select {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #3d2b1f;
+  }
+  input::placeholder, textarea::placeholder {
+    color: #b09080;
+  }
+
+  /* Divider */
+  .bb-divider {
+    border: none;
+    border-top: 1px solid #e8ddd5;
+    margin: 16px 0;
+  }
+
+  /* Section heading style */
+  .section-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #8B1A1A;
+    margin-bottom: 16px;
+  }
+
+  /* Navbar stays white — no change needed */
       `}</style>
 
 
@@ -593,12 +718,57 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
     </div>
   </div>
 
-  {/* Right space / icons later */}
-  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 22, color: '#8B1A1A', fontSize: 22 }}>
-    <span>♡</span>
-    <span>👤</span>
-    <span>🛒</span>
-  </div>
+<div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 16, color: '#8B1A1A', fontSize: 22 }}>
+
+  <button
+  onClick={() => setShowTodayRate(true)}
+  style={{
+    background: 'linear-gradient(90deg,#b8860b,#d4a017)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 20,
+    padding: '8px 18px',
+    fontSize: 13,
+    fontWeight: 700,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    whiteSpace: 'nowrap',
+    boxShadow: '0 2px 8px rgba(184,134,11,0.3)'
+  }}
+>
+  📅 Today Rate
+</button>
+
+  <button
+    onClick={() => setShowOrderSummary(true)}
+    style={{
+      background: 'linear-gradient(90deg,#8B1A1A,#b91c1c)',
+      color: '#fff',
+      border: 'none',
+      borderRadius: 20,
+      padding: '8px 18px',
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      whiteSpace: 'nowrap',
+      boxShadow: '0 2px 8px rgba(139,26,26,0.25)'
+    }}
+  >
+    🏆 Order Summary
+  </button>
+  <span style={{ cursor: 'pointer' }}>♡</span>
+  <span style={{ cursor: 'pointer' }}>👤</span>
+  <span 
+  style={{ cursor: 'pointer', position: 'relative' }} 
+  onClick={() => navigate('/cart')}
+>🛒</span>
+</div>
+
 </div>
 
 {/* CATEGORY NAV WITH DROPDOWN */}
@@ -620,15 +790,16 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 >
     {[
 
-  { name: '💎 All Jewellery', key: 'all' },
+  { name: ' All Jewellery', key: 'all' },
   { name: '🥇 Gold', key: 'gold' },
-  { name: '💍 Diamond', key: 'diamond' },
+  { name: '💎 Diamond', key: 'diamond' },
   { name: '🪞 Earrings', key: 'earrings' },
-  { name: '💫 Rings', key: 'rings' },
+  { name: '💍 Rings', key: 'rings' },
   { name: '♾️ Daily Wear', key: 'dailywear' },
   { name: '🏷️ Offers', key: 'offers' },
   { name: '💒 Wedding', key: 'wedding' },
   { name: '🎁 Gifting', key: 'gifting' },
+  
 
     ].map(cat => (
       <div
@@ -663,10 +834,11 @@ style={{
         filters: ['Category', 'Price', 'Occasion', 'Gender'],
         filterKeys: ['category', 'price', 'occasion', 'gender'],
         panels: {
-          category: {
-            type: 'icon-grid',
-            items: ['All Jewellery','Earrings','Pendants','Finger Rings','Mangalsutra','Chains','Nose Pin','Necklaces','Necklace Set','Bangles','Bracelets','Pendant Set'],
-          },
+category: {
+  type: 'icon-grid',
+  items: ['All Jewellery','Earrings','Finger Rings',
+          'Chains','Necklaces','Bangles','Bracelets'],
+},
           price: {
             type: 'price-grid',
             items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
@@ -682,13 +854,13 @@ style={{
         }
       },
       gold: {
-        filters: ['Category', 'Price', 'Occasion', 'Gold Coin', 'Men', 'Metal'],
-        filterKeys: ['category', 'price', 'occasion', 'goldcoin', 'men', 'metal'],
+        filters: ['Category', 'Price', 'Occasion', 'Gold Coin', 'Men',],
+        filterKeys: ['category', 'price', 'occasion', 'goldcoin', 'men',],
         panels: {
-          category: {
-            type: 'icon-grid',
-            items: ['All Gold','Gold Bangles','Gold Bracelets','Gold Earrings','Gold Chains','Gold Pendants','Gold Rings','Gold Engagement Rings','Gold Necklaces','Gold Nose Pins','Gold Kadas','Gold Mangalsutras'],
-          },
+category: {
+  type: 'icon-grid',
+  items: ['All Gold','Gold Bangles','Gold Bracelets','Gold Earrings','Gold Chains','Gold Rings','Gold Engagement Rings','Gold Necklaces'],
+},
           price: {
             type: 'price-grid',
             items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
@@ -707,40 +879,28 @@ style={{
             items: ['Men\'s Rings','Men\'s Chains','Men\'s Bracelets','Men\'s Kadas'],
             icon: '👨',
           },
-          metal: {
-            type: 'icon-grid',
-            items: ['Yellow Gold','Rose Gold','White Gold'],
-            icon: '⚙️',
-          },
         }
       },
-      wedding: {
-        filters: ['Category', 'Community', 'Metal'],
-        filterKeys: ['category', 'community', 'metal'],
-        panels: {
-          category: {
-            type: 'image-grid',
-            items: [
-              { label: 'All Rivaah', emoji: '💍' },
-              { label: 'Wedding Choker', emoji: '📿' },
-              { label: 'Wedding Haram', emoji: '✨' },
-              { label: 'Wedding Bangles', emoji: '💛' },
-              { label: 'Wedding Diamond', emoji: '💎' },
-              { label: 'Wedding Mangalsutra', emoji: '🕌' },
-              { label: 'Accessories', emoji: '🌸' },
-            ],
-          },
-          community: {
-            type: 'community-grid',
-            items: ['Bengali Bride','Bihari Bride','Gujarati Bride','Kannada Bride','Marathi Bride','Odia Bride','Punjabi Bride','Tamil Bride','Telugu Bride','UP Bride'],
-          },
-          metal: {
-            type: 'icon-grid',
-            items: ['Yellow Gold','Rose Gold','White Gold','Silver'],
-            icon: '⚙️',
-          },
-        }
-      },
+wedding: {
+  filters: ['Category', 'Community'],
+  filterKeys: ['category', 'community'],
+  panels: {
+    category: {
+      type: 'image-grid',
+      items: [
+        { label: 'Wedding Ring', emoji: '💍' },
+        { label: 'Wedding Necklaces', emoji: '📿' },
+        { label: 'Wedding Chain', emoji: '✨' },
+        { label: 'Wedding Bangles', emoji: '💛' },
+        { label: 'Wedding Earring', emoji: '👂' },
+      ],
+    },
+community: {
+  type: 'community-grid',
+  items: ['Tamil Bride', 'Kerala Bride', 'Karnataka Bride', 'Andhra Bride', 'Punjabi Bride'],
+},
+  }
+},
       gifting: {
         filters: ['Gifts for', 'Gift Card', 'Price', 'Occasion', 'Corporate Gifting'],
         filterKeys: ['giftsfor', 'giftcard', 'price', 'occasion', 'corporate'],
@@ -773,11 +933,11 @@ style={{
         filters: ['Category', 'Price', 'Occasion', 'Gender'],
         filterKeys: ['category', 'price', 'occasion', 'gender'],
         panels: {
-          category: {
-            type: 'icon-grid',
-            items: ['All Diamond','Diamond Earrings','Diamond Rings','Diamond Necklaces','Diamond Pendants','Diamond Bangles','Diamond Bracelets','Diamond Nose Pins','Diamond Mangalsutra','Solitaire Rings','Diamond Kadas','Diamond Sets'],
-            icon: '💎',
-          },
+category: {
+  type: 'icon-grid',
+  items: ['All Diamond','Diamond Earrings','Diamond Rings','Diamond Necklaces','Diamond Bangles','Diamond Bracelets'],
+  icon: '💎',
+},
           price: {
             type: 'price-grid',
             items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
@@ -794,14 +954,14 @@ style={{
       },
 
       earrings: {
-        filters: ['Category', 'Price', 'Occasion', 'Gender', 'Metal & Stones'],
-        filterKeys: ['category', 'price', 'occasion', 'gender', 'metal'],
+        filters: ['Category', 'Price', 'Occasion', 'Gender',],
+        filterKeys: ['category', 'price', 'occasion', 'gender',],
         panels: {
-          category: {
-            type: 'icon-grid',
-            items: ['All Earrings','Drop & Danglers','Hoop & Huggies','Jhumkas','Studs & Tops'],
-            icon: '💍',
-          },
+ category: {
+  type: 'icon-grid',
+  items: ['All Earrings','Men\'s Gold Earring','Women\'s Gold Earring','Kids Gold Earring','Gold Stud Earring','Gold Hoop Earring','Gold Drop Earring','Gold Stone Earring','Gold Plain Earring'],
+  icon: '💍',
+},
           price: {
             type: 'price-grid',
             items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
@@ -814,17 +974,12 @@ style={{
             type: 'gender-grid',
             items: [{ label: 'Women', emoji: '👩' },{ label: 'Men', emoji: '👨' },{ label: 'Kids & Teens', emoji: '👧' }],
           },
-          metal: {
-            type: 'icon-grid',
-            items: ['Yellow Gold','Rose Gold','White Gold','Silver','Platinum'],
-            icon: '⚙️',
-          },
         }
       },
 
       rings: {
-        filters: ['Category', 'Price', 'Occasion', 'Gender', 'Metal & Stones'],
-        filterKeys: ['category', 'price', 'occasion', 'gender', 'metal'],
+        filters: ['Category', 'Price', 'Occasion', 'Gender',],
+        filterKeys: ['category', 'price', 'occasion', 'gender',],
         panels: {
           category: {
             type: 'icon-grid',
@@ -843,11 +998,6 @@ style={{
             type: 'gender-grid',
             items: [{ label: 'Women', emoji: '👩' },{ label: 'Men', emoji: '👨' },{ label: 'Kids & Teens', emoji: '👧' }],
           },
-          metal: {
-            type: 'icon-grid',
-            items: ['Yellow Gold','Rose Gold','White Gold','Silver','Platinum','Diamond'],
-            icon: '⚙️',
-          },
         }
       },
 
@@ -855,11 +1005,11 @@ style={{
         filters: ['Category', 'Price', 'Style'],
         filterKeys: ['category', 'price', 'style'],
         panels: {
-          category: {
-            type: 'icon-grid',
-            items: ['Dailywear Jewellery','Dailywear Chains','Dailywear Earrings','Dailywear Rings','Dailywear Mangalsutra','Dailywear Pendants'],
-            icon: '🌟',
-          },
+category: {
+  type: 'icon-grid',
+  items: ['Dailywear Jewellery','Dailywear Chains','Dailywear Earrings','Dailywear Rings','Dailywear Bangles','Dailywear Necklaces'],
+  icon: '🌟',
+},
           price: {
             type: 'price-grid',
             items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
@@ -924,80 +1074,184 @@ style={{
     const renderPanel = () => {
       if (!panel) return null
 
-      if (panel.type === 'icon-grid') return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
-          {panel.items.map(item => (
-            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s' }}
-              onMouseEnter={e => e.currentTarget.style.background = '#fdf2f2'}
-              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-              <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#f5f0e8', border: '0.5px solid #e8e0d0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 14 }}>
-                {panel.icon || '💍'}
-              </div>
-              <span style={{ fontSize: 13, color: '#1f2937' }}>{item}</span>
-            </div>
-          ))}
+if (panel.type === 'icon-grid') {
+  const CATEGORY_ROUTES = {
+    'Earrings': '/collection/earrings',
+    'Chains': '/collection/chains',
+    'Necklaces': '/collection/necklaces',
+    'Bangles': '/collection/bangles',
+    'Finger Rings': '/collection/rings',
+  }
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+      {panel.items.map(item => (
+        <div key={item}
+          style={{ display: 'flex', alignItems: 'center', gap: 10,
+            padding: '8px 10px', borderRadius: 8, cursor: 'pointer',
+            transition: 'background 0.15s' }}
+          onMouseEnter={e => e.currentTarget.style.background = '#fdf2f2'}
+          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          onClick={() => {
+            const route = CATEGORY_ROUTES[item]
+            if (route) { setShowDropdown(false); navigate(route) }
+          }}>
+          <div style={{ width: 34, height: 34, borderRadius: '50%',
+            background: '#f5f0e8', border: '0.5px solid #e8e0d0',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0, fontSize: 14 }}>
+            {panel.icon || '💍'}
+          </div>
+          <span style={{ fontSize: 13, color: '#1f2937' }}>{item}</span>
         </div>
-      )
+      ))}
+    </div>
+  )
+}
 
-      if (panel.type === 'price-grid') return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
-          {panel.items.map(p => (
-            <div key={p.label} style={{ textAlign: 'center', cursor: 'pointer' }}
-              onMouseEnter={e => { e.currentTarget.querySelector('.ph-box').style.borderColor = '#8B1A1A'; e.currentTarget.querySelector('.ph-label').style.color = '#8B1A1A' }}
-              onMouseLeave={e => { e.currentTarget.querySelector('.ph-box').style.borderColor = '#e8e0d0'; e.currentTarget.querySelector('.ph-label').style.color = '#1f2937' }}>
-              <div className="ph-box" style={{ width: '100%', aspectRatio: '1', borderRadius: 12, background: '#f5f0e8', border: '0.5px solid #e8e0d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 34, marginBottom: 8, transition: 'border-color 0.15s' }}>
-                {p.emoji}
-              </div>
-              <div className="ph-label" style={{ fontSize: 13, color: '#1f2937', transition: 'color 0.15s' }}>{p.label}</div>
+if (panel.type === 'price-grid') {
+  const priceImgMap = {
+    '< ₹25K':      '/25k below.jpg',
+    '₹25K – ₹50K': '/25k-50k.jpg',
+    '₹50K – ₹1L':  '/50k-1L.jpg',
+    '₹1L & Above': '/1L above.jpg',
+  }
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+      {panel.items.map(p => {
+        const imgSrc = priceImgMap[p.label]
+        return (
+          <div key={p.label} style={{ textAlign: 'center', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.querySelector('.ph-box').style.borderColor = '#8B1A1A'; e.currentTarget.querySelector('.ph-label').style.color = '#8B1A1A' }}
+            onMouseLeave={e => { e.currentTarget.querySelector('.ph-box').style.borderColor = '#e8e0d0'; e.currentTarget.querySelector('.ph-label').style.color = '#1f2937' }}>
+            <div className="ph-box" style={{
+              width: '90%', height: '190px', borderRadius: 12,
+              background: '#f5f0e8', border: '0.5px solid #e8e0d0',
+              overflow: 'hidden', marginBottom: 8,
+              transition: 'border-color 0.15s'
+            }}>
+              {imgSrc
+                ? <img src={imgSrc} alt={p.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                : <span style={{ fontSize: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{p.emoji}</span>
+              }
             </div>
-          ))}
-        </div>
-      )
+            <div className="ph-label" style={{ fontSize: 13, color: '#1f2937', transition: 'color 0.15s' }}>{p.label}</div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
-      if (panel.type === 'occasion-grid') return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
-          {panel.items.map(o => (
-            <div key={o.label} style={{ textAlign: 'center', cursor: 'pointer' }}
-              onMouseEnter={e => { e.currentTarget.querySelector('.oh-box').style.borderColor = '#8B1A1A' }}
-              onMouseLeave={e => { e.currentTarget.querySelector('.oh-box').style.borderColor = '#e8e0d0' }}>
-              <div className="oh-box" style={{ width: '100%', aspectRatio: '0.85', borderRadius: 12, background: '#f5f0e8', border: '0.5px solid #e8e0d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, marginBottom: 8, transition: 'border-color 0.15s' }}>
-                {o.emoji}
-              </div>
-              <div style={{ fontSize: 13, color: '#1f2937' }}>{o.label}</div>
+if (panel.type === 'occasion-grid') {
+  const occasionImgMap = {
+    'Office Wear':      '/Office Wear.jpg',
+    'Modern Wear':      '/Modern Wear.jpg',
+    'Casual Wear':      '/Casual Wear.jpg',
+    'Traditional Wear': '/Traditional Wear.jpg',
+  }
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+      {panel.items.map(o => {
+        const imgSrc = occasionImgMap[o.label]
+        return (
+          <div key={o.label} style={{ textAlign: 'center', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.querySelector('.oh-box').style.borderColor = '#8B1A1A' }}
+            onMouseLeave={e => { e.currentTarget.querySelector('.oh-box').style.borderColor = '#e8e0d0' }}>
+            <div className="oh-box" style={{
+              width: '100%',
+              height: '190px',
+              borderRadius: 12,
+              background: '#f5f0e8',
+              border: '0.5px solid #e8e0d0',
+              overflow: 'hidden',
+              marginBottom: 8,
+              transition: 'border-color 0.15s'
+            }}>
+              {imgSrc
+                ? <img src={imgSrc} alt={o.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                : <span style={{ fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{o.emoji}</span>
+              }
             </div>
-          ))}
-        </div>
-      )
+            <div style={{ fontSize: 13, color: '#1f2937' }}>{o.label}</div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
-      if (panel.type === 'gender-grid') return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, maxWidth: 460 }}>
-          {panel.items.map(g => (
-            <div key={g.label} style={{ textAlign: 'center', cursor: 'pointer' }}
-              onMouseEnter={e => { e.currentTarget.querySelector('.gh-box').style.borderColor = '#8B1A1A' }}
-              onMouseLeave={e => { e.currentTarget.querySelector('.gh-box').style.borderColor = '#e8e0d0' }}>
-              <div className="gh-box" style={{ width: '100%', aspectRatio: '0.85', borderRadius: 12, background: '#f5f0e8', border: '0.5px solid #e8e0d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48, marginBottom: 8, transition: 'border-color 0.15s' }}>
-                {g.emoji}
-              </div>
-              <div style={{ fontSize: 13, color: '#1f2937' }}>{g.label}</div>
-            </div>
-          ))}
+if (panel.type === 'gender-grid') return (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, maxWidth: 460 }}>
+    {panel.items.map(g => {
+      const genderImgMap = {
+        'Women': "/Woman's Jewlley.jpg",
+        'Her':   "/Woman's Jewlley.jpg",
+        'Men':   "/Men's Jewellery.jpg",
+        'Him':   "/Men's Jewellery.jpg",
+        'Kids & Teens': "/Kids Jewllery.jpg",
+        'Kids':         "/Kids Jewllery.jpg",
+      }
+      const imgSrc = genderImgMap[g.label]
+      return (
+        <div key={g.label} style={{ textAlign: 'center', cursor: 'pointer' }}
+          onMouseEnter={e => { e.currentTarget.querySelector('.gh-box').style.borderColor = '#8B1A1A' }}
+          onMouseLeave={e => { e.currentTarget.querySelector('.gh-box').style.borderColor = '#e8e0d0' }}>
+          <div className="gh-box" style={{
+            width: '100%', aspectRatio: '0.85', borderRadius: 12,
+            background: '#f5f0e8', border: '0.5px solid #e8e0d0',
+            overflow: 'hidden', marginBottom: 8,
+            transition: 'border-color 0.15s'
+          }}>
+            {imgSrc
+              ? <img src={imgSrc} alt={g.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              : <span style={{ fontSize: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{g.emoji}</span>
+            }
+          </div>
+          <div style={{ fontSize: 13, color: '#1f2937' }}>{g.label}</div>
         </div>
       )
+    })}
+  </div>
+)
 
-      if (panel.type === 'image-grid') return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
-          {panel.items.map(item => (
-            <div key={item.label} style={{ textAlign: 'center', cursor: 'pointer' }}
-              onMouseEnter={e => { e.currentTarget.querySelector('.wh-box').style.borderColor = '#8B1A1A' }}
-              onMouseLeave={e => { e.currentTarget.querySelector('.wh-box').style.borderColor = '#e8e0d0' }}>
-              <div className="wh-box" style={{ width: '100%', aspectRatio: '0.85', borderRadius: 12, background: '#f5f0e8', border: '0.5px solid #e8e0d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, marginBottom: 8, transition: 'border-color 0.15s' }}>
-                {item.emoji}
-              </div>
-              <div style={{ fontSize: 13, color: '#1f2937' }}>{item.label}</div>
+if (panel.type === 'image-grid') {
+  const weddingImgMap = {
+    'Wedding Ring':      '/wedding_ring.jpg',
+    'Wedding Necklaces': '/wedding_necklaces.jpg',
+    'Wedding Chain':     '/wedding_chain.jpg',
+    'Wedding Bangles':   '/wedding_bangesh.jpg',
+    'Wedding Earring':   '/wedding_earring.jpg',
+  }
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+      {panel.items.map(item => {
+        const imgSrc = weddingImgMap[item.label]
+        return (
+          <div key={item.label} style={{ textAlign: 'center', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.querySelector('.wh-box').style.borderColor = '#8B1A1A' }}
+            onMouseLeave={e => { e.currentTarget.querySelector('.wh-box').style.borderColor = '#e8e0d0' }}>
+            <div className="wh-box" style={{
+              width: '90%',
+              height: '190px',
+              borderRadius: 12,
+              background: '#f5f0e8',
+              border: '0.5px solid #e8e0d0',
+              overflow: 'hidden',
+              marginBottom: 8,
+              transition: 'border-color 0.15s'
+            }}>
+              {imgSrc
+                ? <img src={imgSrc} alt={item.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                : <span style={{ fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{item.emoji}</span>
+              }
             </div>
-          ))}
-        </div>
-      )
+            <div style={{ fontSize: 13, color: '#1f2937' }}>{item.label}</div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
       if (panel.type === 'community-grid') return (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12 }}>
@@ -1481,13 +1735,279 @@ const sectionTitles = {
           </div>
         )}
 
+
+
+{/* ── TODAY RATE POPUP ── */}
+{showTodayRate && (
+  <div
+    onClick={() => setShowTodayRate(false)}
+    style={{
+      position: 'fixed', inset: 0,
+      background: 'rgba(0,0,0,0.75)',
+      backdropFilter: 'blur(8px)',
+      zIndex: 1100,
+      display: 'flex', alignItems: 'center', justifyContent: 'center'
+    }}
+  >
+    <div
+      onClick={e => e.stopPropagation()}
+      style={{
+        background: '#fdf5ee',
+        borderRadius: 24,
+        width: '95%', maxWidth: 400,
+        overflow: 'hidden',
+        boxShadow: '0 32px 80px rgba(0,0,0,0.45)',
+        animation: 'fadeIn 0.3s ease'
+      }}
+    >
+      {/* Header */}
+      <div style={{
+        background: 'linear-gradient(135deg,#8B1A1A,#b91c1c)',
+        padding: '20px 24px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+      }}>
+        <div>
+          <div style={{ color: '#fff', fontWeight: 800, fontSize: 16 }}>📅 Today's Rate</div>
+          <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, marginTop: 3 }}>
+            📍 Chennai, India • ₹ per gram
+            {dbRateDate && <span style={{ marginLeft: 8, color: '#ffd700' }}>
+              {new Date(dbRateDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
+            </span>}
+          </div>
+        </div>
+        <button
+          onClick={() => setShowTodayRate(false)}
+          style={{
+            background: 'rgba(255,255,255,0.15)',
+            border: '1px solid rgba(255,255,255,0.3)',
+            color: '#fff', borderRadius: 8,
+            padding: '5px 12px', cursor: 'pointer', fontSize: 12
+          }}
+        >✕</button>
+      </div>
+
+      {/* Rate Cards */}
+      <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+        {/* Silver 1g */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: 'rgba(192,192,192,0.08)',
+          border: '1px solid rgba(192,192,192,0.3)',
+          borderRadius: 14, padding: '14px 18px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontSize: 28 }}>🥈</span>
+            <div>
+              <div style={{ color: '#9ca3af', fontWeight: 800, fontSize: 13 }}>SILVER 999</div>
+              <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ color: '#9ca3af', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
+              {metalPrices.silver ? `₹${metalPrices.silver.toFixed(2)}` : '—'}
+            </div>
+            <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
+          </div>
+        </div>
+
+        {/* Gold 22K 1g */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: 'rgba(251,191,36,0.08)',
+          border: '1px solid rgba(251,191,36,0.4)',
+          borderRadius: 14, padding: '14px 18px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontSize: 28 }}>🏅</span>
+            <div>
+              <div style={{ color: '#fbbf24', fontWeight: 800, fontSize: 13 }}>GOLD 22K</div>
+              <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ color: '#fbbf24', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
+              {metalPrices.gold22k ? `₹${metalPrices.gold22k.toFixed(2)}` : '—'}
+            </div>
+            <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
+          </div>
+        </div>
+
+        {/* Gold 24K 1g */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: 'rgba(255,215,0,0.08)',
+          border: '1px solid rgba(255,215,0,0.4)',
+          borderRadius: 14, padding: '14px 18px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontSize: 28 }}>🥇</span>
+            <div>
+              <div style={{ color: '#ffd700', fontWeight: 800, fontSize: 13 }}>GOLD 24K</div>
+              <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ color: '#ffd700', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
+              {metalPrices.gold24k ? `₹${metalPrices.gold24k.toFixed(2)}` : '—'}
+            </div>
+            <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'center', fontSize: 10, color: '#b09080', marginTop: 4 }}>
+          Rates update every 30 seconds • BitByte Jewels
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* ── ORDER SUMMARY POPUP ── */}
+{showOrderSummary && (
+  <div
+    onClick={() => setShowOrderSummary(false)}
+    style={{
+      position: 'fixed', inset: 0,
+      background: 'rgba(0,0,0,0.82)',
+      backdropFilter: 'blur(10px)',
+      zIndex: 1100,
+      display: 'flex', alignItems: 'center', justifyContent: 'center'
+    }}
+  >
+    <div
+      onClick={e => e.stopPropagation()}
+      style={{
+        background: '#fdf5ee',
+        borderRadius: 24,
+        width: '95%', maxWidth: 480,
+        maxHeight: '88vh',
+        display: 'flex', flexDirection: 'column',
+        overflow: 'hidden',
+        boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
+        animation: 'fadeIn 0.3s ease'
+      }}
+    >
+      {/* Header */}
+      <div style={{
+        padding: '20px 24px',
+        borderBottom: '1px solid #e8ddd5',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        background: '#fff'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 20 }}>🏆</span>
+          <span style={{ color: '#8B1A1A', fontWeight: 800, fontSize: 15, letterSpacing: '0.5px' }}>
+            ORDER SUMMARY
+          </span>
+        </div>
+        <button
+          onClick={() => setShowOrderSummary(false)}
+          style={{
+            background: 'rgba(239,68,68,0.1)',
+            border: '1px solid rgba(239,68,68,0.3)',
+            color: '#f87171', borderRadius: 8,
+            padding: '5px 14px', cursor: 'pointer', fontSize: 12
+          }}
+        >✕ Close</button>
+      </div>
+
+      {/* Period Tabs */}
+      <div style={{ display: 'flex', gap: 8, padding: '16px 24px 0', background: '#fff' }}>
+        {['today', 'week', 'month'].map(p => (
+          <button
+            key={p}
+            onClick={() => setSummaryPeriod(p)}
+            style={{
+              flex: 1, padding: '10px 0', borderRadius: 10,
+              border: summaryPeriod === p ? 'none' : '1px solid #e8ddd5',
+              background: summaryPeriod === p ? 'linear-gradient(90deg,#34d399,#22d3ee)' : 'transparent',
+              color: summaryPeriod === p ? '#003b40' : '#7c5c4a',
+              fontWeight: 800, fontSize: 12,
+              textTransform: 'uppercase', letterSpacing: '0.5px',
+              cursor: 'pointer', transition: 'all 0.2s ease'
+            }}
+          >
+            {p === 'today' ? 'Today' : p === 'week' ? 'Week' : 'Month'}
+          </button>
+        ))}
+      </div>
+
+      {/* Title */}
+      <div style={{
+        padding: '12px 24px 0', background: '#fff',
+        display: 'flex', alignItems: 'center', gap: 8
+      }}>
+        <span style={{ fontSize: 14 }}>📦</span>
+        <span style={{ color: '#8B1A1A', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          {summaryPeriod === 'today' ? "Today's" : summaryPeriod === 'week' ? "This Week's" : "This Month's"} Orders
+        </span>
+      </div>
+
+      {/* Cards */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 24px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {[
+          { key: 'gold_22k', label: 'GOLD 22K', icon: '🥇', color: '#fbbf24', rgba: '251,191,36' },
+          { key: 'gold_24k', label: 'GOLD 24K', icon: '🥇', color: '#ffd700', rgba: '255,215,0' },
+          { key: 'silver_999', label: 'SILVER 999', icon: '🥈', color: '#9ca3af', rgba: '156,163,175' },
+        ].map(({ key, label, icon, color, rgba }) => {
+          const data = orderSummary?.[summaryPeriod]?.[key]
+          return (
+            <div key={key} style={{
+              background: `rgba(${rgba},0.08)`,
+              border: `1px solid rgba(${rgba},0.35)`,
+              borderRadius: 16, padding: '16px 20px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                <span style={{ fontSize: 18 }}>{icon}</span>
+                <span style={{ color, fontWeight: 800, fontSize: 13, letterSpacing: '1px' }}>{label}</span>
+              </div>
+              {[
+                { label: 'Orders', value: data ? `${data.orders}` : '0' },
+                { label: 'Grams', value: data ? (data.grams >= 1 ? `${data.grams.toFixed(2)} gm` : `${(data.grams * 1000).toFixed(2)} mg`) : '0.00 mg' },
+                { label: 'Total Amount', value: data ? `₹${Number(data.amount).toLocaleString('en-IN')}` : '₹0', highlight: true },
+              ].map(({ label: l, value, highlight }) => (
+                <div key={l} style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  padding: '7px 0',
+                  borderBottom: l !== 'Total Amount' ? `1px solid rgba(${rgba},0.15)` : 'none'
+                }}>
+                  <span style={{ color: '#7c5c4a', fontSize: 13 }}>{l}</span>
+                  <span style={{
+                    color: highlight ? '#16a34a' : color,
+                    fontWeight: highlight ? 800 : 700,
+                    fontSize: highlight ? 15 : 13,
+                    fontFamily: 'monospace'
+                  }}>{value}</span>
+                </div>
+              ))}
+            </div>
+          )
+        })}
+
+        <button
+          onClick={fetchOrderSummary}
+          style={{
+            width: '100%', padding: 10,
+            background: 'rgba(139,26,26,0.06)',
+            border: '1px solid rgba(139,26,26,0.2)',
+            borderRadius: 12, color: '#8B1A1A',
+            fontSize: 12, fontWeight: 700, cursor: 'pointer', marginTop: 4
+          }}
+        >🔄 Refresh</button>
+      </div>
+    </div>
+  </div>
+)}
+
+
         {/* ── PLACE ORDER POPUP ── */}
         {orderPopup && (() => {
           const metalLabels = { gold_22k: '🏅 Gold 22K', gold_24k: '🥇 Gold 24K', silver_999: '🥈 Silver 999' }
           const metalColors = { gold_22k: '#fbbf24', gold_24k: '#ffd700', silver_999: '#c0c0c0' }
           const rateMap = { gold_22k: metalPrices.gold22k, gold_24k: metalPrices.gold24k, silver_999: metalPrices.silver }
 
-          const selectedW = WEIGHTS.find(x => x.label === orderWeight)
+          const selectedW = (orderMetal === 'silver_999' ? WEIGHTS_SILVER : WEIGHTS_GOLD).find(x => x.label === orderWeight)
           const rate = rateMap[orderMetal] || 0
           const unitPrice = selectedW ? (selectedW.grams * rate) : 0
           const totalAmt = unitPrice * (orderCount || 0)
@@ -1516,7 +2036,7 @@ const sectionTitles = {
                       style={{ width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '10px', padding: '12px 14px', color: text, fontSize: '14px', outline: 'none', cursor: 'pointer' }}
                     >
                       <option value="" style={{ background: optionBg }}>-- Select --</option>
-                      {WEIGHTS.map(w => (
+                      {(orderMetal === 'silver_999' ? WEIGHTS_SILVER : WEIGHTS_GOLD).map(w => (
                         <option key={w.label} value={w.label} style={{ background: optionBg }}>{w.label}</option>
                       ))}
                     </select>
@@ -1639,7 +2159,7 @@ const sectionTitles = {
         )}
 
         {/* Main wrapper - 2 column layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '24px', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px', alignItems: 'start' }}>
 
           {/* ── LEFT COLUMN: Metal Rates ── */}
           <div>
@@ -1677,7 +2197,7 @@ const sectionTitles = {
                       {metalPrices.silver && <span style={{ color: 'rgba(192,192,192,0.55)', fontSize: '11px' }}>₹{metalPrices.silver.toFixed(2)}/gm</span>}
                     </div>
                     <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap' }}>
-                      {WEIGHTS.map(w => {
+                      {WEIGHTS_SILVER.map(w => {
                         const priceSilver = metalPrices.silver != null ? (w.grams * metalPrices.silver).toFixed(2) : null
                         const hoveredSilver = hoveredJewel === `sv_${w.label}`
                         return (
@@ -1687,7 +2207,7 @@ const sectionTitles = {
                             style={{ flex: 1, minWidth: 0, position: 'relative', background: hoveredSilver ? 'rgba(192,192,192,0.18)' : (dark ? 'rgba(192,192,192,0.04)' : 'rgba(192,192,192,0.07)'), border: hoveredSilver ? '1px solid rgba(192,192,192,0.85)' : '1px solid rgba(192,192,192,0.25)', borderRadius: '14px', overflow: 'hidden', transition: 'all 0.25s ease', transform: hoveredSilver ? 'translateY(-6px) scale(1.04)' : 'translateY(0) scale(1)', boxShadow: hoveredSilver ? '0 12px 32px rgba(192,192,192,0.3)' : 'none', cursor: 'pointer' }}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
-                              <img src={silverCoin} alt="Silver 999" style={{ width: '70px', height: '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hoveredSilver ? 'drop-shadow(0 4px 12px rgba(192,192,192,0.9)) brightness(1.2)' : 'drop-shadow(0 2px 6px rgba(192,192,192,0.45))', transition: 'filter 0.25s ease' }} />
+                              <img src={silverCoin} alt="Silver 999" style={{ width: hoveredSilver ? '115px' : '70px', height: hoveredSilver ? '115px' : '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hoveredSilver ? 'drop-shadow(0 6px 18px rgba(192,192,192,1)) brightness(1.4) contrast(1.1)' : 'drop-shadow(0 2px 6px rgba(192,192,192,0.45))', transition: 'all 0.3s ease' }} />
                             </div>
                             <div style={{ padding: '4px 6px 6px', textAlign: 'center' }}>
                               <div style={{ display: 'inline-block', fontSize: '9px', fontWeight: 800, color: hoveredSilver ? '#000' : '#c0c0c0', background: hoveredSilver ? '#c0c0c0' : 'rgba(192,192,192,0.1)', border: '1px solid rgba(192,192,192,0.25)', borderRadius: '20px', padding: '2px 6px', marginBottom: '4px', transition: 'all 0.2s' }}>{w.label}</div>
@@ -1737,7 +2257,7 @@ const sectionTitles = {
                         {metalPrices.gold22k && <span style={{ color: 'rgba(251,191,36,0.55)', fontSize: '11px' }}>₹{metalPrices.gold22k.toFixed(2)}/gm</span>}
                       </div>
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap' }}>
-                        {WEIGHTS.map(w => {
+                        {WEIGHTS_GOLD.map(w => {
                           const price22k = metalPrices.gold22k != null ? (w.grams * metalPrices.gold22k).toFixed(2) : null
                           const hovered22k = hoveredJewel === `g22_${w.label}`
                           return (
@@ -1748,7 +2268,7 @@ const sectionTitles = {
                             >
                               {/* Coin image */}
                               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
-                                <img src={goldCoin} alt="Gold 22K" style={{ width: '70px', height: '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hovered22k ? 'drop-shadow(0 4px 12px rgba(251,191,36,0.9))' : 'drop-shadow(0 2px 6px rgba(251,191,36,0.5))', transition: 'filter 0.25s ease' }} />
+                                <img src={goldCoin} alt="Gold 22K" style={{ width: hovered22k ? '115px' : '70px', height: hovered22k ? '115px' : '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hovered22k ? 'drop-shadow(0 6px 20px rgba(251,191,36,1)) brightness(1.3) saturate(1.4)' : 'drop-shadow(0 2px 6px rgba(251,191,36,0.5))', transition: 'all 0.3s ease' }} />
                               </div>
 
                               {/* Weight + Rate — highlight on hover */}
@@ -1802,7 +2322,7 @@ const sectionTitles = {
                         {metalPrices.gold24k && <span style={{ color: 'rgba(255,215,0,0.55)', fontSize: '11px' }}>₹{metalPrices.gold24k.toFixed(2)}/gm</span>}
                       </div>
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap' }}>
-                        {WEIGHTS.map(w => {
+                        {WEIGHTS_GOLD.map(w => {
                           const price24k = metalPrices.gold24k != null ? (w.grams * metalPrices.gold24k).toFixed(2) : null
                           const hovered24k = hoveredJewel === `g24_${w.label}`
                           return (
@@ -1812,7 +2332,7 @@ const sectionTitles = {
                               style={{ flex: 1, minWidth: 0, position: 'relative', background: hovered24k ? 'rgba(255,215,0,0.15)' : (dark ? 'rgba(255,215,0,0.05)' : 'rgba(255,215,0,0.07)'), border: hovered24k ? '1px solid rgba(255,215,0,0.8)' : '1px solid rgba(255,215,0,0.3)', borderRadius: '14px', overflow: 'hidden', transition: 'all 0.25s ease', transform: hovered24k ? 'translateY(-6px) scale(1.04)' : 'translateY(0) scale(1)', boxShadow: hovered24k ? '0 12px 32px rgba(255,215,0,0.35)' : 'none', cursor: 'pointer' }}
                             >
                               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
-                                <img src={goldCoin} alt="Gold 24K" style={{ width: '70px', height: '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hovered24k ? 'drop-shadow(0 4px 12px rgba(255,215,0,0.9))' : 'drop-shadow(0 2px 6px rgba(255,215,0,0.5))', transition: 'filter 0.25s ease' }} />
+                                <img src={goldCoin} alt="Gold 24K" style={{ width: hovered24k ? '115px' : '70px', height: hovered24k ? '115px' : '70px', objectFit: 'contain', background: 'transparent', display: 'block', filter: hovered24k ? 'drop-shadow(0 6px 20px rgba(255,215,0,1)) brightness(1.3) saturate(1.5)' : 'drop-shadow(0 2px 6px rgba(255,215,0,0.5))', transition: 'all 0.3s ease' }} />
                               </div>
                               <div style={{ padding: '4px 6px 6px', textAlign: 'center' }}>
                                 <div style={{ display: 'inline-block', fontSize: '9px', fontWeight: 800, color: hovered24k ? '#000' : '#ffd700', background: hovered24k ? '#ffd700' : 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '20px', padding: '2px 6px', marginBottom: '4px', transition: 'all 0.2s' }}>{w.label}</div>
@@ -1857,64 +2377,84 @@ const sectionTitles = {
               )
             })()}
           </div>
+        </div>
 
-          {/* ── RIGHT COLUMN: Order Summary ── */}
-          <div style={{ position: 'sticky', top: '24px' }}>
-            <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
-              {['today', 'week', 'month'].map(p => (
-                <button key={p} onClick={() => setSummaryPeriod(p)} style={{
-                  flex: 1, padding: '8px 0', borderRadius: '10px',
-                  border: summaryPeriod === p ? 'none' : `1px solid ${border}`,
-                  background: summaryPeriod === p ? 'linear-gradient(90deg,#34d399,#22d3ee)' : 'transparent',
-                  color: summaryPeriod === p ? '#003b40' : subtext,
-                  fontWeight: 800, fontSize: '11px', textTransform: 'uppercase',
-                  letterSpacing: '0.5px', cursor: 'pointer', transition: 'all 0.2s ease',
-                }}>
-                  {p === 'today' ? 'Today' : p === 'week' ? 'Week' : 'Month'}
-                </button>
-              ))}
-            </div>
+{/* ── BHARATHY WORLD SECTION ── */}
+        <div style={{ marginBottom: '40px', marginTop: '40px', textAlign: 'center' }}>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-              <span style={{ fontSize: '16px' }}>🏆</span>
-              <span style={{ color: '#a5f3fc', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                {summaryPeriod === 'today' ? "Today's" : summaryPeriod === 'week' ? "This Week's" : "This Month's"} Orders
-              </span>
-            </div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: '#1a0a0a', marginBottom: 6 }}>
+            Bharathy World
+          </div>
+          <div style={{ fontSize: 14, color: '#7c5c4a', marginBottom: 32 }}>
+            A companion for every occasion
+          </div>
 
-            {[
-              { key: 'gold_22k', label: 'GOLD 22K', icon: '🥇', color: '#fbbf24', rgba: '251,191,36' },
-              { key: 'gold_24k', label: 'GOLD 24K', icon: '🥇', color: '#ffd700', rgba: '255,215,0' },
-              { key: 'silver_999', label: 'SILVER 999', icon: '🥈', color: '#c0c0c0', rgba: '192,192,192' },
-            ].map(({ key, label, icon, color, rgba }) => {
-              const data = orderSummary?.[summaryPeriod]?.[key]
-              return (
-                <div key={key} style={{ background: `rgba(${rgba},0.05)`, border: `1px solid rgba(${rgba},0.25)`, borderRadius: '16px', padding: '16px 18px', marginBottom: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <span style={{ fontSize: '18px' }}>{icon}</span>
-                    <span style={{ color, fontWeight: 800, fontSize: '12px', letterSpacing: '1px' }}>{label}</span>
-                  </div>
-                  {[
-                    { label: 'Order', value: data ? `${data.orders}` : '0' },
-                    { label: 'Grams', value: data ? (data.grams >= 1 ? `${data.grams.toFixed(2)} gm` : `${(data.grams * 1000).toFixed(2)} mg`) : '0.00 mg' },
-                    { label: 'Total Amount', value: data ? `₹${Number(data.amount).toLocaleString('en-IN')}` : '₹0', highlight: true },
-                  ].map(({ label: lbl, value, highlight }) => (
-                    <div key={lbl} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: lbl !== 'Total Amount' ? `1px solid rgba(${rgba},0.1)` : 'none' }}>
-                      <span style={{ color: subtext, fontSize: '12px' }}>{lbl}</span>
-                      <span style={{ color: highlight ? '#4ade80' : color, fontWeight: highlight ? 800 : 700, fontSize: highlight ? '14px' : '13px', fontFamily: 'monospace' }}>{value}</span>
-                    </div>
-                  ))}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 1300, margin: '0 auto', padding: '0 40px' }}>
+
+            {/* LEFT COLUMN — 2 stacked */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+              {/* Wedding */}
+              <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', height: '300px', cursor: 'pointer' }}
+                onMouseEnter={e => e.currentTarget.querySelector('.bw-img').style.transform = 'scale(1.04)'}
+                onMouseLeave={e => e.currentTarget.querySelector('.bw-img').style.transform = 'scale(1)'}
+              >
+                <img className="bw-img" src="/marriage_woman.jpg" alt="Wedding"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(139,26,26,0.65) 0%, transparent 55%)' }} />
+                <div style={{ position: 'absolute', bottom: 24, left: 24 }}>
+                  <div style={{ color: '#fff', fontWeight: 700, fontSize: 22 }}>Wedding</div>
                 </div>
-              )
-            })}
+              </div>
 
+              {/* Gold */}
+              <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', height: '420px', cursor: 'pointer' }}
+                onMouseEnter={e => e.currentTarget.querySelector('.bw-img').style.transform = 'scale(1.04)'}
+                onMouseLeave={e => e.currentTarget.querySelector('.bw-img').style.transform = 'scale(1)'}
+              >
+                <img className="bw-img" src="/gold_Woman.jpg" alt="Gold"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(139,26,26,0.65) 0%, transparent 55%)' }} />
+                <div style={{ position: 'absolute', bottom: 24, left: 24 }}>
+                  <div style={{ color: '#fff', fontWeight: 700, fontSize: 22 }}>Gold</div>
+                </div>
+              </div>
 
+            </div>
 
-            <button onClick={fetchOrderSummary} style={{ width: '100%', padding: '10px', background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.25)', borderRadius: '12px', color: '#22d3ee', fontSize: '12px', fontWeight: 700, cursor: 'pointer', marginTop: '4px' }}>
-              🔄 Refresh Orders
-            </button>
+            {/* RIGHT COLUMN — 2 stacked */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+              {/* Diamond */}
+              <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', height: '420px', cursor: 'pointer' }}
+                onMouseEnter={e => e.currentTarget.querySelector('.bw-img').style.transform = 'scale(1.04)'}
+                onMouseLeave={e => e.currentTarget.querySelector('.bw-img').style.transform = 'scale(1)'}
+              >
+                <img className="bw-img" src="/diamond_woman.jpg" alt="Diamond"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(139,26,26,0.65) 0%, transparent 55%)' }} />
+                <div style={{ position: 'absolute', bottom: 24, left: 24 }}>
+                  <div style={{ color: '#fff', fontWeight: 700, fontSize: 22 }}>Diamond</div>
+                </div>
+              </div>
+
+              {/* Dailywear */}
+              <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', height: '300px', cursor: 'pointer' }}
+                onMouseEnter={e => e.currentTarget.querySelector('.bw-img').style.transform = 'scale(1.04)'}
+                onMouseLeave={e => e.currentTarget.querySelector('.bw-img').style.transform = 'scale(1)'}
+              >
+                <img className="bw-img" src="/dailywear_woman.jpg" alt="Dailywear"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(139,26,26,0.65) 0%, transparent 55%)' }} />
+                <div style={{ position: 'absolute', bottom: 24, left: 24 }}>
+                  <div style={{ color: '#fff', fontWeight: 700, fontSize: 22 }}>Dailywear</div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
+        {/* ── END BHARATHY WORLD ── */}
 
         {/* ── JEWELRY SHOWCASE ── */}
         <div style={{ marginBottom: '28px', marginTop: '28px' }}>
@@ -2093,10 +2633,206 @@ const sectionTitles = {
 
           </div>
         </div>
-        {/* ── END JEWELRY SHOWCASE ── */}
+{/* ── END JEWELRY SHOWCASE ── */}
+
+
+
+
+
+        {/* ── SHOP BY GENDER SECTION ── */}
+        <div style={{ marginBottom: '40px', marginTop: '40px', textAlign: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 8 }}>
+            <div style={{ height: 1, width: 80, background: 'linear-gradient(90deg,transparent,#b8860b)' }} />
+            <span style={{ fontSize: 18, color: '#b8860b' }}>💎</span>
+            <div style={{ height: 1, width: 80, background: 'linear-gradient(90deg,#b8860b,transparent)' }} />
+          </div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#1a0a0a', letterSpacing: 2, marginBottom: 6 }}>SHOP BY GENDER</div>
+          <div style={{ fontSize: 14, color: '#7c5c4a', marginBottom: 28 }}>Find Jewelry for Women, Men, and Kids</div>
+
+         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24, maxWidth: 1300, margin: '0 auto', padding: '0 40px', alignItems: 'start' }}>
+            {[
+              { label: "Women's Jewellery", img: "/Woman's Jewlley.jpg" },
+              { label: "Men's Jewellery",   img: "/Men's Jewellery.jpg" },
+              { label: "Kid's Jewellery",   img: "/Kids Jewllery.jpg" },
+            ].map((item, i) => (
+              <div
+                key={item.label}
+                style={{ cursor: 'pointer', textAlign: 'center' }}
+                onMouseEnter={e => {
+                  e.currentTarget.querySelector('.sbg-img').style.transform = 'scale(1.03)'
+                  e.currentTarget.querySelector('.sbg-label').style.color = '#8B1A1A'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.querySelector('.sbg-img').style.transform = 'scale(1)'
+                  e.currentTarget.querySelector('.sbg-label').style.color = '#b8860b'
+                }}
+              >
+<div style={{
+                  borderRadius: 16, overflow: 'hidden',
+                  border: '1px solid #e8ddd5',
+                  boxShadow: '0 4px 16px rgba(139,26,26,0.08)',
+                  marginBottom: 12,
+                  height: i === 1 ? '460px' : '420px',
+                  width: '100%',
+                  marginTop: i === 1 ? '0px' : '40px',
+                }}>
+                  <img
+                    className="sbg-img"
+                    src={item.img}
+                    alt={item.label}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.3s ease' }}
+                  />
+                </div>
+                <div className="sbg-label" style={{ fontSize: 14, fontWeight: 700, color: '#b8860b', transition: 'color 0.2s' }}>
+                  {item.label}
+                </div>
+              </div>
+            ))}
+</div>
+        </div>
+
+        {/* ── FEATURED JEWELLERY COLLECTIONS ── */}
+        <div style={{ marginBottom: '40px', marginTop: '40px', textAlign: 'center' }}>
+
+          {/* Heading */}
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#1a0a0a', letterSpacing: 1, marginBottom: 6, fontStyle: 'italic' }}>
+            Featured Jewellery Collections
+          </div>
+          <div style={{ fontSize: 14, color: '#7c5c4a', marginBottom: 32 }}>
+            A selection of jewellery designs across categories
+          </div>
+
+          {/* Layout: Left big + Right 2 stacked */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 1300, margin: '0 auto', padding: '0 40px', alignItems: 'stretch' }}>
+
+            {/* LEFT — big tall image */}
+            <div style={{
+              position: 'relative', borderRadius: 16, overflow: 'hidden',
+              height: '680px', cursor: 'pointer',
+            }}>
+              <img
+                src="/black_woman.png"
+                alt="Layered Luxe"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+              />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%)' }} />
+              <div style={{ position: 'absolute', bottom: 28, right: 28, textAlign: 'right' }}>
+                <div style={{ color: '#fff', fontWeight: 800, fontSize: 22, fontStyle: 'italic', letterSpacing: 1 }}>Layered Luxe</div>
+                <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 4, fontStyle: 'italic' }}>Stack it. Style it. Own it.</div>
+              </div>
+            </div>
+
+            {/* RIGHT — 2 stacked images */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, height: '680px' }}>
+
+              {/* Top right image */}
+              <div style={{
+                position: 'relative', borderRadius: 16, overflow: 'hidden',
+                flex: 1, cursor: 'pointer',
+              }}>
+                <img
+                  src="/black_necklaces.png"
+                  alt="Ethnic Glow"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%)' }} />
+                <div style={{ position: 'absolute', bottom: 20, right: 20, textAlign: 'right' }}>
+                  <div style={{ color: '#fff', fontWeight: 800, fontSize: 18, fontStyle: 'italic', letterSpacing: 1 }}>Ethnic Glow</div>
+                  <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, marginTop: 3, fontStyle: 'italic' }}>Tradition with a twist.</div>
+                </div>
+              </div>
+
+              {/* Bottom right image */}
+              <div style={{
+                position: 'relative', borderRadius: 16, overflow: 'hidden',
+                flex: 1, cursor: 'pointer',
+              }}>
+                <img
+                  src="/black_daimond.png"
+                  alt="Diamond Whisper"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%)' }} />
+                <div style={{ position: 'absolute', bottom: 20, right: 20, textAlign: 'right' }}>
+                  <div style={{ color: '#fff', fontWeight: 800, fontSize: 18, fontStyle: 'italic', letterSpacing: 1 }}>Diamond Whisper</div>
+                  <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, marginTop: 3, fontStyle: 'italic' }}>Delicate shine. Big impression.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        {/* ── END FEATURED JEWELLERY ── */}
 
 
       </div>
+
+      {/* ── FLOATING CHAT WIDGET ── */}
+      {showChatWidget && (
+        <div style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          zIndex: 9999,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: '8px',
+        }}>
+          {/* Bubble */}
+          <div style={{
+            background: '#fff',
+            border: '1px solid #e8ddd5',
+            borderRadius: '20px 20px 4px 20px',
+            padding: '10px 16px',
+            fontSize: '13px',
+            fontWeight: 600,
+            color: '#3d2b1f',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            whiteSpace: 'nowrap',
+          }}>
+            How can I help you?
+            <button
+              onClick={() => setShowChatWidget(false)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#9ca3af',
+                fontSize: '14px',
+                fontWeight: 700,
+                padding: '0 0 0 4px',
+                lineHeight: 1,
+              }}
+            >✕</button>
+          </div>
+
+          {/* Woman image - round */}
+          <img
+            src="/greating_woman.png"
+            alt="Help"
+            style={{
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '2px solid #8B1A1A',
+              boxShadow: '0 4px 16px rgba(139,26,26,0.25)',
+              cursor: 'pointer',
+            }}
+          />
+        </div>
+      )}
+
     </div>
 
 
