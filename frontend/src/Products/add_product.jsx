@@ -55,11 +55,11 @@ const SUBCATEGORIES = {
     silver: ["Men's Silver Chain","Women's Silver Chain","Kids Silver Chain","Silver Wedding Chain","Silver Rope Chain","Silver Box Chain","Silver Stone Chain","Silver Plain Chain"],
     diamond: ["Men's Diamond Chain","Women's Diamond Chain","Diamond Pendant Chain","Diamond Wedding Chain","Diamond Plain Chain"],
   },
-  coins: {
-    gold: ["Gold 1 Gram Coin","Gold 2 Gram Coin","Gold 5 Gram Coin","Gold 10 Gram Coin","Gold Lakshmi Coin","Gold Ganesha Coin","Gold Plain Coin","Gold Gift Coin"],
-    silver: ["Silver 1 Gram Coin","Silver 2 Gram Coin","Silver 5 Gram Coin","Silver 10 Gram Coin","Silver Lakshmi Coin","Silver Ganesha Coin","Silver Plain Coin","Silver Gift Coin"],
-    diamond: [],
-  },
+coins: {
+  gold: ["100 mg Gold Coin","200 mg Gold Coin","500 mg Gold Coin","1 gm Gold Coin","2 gm Gold Coin","4 gm Gold Coin","8 gm Gold Coin","16 gm Gold Coin","40 gm Gold Coin","Gold Lakshmi Coin","Gold Ganesha Coin","Gold Gift Coin"],
+  silver: ["500 mg Silver Coin","1 gm Silver Coin","2 gm Silver Coin","5 gm Silver Coin","10 gm Silver Coin","20 gm Silver Coin","50 gm Silver Coin","100 gm Silver Coin","Silver Lakshmi Coin","Silver Ganesha Coin","Silver Gift Coin"],
+  diamond: [],
+},
 }
 
 const getImageUrl = img => {
@@ -172,7 +172,7 @@ const calcAll = (crossW, stoneW, metal, grade, makingCharge, wastageCharge, ston
     if (!productForm.cross_weight)   { setProductMsg('❌ Cross Weight required');   return }
     if (!productForm.category)       { setProductMsg('❌ Category required'); return }
     if (!productForm.metal)          { setProductMsg('❌ Metal required');    return }
-    if (!productForm.grade)          { setProductMsg('❌ Grade required');    return }
+    if (productForm.metal !== 'diamond' && !productForm.grade) { setProductMsg('❌ Grade required'); return }
     setProductSaving(true)
     try {
       const fd = new FormData()

@@ -31,6 +31,7 @@ export default function AllCollection() {
   const metalFilter = searchParams.get('metal')
   const genderFilter = searchParams.get('gender')
   const occasionFilter = searchParams.get('occasion')
+  const weddingCategoryFilter = searchParams.get('wedding_category')
 
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -44,6 +45,7 @@ const params = []
 if (metalFilter) params.push(`metal=${metalFilter}`)
 if (genderFilter) params.push(`gender=${genderFilter}`)
 if (occasionFilter) params.push(`occasion=${occasionFilter}`)
+if (weddingCategoryFilter) params.push(`wedding_category=${encodeURIComponent(weddingCategoryFilter)}`)
 if (params.length) url += `?${params.join('&')}`
 
         const res = await fetch(url)
@@ -69,7 +71,7 @@ if (params.length) url += `?${params.join('&')}`
       setLoading(false)
     }
     fetchAll()
-  }, [priceFilter, metalFilter, genderFilter, occasionFilter])
+  }, [priceFilter, metalFilter, genderFilter, occasionFilter, weddingCategoryFilter])
 
   return (
     <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Inter",system-ui,sans-serif' }}>

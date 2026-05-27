@@ -31,6 +31,9 @@ import AllCollection from './collection/all_collection'
 import BraceletsCollection from './collection/bracelets_collection'
 import GoldBracelets from './gold_silver/gold_bracelets'
 import SilverBracelets from './gold_silver/silver_bracelets'
+import CoinsCollection from './collection/coins_collection'
+import GoldCoins from './gold_silver/gold_coins'
+import SilverCoins from './gold_silver/silver_coins'
 
 
 function ProtectedRoute({ children, role }) {
@@ -111,6 +114,9 @@ export default function App() {
 } />
 
 <Route path="/collection/all" element={<AllCollection />} />
+<Route path="/collection/coins" element={<CoinsCollection />} />
+<Route path="/gold-coins" element={<GoldCoins />} />
+<Route path="/silver-coins" element={<SilverCoins />} />
 
 <Route path="/collection/bracelets" element={<BraceletsCollection />} />
 <Route path="/gold-bracelets" element={<GoldBracelets />} />

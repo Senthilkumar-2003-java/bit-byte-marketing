@@ -762,6 +762,9 @@ class JewelryProductView(APIView):
            qs = qs.filter(gender=gender)
         if occasion:
            qs = qs.filter(occasion=occasion)
+        wedding_category = request.query_params.get('wedding_category')
+        if wedding_category:
+           qs = qs.filter(wedding_category=wedding_category)   
         
         serializer = JewelryProductSerializer(qs, many=True, context={'request': request})
         return Response(serializer.data)

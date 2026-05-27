@@ -33,7 +33,7 @@ function HomeBannerSlider() {
     fetch(`${API_BASE}/api/home-banners/`)
       .then(r => r.json())
       .then(data => { if (Array.isArray(data) && data.length) setBanners(data) })
-      .catch(() => {})
+      .catch(() => { })
   }, [])
 
   useEffect(() => {
@@ -65,7 +65,7 @@ function HomeBannerSlider() {
         const url = getUrl(b.image)
         if (!url) return null
         const isActive = i === current
-        const isPrev   = i === (current - 1 + banners.length) % banners.length
+        const isPrev = i === (current - 1 + banners.length) % banners.length
 
         return (
           <div
@@ -141,7 +141,7 @@ export default function CustomerDashboard() {
   const [showChatWidget, setShowChatWidget] = useState(true)
   // const canvasRef = useRef(null)
 
-  const bg = '#FDF5EE' 
+  const bg = '#FDF5EE'
   const text = dark ? '#f8fafc' : '#020617'
   const subtext = dark ? '#94a3b8' : '#64748b'
   const accent = dark ? '#22d3ee' : '#2563eb'
@@ -237,28 +237,28 @@ export default function CustomerDashboard() {
   }, [])
 
 
-const WEIGHTS_SILVER = [
-  { label: '500 mg', grams: 0.50 },
-  { label: '1 gm',  grams: 1 },
-  { label: '2 gm',  grams: 2 },
-  { label: '5 gm',  grams: 5 },
-  { label: '10 gm', grams: 10 },
-  { label: '20 gm', grams: 20 },
-  { label: '50 gm', grams: 50 },
-  { label: '100 gm',grams: 100 },
-]
+  const WEIGHTS_SILVER = [
+    { label: '500 mg', grams: 0.50 },
+    { label: '1 gm', grams: 1 },
+    { label: '2 gm', grams: 2 },
+    { label: '5 gm', grams: 5 },
+    { label: '10 gm', grams: 10 },
+    { label: '20 gm', grams: 20 },
+    { label: '50 gm', grams: 50 },
+    { label: '100 gm', grams: 100 },
+  ]
 
-const WEIGHTS_GOLD = [
-  { label: '100 mg', grams: 0.10 },
-  { label: '200 mg', grams: 0.20 },
-  { label: '500 mg', grams: 0.50 },
-  { label: '1 gm',  grams: 1 },
-  { label: '2 gm',  grams: 2 },
-  { label: '4 gm',  grams: 4 },
-  { label: '8 gm',  grams: 8 },
-  { label: '16 gm', grams: 16 },
-  { label: '40 gm', grams: 40 },
-]
+  const WEIGHTS_GOLD = [
+    { label: '100 mg', grams: 0.10 },
+    { label: '200 mg', grams: 0.20 },
+    { label: '500 mg', grams: 0.50 },
+    { label: '1 gm', grams: 1 },
+    { label: '2 gm', grams: 2 },
+    { label: '4 gm', grams: 4 },
+    { label: '8 gm', grams: 8 },
+    { label: '16 gm', grams: 16 },
+    { label: '40 gm', grams: 40 },
+  ]
 
   const PROFILE_FIELDS = [
     ['initial', 'Initial'],
@@ -361,7 +361,7 @@ const WEIGHTS_GOLD = [
     if (!orderCount || orderCount < 1) { alert('Count enter pannunga'); return }
 
     const weightsArr = orderMetal === 'silver_999' ? WEIGHTS_SILVER : WEIGHTS_GOLD
-const w = weightsArr.find(x => x.label === orderWeight)
+    const w = weightsArr.find(x => x.label === orderWeight)
     if (!w) return
 
     const rateMap = {
@@ -658,654 +658,727 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
         <div key={p.id} style={{ position: 'absolute', left: `${p.x}%`, bottom: '-100px', width: p.size, height: p.size, borderRadius: '40% 60% 60% 40% / 40% 40% 60% 60%', border: `1px solid ${accent}44`, opacity: p.opacity, animation: `antigravity ${p.duration}s ${p.delay}s infinite linear`, '--op': p.opacity, pointerEvents: 'none', zIndex: 0 }} />
       ))} */}
 
-{/* TOP NAV */}
-{/* TOP NAV */}
-<div
-  style={{
-    background: '#fff',
-    borderBottom: '0.5px solid #e5e7eb',
-    padding: '18px 40px',
-    display: 'grid',
-    gridTemplateColumns: '260px 1fr 260px',
-    alignItems: 'center',
-    gap: '24px',
-    position: 'sticky',
-    top: 0,
-    zIndex: 300
-  }}
->
-  {/* Logo */}
-  <div
-    style={{
-      color: '#8B1A1A',
-      fontWeight: 800,
-      fontSize: '24px',
-      letterSpacing: '3px'
-    }}
-  >
-    BitByte Jewels
-  </div>
-
-  {/* Center Search bar */}
-  <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-    <div style={{ width: '100%', maxWidth: 680, position: 'relative' }}>
-      <span
+      {/* TOP NAV */}
+      {/* TOP NAV */}
+      <div
         style={{
-          position: 'absolute',
-          left: 18,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          color: '#8B1A1A',
-          fontSize: 18
+          background: '#fff',
+          borderBottom: '0.5px solid #e5e7eb',
+          padding: '18px 40px',
+          display: 'grid',
+          gridTemplateColumns: '260px 1fr 260px',
+          alignItems: 'center',
+          gap: '24px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 300
         }}
       >
-        🔍
-      </span>
-
-      <input
-        placeholder="Search gold & diamond jewellery..."
-        style={{
-          width: '100%',
-          border: '1px solid #d1d5db',
-          borderRadius: 28,
-          padding: '14px 18px 14px 48px',
-          fontSize: 15,
-          outline: 'none',
-          color: '#374151',
-          boxSizing: 'border-box'
-        }}
-      />
-    </div>
-  </div>
-
-<div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 16, color: '#8B1A1A', fontSize: 22 }}>
-
-  <button
-  onClick={() => setShowTodayRate(true)}
-  style={{
-    background: 'linear-gradient(90deg,#b8860b,#d4a017)',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 20,
-    padding: '8px 18px',
-    fontSize: 13,
-    fontWeight: 700,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    whiteSpace: 'nowrap',
-    boxShadow: '0 2px 8px rgba(184,134,11,0.3)'
-  }}
->
-  📅 Today Rate
-</button>
-
-  <button
-    onClick={() => setShowOrderSummary(true)}
-    style={{
-      background: 'linear-gradient(90deg,#8B1A1A,#b91c1c)',
-      color: '#fff',
-      border: 'none',
-      borderRadius: 20,
-      padding: '8px 18px',
-      fontSize: 13,
-      fontWeight: 700,
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      gap: 6,
-      whiteSpace: 'nowrap',
-      boxShadow: '0 2px 8px rgba(139,26,26,0.25)'
-    }}
-  >
-    🏆 Order Summary
-  </button>
-  <span style={{ cursor: 'pointer' }}>♡</span>
-  <span style={{ cursor: 'pointer' }}>👤</span>
-  <span 
-  style={{ cursor: 'pointer', position: 'relative' }} 
-  onClick={() => navigate('/cart')}
->🛒</span>
-</div>
-
-</div>
-
-{/* CATEGORY NAV WITH DROPDOWN */}
-<div style={{ position: 'sticky', top: '73px', zIndex: 250, background: '#fff' }} onMouseLeave={() => { setShowDropdown(false) }}>
-
-  {/* Top category bar */}
-<div
-  style={{
-    borderBottom: '0.5px solid #f0f0f0',
-    padding: '0 40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    background: '#fff',
-    minHeight: 64,
-    width: '100%',
-    boxSizing: 'border-box'
-  }}
->
-    {[
-
-  { name: ' All Jewellery', key: 'all' },
-  { name: '🥇 Gold', key: 'gold' },
-  { name: '💎 Diamond', key: 'diamond' },
-  { name: '🪞 Earrings', key: 'earrings' },
-  { name: '💍 Rings', key: 'rings' },
-  { name: '🥈 Silver', key: 'silver' },
-  { name: '🏷️ Offers', key: 'offers' },
-  { name: '💒 Wedding', key: 'wedding' },
-  { name: '🎁 Gifting', key: 'gifting' },
-  
-
-    ].map(cat => (
-      <div
-        key={cat.key}
-        onMouseEnter={() => {
-          setShowDropdown(true)
-          setActiveCategory(cat.key)
-          // Set default filter for each category
-          const defaults = { all: 'category', gold: 'category', diamond: 'category', earrings: 'category', rings: 'category', silver: 'category', wedding: 'category', gifting: 'giftsfor', offers: 'alloffers' }
-          setActiveFilter(defaults[cat.key] || 'category')
-        }}
-style={{
-  padding: '20px 18px',
-  fontSize: 18,
-  cursor: 'pointer',
-  whiteSpace: 'nowrap',
-  color: (showDropdown && activeCategory === cat.key) ? '#8B1A1A' : '#374151',
-  borderBottom: (showDropdown && activeCategory === cat.key) ? '3px solid #8B1A1A' : '3px solid transparent',
-  fontWeight: (showDropdown && activeCategory === cat.key) ? 600 : 500,
-  transition: 'all 0.15s',
-}}
-      >{cat.name}</div>
-    ))}
-  </div>
-
-  {/* Dropdown panel */}
-  {showDropdown && (() => {
-
-    // ── CONFIG for each category ──
-    const DROPDOWN_CONFIG = {
-      all: {
-        filters: ['Category', 'Price', 'Occasion', 'Gender'],
-        filterKeys: ['category', 'price', 'occasion', 'gender'],
-        panels: {
-category: {
-  type: 'icon-grid',
-  items: ['Earrings','Finger Rings',
-          'Chains','Necklaces','Bangles','Bracelets'],
-},
-          price: {
-            type: 'price-grid',
-            items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
-          },
-          occasion: {
-            type: 'occasion-grid',
-            items: [{ label: 'Office Wear', emoji: '💼' },{ label: 'Modern Wear', emoji: '🚗' },{ label: 'Casual Wear', emoji: '☀️' },{ label: 'Traditional Wear', emoji: '🪔' }],
-          },
-          gender: {
-            type: 'gender-grid',
-            items: [{ label: 'Women', emoji: '👩' },{ label: 'Men', emoji: '👨' },{ label: 'Kids & Teens', emoji: '👧' }],
-          },
-        }
-      },
-      gold: {
-        filters: ['Category', 'Price', 'Occasion', 'Gold Coin', 'Men',],
-        filterKeys: ['category', 'price', 'occasion', 'goldcoin', 'men',],
-        panels: {
-category: {
-  type: 'icon-grid',
-  items: ['Gold Bracelets','Gold Earrings','Gold Chains','Gold Rings','Gold Bangles','Gold Necklaces'],
-},
-          price: {
-            type: 'price-grid',
-            items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
-          },
-          occasion: {
-            type: 'occasion-grid',
-            items: [{ label: 'Office Wear', emoji: '💼' },{ label: 'Modern Wear', emoji: '🚗' },{ label: 'Casual Wear', emoji: '☀️' },{ label: 'Traditional Wear', emoji: '🪔' }],
-          },
-          goldcoin: {
-            type: 'icon-grid',
-            items: ['Special Coins','1 Gram','2 Gram','4 Gram','5 Gram','8 Gram','10 Gram','25 Gram','50 Gram','100 Gram'],
-            icon: '🥇',
-          },
-          men: {
-            type: 'icon-grid',
-            items: ['Men\'s Rings','Men\'s Chains','Men\'s Bracelets','Men\'s Kadas'],
-            icon: '👨',
-          },
-        }
-      },
-wedding: {
-  filters: ['Category', 'Community'],
-  filterKeys: ['category', 'community'],
-  panels: {
-    category: {
-      type: 'image-grid',
-      items: [
-        { label: 'Wedding Ring', emoji: '💍' },
-        { label: 'Wedding Necklaces', emoji: '📿' },
-        { label: 'Wedding Chain', emoji: '✨' },
-        { label: 'Wedding Bangles', emoji: '💛' },
-        { label: 'Wedding Earring', emoji: '👂' },
-      ],
-    },
-community: {
-  type: 'community-grid',
-  items: ['Tamil Bride', 'Kerala Bride', 'Karnataka Bride', 'Andhra Bride', 'Punjabi Bride'],
-},
-  }
-},
-      gifting: {
-        filters: ['Gifts for', 'Gift Card', 'Price', 'Occasion', 'Corporate Gifting'],
-        filterKeys: ['giftsfor', 'giftcard', 'price', 'occasion', 'corporate'],
-        panels: {
-          giftsfor: {
-            type: 'gender-grid',
-            items: [{ label: 'Her', emoji: '👩' },{ label: 'Him', emoji: '👨' },{ label: 'Kids', emoji: '👧' }],
-          },
-          giftcard: {
-            type: 'giftcard-grid',
-            items: [{ label: 'BitByte Gift Card', emoji: '🎁' },{ label: 'BitByte E-Gift Card', emoji: '💌' }],
-          },
-          price: {
-            type: 'price-grid',
-            items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
-          },
-          occasion: {
-            type: 'occasion-grid',
-            items: [{ label: 'Wedding', emoji: '💍' },{ label: 'Birthday', emoji: '🎂' },{ label: 'Anniversary', emoji: '❤️' },{ label: 'Auspicious', emoji: '🪔' }],
-          },
-          corporate: {
-            type: 'icon-grid',
-            items: ['Corporate Gifts','Bulk Orders','Custom Engraving'],
-            icon: '🏢',
-          },
-        }
-      },
-
-      diamond: {
-        filters: ['Category', 'Price', 'Occasion', 'Gender'],
-        filterKeys: ['category', 'price', 'occasion', 'gender'],
-        panels: {
-category: {
-  type: 'icon-grid',
-  items: ['Diamond Earrings','Diamond Rings','Diamond Necklaces','Diamond Bangles','Diamond Bracelets'],
-  icon: '💎',
-},
-          price: {
-            type: 'price-grid',
-            items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
-          },
-          occasion: {
-            type: 'occasion-grid',
-            items: [{ label: 'Office Wear', emoji: '💼' },{ label: 'Modern Wear', emoji: '🚗' },{ label: 'Casual Wear', emoji: '☀️' },{ label: 'Traditional Wear', emoji: '🪔' }],
-          },
-          gender: {
-            type: 'gender-grid',
-            items: [{ label: 'Women', emoji: '👩' },{ label: 'Men', emoji: '👨' },{ label: 'Kids & Teens', emoji: '👧' }],
-          },
-        }
-      },
-
-      earrings: {
-        filters: ['Category', 'Price', 'Occasion', 'Gender',],
-        filterKeys: ['category', 'price', 'occasion', 'gender',],
-        panels: {
- category: {
-  type: 'icon-grid',
-  items: ['Men\'s Gold Earring','Women\'s Gold Earring','Kids Gold Earring','Gold Stud Earring','Gold Hoop Earring','Gold Drop Earring','Gold Stone Earring','Gold Plain Earring'],
-  icon: '💍',
-},
-          price: {
-            type: 'price-grid',
-            items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
-          },
-          occasion: {
-            type: 'occasion-grid',
-            items: [{ label: 'Office Wear', emoji: '💼' },{ label: 'Modern Wear', emoji: '🚗' },{ label: 'Casual Wear', emoji: '☀️' },{ label: 'Traditional Wear', emoji: '🪔' }],
-          },
-          gender: {
-            type: 'gender-grid',
-            items: [{ label: 'Women', emoji: '👩' },{ label: 'Men', emoji: '👨' },{ label: 'Kids & Teens', emoji: '👧' }],
-          },
-        }
-      },
-
-      rings: {
-        filters: ['Category', 'Price', 'Occasion', 'Gender',],
-        filterKeys: ['category', 'price', 'occasion', 'gender',],
-        panels: {
-          category: {
-            type: 'icon-grid',
-            items: ['Casual Rings','Couple Rings','Diamond Engagement Rings','Engagement Rings','Gold Engagement Rings','Men\'s Rings','Platinum Engagement Rings'],
-            icon: '💍',
-          },
-          price: {
-            type: 'price-grid',
-            items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
-          },
-          occasion: {
-            type: 'occasion-grid',
-            items: [{ label: 'Office Wear', emoji: '💼' },{ label: 'Modern Wear', emoji: '🚗' },{ label: 'Casual Wear', emoji: '☀️' },{ label: 'Traditional Wear', emoji: '🪔' }],
-          },
-          gender: {
-            type: 'gender-grid',
-            items: [{ label: 'Women', emoji: '👩' },{ label: 'Men', emoji: '👨' },{ label: 'Kids & Teens', emoji: '👧' }],
-          },
-        }
-      },
-
-silver: {
-        filters: ['Category', 'Price', 'Occasion', 'Silver Coin', 'Gender'],
-        filterKeys: ['category', 'price', 'occasion', 'silvercoin', 'gender'],
-        panels: {
-          category: {
-            type: 'icon-grid',
-            items: ['Silver Bangles','Silver Bracelets','Silver Earrings','Silver Chains','Silver Rings','Silver Necklaces','Silver Anklets'],
-            icon: '🥈',
-          },
-          price: {
-            type: 'price-grid',
-            items: [{ label: '< ₹25K', emoji: '🪙' },{ label: '₹25K – ₹50K', emoji: '💛' },{ label: '₹50K – ₹1L', emoji: '💎' },{ label: '₹1L & Above', emoji: '👑' }],
-          },
-          occasion: {
-            type: 'occasion-grid',
-            items: [{ label: 'Office Wear', emoji: '💼' },{ label: 'Modern Wear', emoji: '🚗' },{ label: 'Casual Wear', emoji: '☀️' },{ label: 'Traditional Wear', emoji: '🪔' }],
-          },
-          silvercoin: {
-            type: 'silver-coin-grid',
-            items: ['500 mg','1 gm','2 gm','5 gm','10 gm','20 gm','50 gm','100 gm'],
-          },
-          gender: {
-            type: 'gender-grid',
-            items: [{ label: 'Women', emoji: '👩' },{ label: 'Men', emoji: '👨' },{ label: 'Kids & Teens', emoji: '👧' }],
-          },
-        }
-      },
-
-      offers: {
-        filters: ['All Offers', 'Gold Offers', 'Diamond Offers', 'Festive Deals'],
-        filterKeys: ['alloffers', 'goldoffers', 'diamondoffers', 'festive'],
-        panels: {
-          alloffers: {
-            type: 'offers-grid',
-            items: [
-              { label: 'Making Charge Off', emoji: '🏷️', badge: 'UPTO 20%' },
-              { label: 'Exchange Bonus', emoji: '🔄', badge: 'EXTRA ₹500' },
-              { label: 'New Arrivals', emoji: '✨', badge: 'FRESH STOCK' },
-              { label: 'Clearance Sale', emoji: '🔥', badge: 'LIMITED' },
-            ],
-          },
-          goldoffers: {
-            type: 'offers-grid',
-            items: [
-              { label: 'Gold Making Off', emoji: '🥇', badge: 'UPTO 15%' },
-              { label: 'Gold Exchange', emoji: '🔄', badge: 'BONUS ₹300' },
-              { label: 'BIS Hallmark Gold', emoji: '✅', badge: 'CERTIFIED' },
-              { label: 'Gold Coins Deal', emoji: '🪙', badge: 'SPECIAL PRICE' },
-            ],
-          },
-          diamondoffers: {
-            type: 'offers-grid',
-            items: [
-              { label: 'Diamond Making Off', emoji: '💎', badge: 'UPTO 25%' },
-              { label: 'Solitaire Special', emoji: '💍', badge: 'EXCLUSIVE' },
-              { label: 'Certified Diamond', emoji: '✅', badge: 'IGI/GIA' },
-              { label: 'Buy 1 Get 1', emoji: '🎁', badge: 'LIMITED' },
-            ],
-          },
-          festive: {
-            type: 'offers-grid',
-            items: [
-              { label: 'Akshaya Tritiya', emoji: '🪔', badge: 'SPECIAL' },
-              { label: 'Dhanteras Offer', emoji: '🏮', badge: 'DIWALI' },
-              { label: 'Wedding Season', emoji: '💒', badge: 'BRIDAL' },
-              { label: 'Anniversary Deals', emoji: '❤️', badge: 'COUPLE' },
-            ],
-          },
-        }
-      },
-    }
-
-    const cfg = DROPDOWN_CONFIG[activeCategory] || DROPDOWN_CONFIG['all']
-    const panel = cfg.panels[activeFilter] || cfg.panels[cfg.filterKeys[0]]
-
-
-    
-
-    const renderPanel = () => {
-      if (!panel) return null
-
-if (panel.type === 'icon-grid') {
-  const CATEGORY_ROUTES = {
-    'Earrings': '/collection/earrings',
-    'Chains': '/collection/chains',
-    'Necklaces': '/collection/necklaces',
-    'Bangles': '/collection/bangles',
-    'Finger Rings': '/collection/rings',
-    'Bracelets': '/collection/bracelets',
-'Gold Bracelets': '/collection/bracelets',
-'Silver Bracelets': '/collection/bracelets',
-    
-  }
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
-      {panel.items.map(item => (
-        <div key={item}
-          style={{ display: 'flex', alignItems: 'center', gap: 10,
-            padding: '8px 10px', borderRadius: 8, cursor: 'pointer',
-            transition: 'background 0.15s' }}
-          onMouseEnter={e => e.currentTarget.style.background = '#fdf2f2'}
-          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          onClick={() => {
-            const route = CATEGORY_ROUTES[item]
-            if (route) { setShowDropdown(false); navigate(route) }
-          }}>
-          <div style={{ width: 34, height: 34, borderRadius: '50%',
-            background: '#f5f0e8', border: '0.5px solid #e8e0d0',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0, fontSize: 14 }}>
-            {panel.icon || '💍'}
-          </div>
-          <span style={{ fontSize: 13, color: '#1f2937' }}>{item}</span>
+        {/* Logo */}
+        <div
+          style={{
+            color: '#8B1A1A',
+            fontWeight: 800,
+            fontSize: '24px',
+            letterSpacing: '3px'
+          }}
+        >
+          BitByte Jewels
         </div>
-      ))}
-    </div>
-  )
-}
 
-if (panel.type === 'silver-coin-grid') {
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10 }}>
-      {panel.items.map(item => {
-        const w = WEIGHTS_SILVER.find(x => x.label === item)
-        const price = w && metalPrices.silver != null ? (w.grams * metalPrices.silver).toFixed(2) : null
-        return (
-          <div key={item}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-              padding: '10px 8px', borderRadius: 12, cursor: 'pointer',
-              border: '1px solid rgba(192,192,192,0.25)',
-              background: 'rgba(192,192,192,0.05)',
-              transition: 'all 0.2s' }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'rgba(192,192,192,0.18)'
-              e.currentTarget.style.borderColor = 'rgba(192,192,192,0.85)'
-              e.currentTarget.style.transform = 'translateY(-4px) scale(1.04)'
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(192,192,192,0.35)'
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = 'rgba(192,192,192,0.05)'
-              e.currentTarget.style.borderColor = 'rgba(192,192,192,0.25)'
-              e.currentTarget.style.transform = 'translateY(0) scale(1)'
-              e.currentTarget.style.boxShadow = 'none'
+        {/* Center Search bar */}
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: '100%', maxWidth: 680, position: 'relative' }}>
+            <span
+              style={{
+                position: 'absolute',
+                left: 18,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#8B1A1A',
+                fontSize: 18
+              }}
+            >
+              🔍
+            </span>
+
+            <input
+              placeholder="Search gold & diamond jewellery..."
+              style={{
+                width: '100%',
+                border: '1px solid #d1d5db',
+                borderRadius: 28,
+                padding: '14px 18px 14px 48px',
+                fontSize: 15,
+                outline: 'none',
+                color: '#374151',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 16, color: '#8B1A1A', fontSize: 22 }}>
+
+          <button
+            onClick={() => setShowTodayRate(true)}
+            style={{
+              background: 'linear-gradient(90deg,#b8860b,#d4a017)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 20,
+              padding: '8px 18px',
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              whiteSpace: 'nowrap',
+              boxShadow: '0 2px 8px rgba(184,134,11,0.3)'
             }}
           >
-            <img src={silverCoin} alt={item}
-              style={{ width: 54, height: 54, objectFit: 'contain',
-                filter: 'drop-shadow(0 2px 6px rgba(192,192,192,0.6))',
-                transition: 'all 0.25s' }} />
-            <div style={{ fontSize: 10, fontWeight: 800, color: '#c0c0c0',
-              background: 'rgba(192,192,192,0.12)', border: '1px solid rgba(192,192,192,0.3)',
-              borderRadius: 20, padding: '2px 8px' }}>{item}</div>
-            <div style={{ color: '#d1d5db', fontWeight: 700, fontSize: 11, fontFamily: 'monospace' }}>
-              {price ? `₹${price}` : '—'}
-            </div>
-            <div style={{ display: 'flex', gap: 4, width: '100%' }}>
-              <button
-                onClick={e => {
-                  e.stopPropagation()
-                  if (w) addMetalToCart('silver_999', 'Silver 999', w, price, silverCoin)
-                  setShowDropdown(false)
-                }}
-                style={{ flex: 1, padding: '4px 0', background: 'rgba(192,192,192,0.15)',
-                  border: '1px solid rgba(192,192,192,0.45)', borderRadius: 7,
-                  color: '#c0c0c0', fontSize: 9, fontWeight: 800, cursor: 'pointer' }}
-              >🪙 Cart</button>
-              <button
-                onClick={e => {
-                  e.stopPropagation()
-                  setOrderMetal('silver_999'); setOrderWeight(item)
-                  setOrderCount(1); setOrderMsg(''); setOrderPopup(true)
-                  setShowDropdown(false)
-                }}
-                style={{ flex: 1, padding: '4px 0', background: 'linear-gradient(90deg,#9ca3af,#e5e7eb)',
-                  border: 'none', borderRadius: 7,
-                  color: '#000', fontSize: 9, fontWeight: 900, cursor: 'pointer' }}
-              >🛒 Buy</button>
-            </div>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
+            📅 Today Rate
+          </button>
 
-
-
-if (panel.type === 'price-grid') {
-  const priceImgMap = {
-    '< ₹25K':      '/25k below.jpg',
-    '₹25K – ₹50K': '/25k-50k.jpg',
-    '₹50K – ₹1L':  '/50k-1L.jpg',
-    '₹1L & Above': '/1L above.jpg',
-  }
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
-      {panel.items.map(p => {
-        const imgSrc = priceImgMap[p.label]
-        return (
-          <div key={p.label} style={{ textAlign: 'center', cursor: 'pointer' }}
-  onMouseEnter={e => { e.currentTarget.querySelector('.ph-box').style.borderColor = '#8B1A1A'; e.currentTarget.querySelector('.ph-label').style.color = '#8B1A1A' }}
-  onMouseLeave={e => { e.currentTarget.querySelector('.ph-box').style.borderColor = '#e8e0d0'; e.currentTarget.querySelector('.ph-label').style.color = '#1f2937' }}
-  onClick={() => {
-    const priceMap = { '< ₹25K': 'below25k', '₹25K – ₹50K': '25k-50k', '₹50K – ₹1L': '50k-1L', '₹1L & Above': 'above1L' }
-    const metalMap = { gold: 'gold', silver: 'silver', diamond: 'gold', earrings: '', rings: '', all: '' }
-    const priceKey = priceMap[p.label]
-    const metalParam = metalMap[activeCategory] ? `&metal=${metalMap[activeCategory]}` : ''
-    setShowDropdown(false)
-    navigate(`/collection/all?price=${priceKey}${metalParam}`)
-  }}>
-            <div className="ph-box" style={{
-              width: '90%', height: '190px', borderRadius: 12,
-              background: '#f5f0e8', border: '0.5px solid #e8e0d0',
-              overflow: 'hidden', marginBottom: 8,
-              transition: 'border-color 0.15s'
-            }}>
-              {imgSrc
-                ? <img src={imgSrc} alt={p.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                : <span style={{ fontSize: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{p.emoji}</span>
-              }
-            </div>
-            <div className="ph-label" style={{ fontSize: 13, color: '#1f2937', transition: 'color 0.15s' }}>{p.label}</div>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-if (panel.type === 'occasion-grid') {
-  const occasionImgMap = {
-    'Office Wear':      '/Office Wear.jpg',
-    'Modern Wear':      '/Modern Wear.jpg',
-    'Casual Wear':      '/Casual Wear.jpg',
-    'Traditional Wear': '/Traditional Wear.jpg',
-  }
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
-      {panel.items.map(o => {
-        const imgSrc = occasionImgMap[o.label]
-        return (
-          <div key={o.label} style={{ textAlign: 'center', cursor: 'pointer' }}
-            onMouseEnter={e => { e.currentTarget.querySelector('.oh-box').style.borderColor = '#8B1A1A' }}
-            onMouseLeave={e => { e.currentTarget.querySelector('.oh-box').style.borderColor = '#e8e0d0' }}>
-            <div className="oh-box" style={{
-              width: '100%',
-              height: '190px',
-              borderRadius: 12,
-              background: '#f5f0e8',
-              border: '0.5px solid #e8e0d0',
-              overflow: 'hidden',
-              marginBottom: 8,
-              transition: 'border-color 0.15s'
-            }}>
-              {imgSrc
-                ? <img src={imgSrc} alt={o.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                : <span style={{ fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{o.emoji}</span>
-              }
-            </div>
-            <div style={{ fontSize: 13, color: '#1f2937' }}>{o.label}</div>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-if (panel.type === 'gender-grid') return (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, maxWidth: 460 }}>
-    {panel.items.map(g => {
-      const genderImgMap = {
-        'Women': "/Woman's Jewlley.jpg",
-        'Her':   "/Woman's Jewlley.jpg",
-        'Men':   "/Men's Jewellery.jpg",
-        'Him':   "/Men's Jewellery.jpg",
-        'Kids & Teens': "/Kids Jewllery.jpg",
-        'Kids':         "/Kids Jewllery.jpg",
-      }
-      const imgSrc = genderImgMap[g.label]
-      return (
-        <div key={g.label} style={{ textAlign: 'center', cursor: 'pointer' }}
-  onMouseEnter={e => { e.currentTarget.querySelector('.gh-box').style.borderColor = '#8B1A1A' }}
-  onMouseLeave={e => { e.currentTarget.querySelector('.gh-box').style.borderColor = '#e8e0d0' }}
-  onClick={() => {
-    const gMap = { 'Women': 'women', 'Her': 'women', 'Men': 'men', 'Him': 'men', 'Kids & Teens': 'kids', 'Kids': 'kids' }
-    const g2 = gMap[g.label]
-    if (g2) { setShowDropdown(false); navigate(`/collection/all?gender=${g2}`) }
-  }}>
-          <div className="gh-box" style={{
-            width: '100%', aspectRatio: '0.85', borderRadius: 12,
-            background: '#f5f0e8', border: '0.5px solid #e8e0d0',
-            overflow: 'hidden', marginBottom: 8,
-            transition: 'border-color 0.15s'
-          }}>
-            {imgSrc
-              ? <img src={imgSrc} alt={g.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              : <span style={{ fontSize: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{g.emoji}</span>
-            }
-          </div>
-          <div style={{ fontSize: 13, color: '#1f2937' }}>{g.label}</div>
+          <button
+            onClick={() => setShowOrderSummary(true)}
+            style={{
+              background: 'linear-gradient(90deg,#8B1A1A,#b91c1c)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 20,
+              padding: '8px 18px',
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              whiteSpace: 'nowrap',
+              boxShadow: '0 2px 8px rgba(139,26,26,0.25)'
+            }}
+          >
+            🏆 Order Summary
+          </button>
+          <span style={{ cursor: 'pointer' }}>♡</span>
+          <span style={{ cursor: 'pointer' }}>👤</span>
+          <span
+            style={{ cursor: 'pointer', position: 'relative' }}
+            onClick={() => navigate('/cart')}
+          >🛒</span>
         </div>
-      )
-    })}
-  </div>
-)
+
+      </div>
+
+      {/* CATEGORY NAV WITH DROPDOWN */}
+      <div style={{ position: 'sticky', top: '73px', zIndex: 250, background: '#fff' }} onMouseLeave={() => { setShowDropdown(false) }}>
+
+        {/* Top category bar */}
+        <div
+          style={{
+            borderBottom: '0.5px solid #f0f0f0',
+            padding: '0 40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: '#fff',
+            minHeight: 64,
+            width: '100%',
+            boxSizing: 'border-box'
+          }}
+        >
+          {[
+
+            { name: ' All Jewellery', key: 'all' },
+            { name: '🥇 Gold', key: 'gold' },
+            { name: '💎 Diamond', key: 'diamond' },
+            { name: '🪞 Earrings', key: 'earrings' },
+            { name: '💍 Rings', key: 'rings' },
+            { name: '🥈 Silver', key: 'silver' },
+            { name: '🪙 Coins', key: 'coins' },
+            { name: '🏷️ Offers', key: 'offers' },
+            { name: '💒 Wedding', key: 'wedding' },
+            { name: '🎁 Gifting', key: 'gifting' },
+
+
+          ].map(cat => (
+            <div
+              key={cat.key}
+              onMouseEnter={() => {
+                setShowDropdown(true)
+                setActiveCategory(cat.key)
+                // Set default filter for each category
+                const defaults = { all: 'category', gold: 'category', diamond: 'category', earrings: 'category', rings: 'category', silver: 'category', coins: 'silver', wedding: 'category', gifting: 'giftsfor', offers: 'alloffers' }
+                setActiveFilter(defaults[cat.key] || 'category')
+              }}
+              style={{
+                padding: '20px 18px',
+                fontSize: 18,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                color: (showDropdown && activeCategory === cat.key) ? '#8B1A1A' : '#374151',
+                borderBottom: (showDropdown && activeCategory === cat.key) ? '3px solid #8B1A1A' : '3px solid transparent',
+                fontWeight: (showDropdown && activeCategory === cat.key) ? 600 : 500,
+                transition: 'all 0.15s',
+              }}
+            >{cat.name}</div>
+          ))}
+        </div>
+
+        {/* Dropdown panel */}
+        {showDropdown && (() => {
+
+          // ── CONFIG for each category ──
+          const DROPDOWN_CONFIG = {
+            all: {
+              filters: ['Category', 'Price', 'Occasion', 'Gender'],
+              filterKeys: ['category', 'price', 'occasion', 'gender'],
+              panels: {
+                category: {
+                  type: 'icon-grid',
+                  items: ['Earrings', 'Finger Rings',
+                    'Chains', 'Necklaces', 'Bangles', 'Bracelets'],
+                },
+                price: {
+                  type: 'price-grid',
+                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
+                },
+                occasion: {
+                  type: 'occasion-grid',
+                  items: [{ label: 'Office Wear', emoji: '💼' }, { label: 'Modern Wear', emoji: '🚗' }, { label: 'Casual Wear', emoji: '☀️' }, { label: 'Traditional Wear', emoji: '🪔' }],
+                },
+                gender: {
+                  type: 'gender-grid',
+                  items: [{ label: 'Women', emoji: '👩' }, { label: 'Men', emoji: '👨' }, { label: 'Kids & Teens', emoji: '👧' }],
+                },
+              }
+            },
+            gold: {
+              filters: ['Category', 'Price', 'Occasion', 'Men'],
+              filterKeys: ['category', 'price', 'occasion', 'men'],
+              panels: {
+                category: {
+                  type: 'icon-grid',
+                  items: ['Gold Bracelets', 'Gold Earrings', 'Gold Chains', 'Gold Rings', 'Gold Bangles', 'Gold Necklaces'],
+                },
+                price: {
+                  type: 'price-grid',
+                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
+                },
+                occasion: {
+                  type: 'occasion-grid',
+                  items: [{ label: 'Office Wear', emoji: '💼' }, { label: 'Modern Wear', emoji: '🚗' }, { label: 'Casual Wear', emoji: '☀️' }, { label: 'Traditional Wear', emoji: '🪔' }],
+                },
+                men: {
+                  type: 'icon-grid',
+                  items: ['Men\'s Rings', 'Men\'s Chains', 'Men\'s Bracelets', 'Men\'s Kadas'],
+                  icon: '👨',
+                },
+              }
+            },
+            wedding: {
+              filters: ['Category', 'Community'],
+              filterKeys: ['category', 'community'],
+              panels: {
+                category: {
+                  type: 'image-grid',
+                  items: [
+                    { label: 'Wedding Ring', emoji: '💍' },
+                    { label: 'Wedding Necklaces', emoji: '📿' },
+                    { label: 'Wedding Chain', emoji: '✨' },
+                    { label: 'Wedding Bangles', emoji: '💛' },
+                    { label: 'Wedding Earring', emoji: '👂' },
+                  ],
+                },
+                community: {
+                  type: 'community-grid',
+                  items: ['Tamil Bride', 'Kerala Bride', 'Karnataka Bride', 'Andhra Bride', 'Punjabi Bride'],
+                },
+              }
+            },
+            gifting: {
+              filters: ['Gifts for', 'Gift Card', 'Price', 'Occasion', 'Corporate Gifting'],
+              filterKeys: ['giftsfor', 'giftcard', 'price', 'occasion', 'corporate'],
+              panels: {
+                giftsfor: {
+                  type: 'gender-grid',
+                  items: [{ label: 'Her', emoji: '👩' }, { label: 'Him', emoji: '👨' }, { label: 'Kids', emoji: '👧' }],
+                },
+                giftcard: {
+                  type: 'giftcard-grid',
+                  items: [{ label: 'BitByte Gift Card', emoji: '🎁' }, { label: 'BitByte E-Gift Card', emoji: '💌' }],
+                },
+                price: {
+                  type: 'price-grid',
+                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
+                },
+                occasion: {
+                  type: 'occasion-grid',
+                  items: [{ label: 'Wedding', emoji: '💍' }, { label: 'Birthday', emoji: '🎂' }, { label: 'Anniversary', emoji: '❤️' }, { label: 'Auspicious', emoji: '🪔' }],
+                },
+                corporate: {
+                  type: 'icon-grid',
+                  items: ['Corporate Gifts', 'Bulk Orders', 'Custom Engraving'],
+                  icon: '🏢',
+                },
+              }
+            },
+
+            diamond: {
+              filters: ['Category', 'Price', 'Occasion', 'Gender'],
+              filterKeys: ['category', 'price', 'occasion', 'gender'],
+              panels: {
+                category: {
+                  type: 'icon-grid',
+                  items: ['Diamond Earrings', 'Diamond Rings', 'Diamond Necklaces', 'Diamond Bangles', 'Diamond Bracelets'],
+                  icon: '💎',
+                },
+                price: {
+                  type: 'price-grid',
+                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
+                },
+                occasion: {
+                  type: 'occasion-grid',
+                  items: [{ label: 'Office Wear', emoji: '💼' }, { label: 'Modern Wear', emoji: '🚗' }, { label: 'Casual Wear', emoji: '☀️' }, { label: 'Traditional Wear', emoji: '🪔' }],
+                },
+                gender: {
+                  type: 'gender-grid',
+                  items: [{ label: 'Women', emoji: '👩' }, { label: 'Men', emoji: '👨' }, { label: 'Kids & Teens', emoji: '👧' }],
+                },
+              }
+            },
+
+            earrings: {
+              filters: ['Category', 'Price', 'Occasion', 'Gender',],
+              filterKeys: ['category', 'price', 'occasion', 'gender',],
+              panels: {
+                category: {
+                  type: 'icon-grid',
+                  items: ['Men\'s Gold Earring', 'Women\'s Gold Earring', 'Kids Gold Earring', 'Gold Stud Earring', 'Gold Hoop Earring', 'Gold Drop Earring', 'Gold Stone Earring', 'Gold Plain Earring'],
+                  icon: '💍',
+                },
+                price: {
+                  type: 'price-grid',
+                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
+                },
+                occasion: {
+                  type: 'occasion-grid',
+                  items: [{ label: 'Office Wear', emoji: '💼' }, { label: 'Modern Wear', emoji: '🚗' }, { label: 'Casual Wear', emoji: '☀️' }, { label: 'Traditional Wear', emoji: '🪔' }],
+                },
+                gender: {
+                  type: 'gender-grid',
+                  items: [{ label: 'Women', emoji: '👩' }, { label: 'Men', emoji: '👨' }, { label: 'Kids & Teens', emoji: '👧' }],
+                },
+              }
+            },
+
+            rings: {
+              filters: ['Category', 'Price', 'Occasion', 'Gender',],
+              filterKeys: ['category', 'price', 'occasion', 'gender',],
+              panels: {
+                category: {
+                  type: 'icon-grid',
+                  items: ['Casual Rings', 'Couple Rings', 'Diamond Engagement Rings', 'Engagement Rings', 'Gold Engagement Rings', 'Men\'s Rings', 'Platinum Engagement Rings'],
+                  icon: '💍',
+                },
+                price: {
+                  type: 'price-grid',
+                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
+                },
+                occasion: {
+                  type: 'occasion-grid',
+                  items: [{ label: 'Office Wear', emoji: '💼' }, { label: 'Modern Wear', emoji: '🚗' }, { label: 'Casual Wear', emoji: '☀️' }, { label: 'Traditional Wear', emoji: '🪔' }],
+                },
+                gender: {
+                  type: 'gender-grid',
+                  items: [{ label: 'Women', emoji: '👩' }, { label: 'Men', emoji: '👨' }, { label: 'Kids & Teens', emoji: '👧' }],
+                },
+              }
+            },
+
+            silver: {
+              filters: ['Category', 'Price', 'Occasion', 'Gender'],
+              filterKeys: ['category', 'price', 'occasion', 'gender'],
+              panels: {
+                category: {
+                  type: 'icon-grid',
+                  items: ['Silver Bangles', 'Silver Bracelets', 'Silver Earrings', 'Silver Chains', 'Silver Rings', 'Silver Necklaces', 'Silver Anklets'],
+                  icon: '🥈',
+                },
+                price: {
+                  type: 'price-grid',
+                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
+                },
+                occasion: {
+                  type: 'occasion-grid',
+                  items: [{ label: 'Office Wear', emoji: '💼' }, { label: 'Modern Wear', emoji: '🚗' }, { label: 'Casual Wear', emoji: '☀️' }, { label: 'Traditional Wear', emoji: '🪔' }],
+                },
+                gender: {
+                  type: 'gender-grid',
+                  items: [{ label: 'Women', emoji: '👩' }, { label: 'Men', emoji: '👨' }, { label: 'Kids & Teens', emoji: '👧' }],
+                },
+              }
+            },
+            coins: {
+              filters: ['Silver', 'Gold 22K', 'Gold 24K', 'Price'],
+              filterKeys: ['silver', 'gold22k', 'gold24k', 'price'],
+              panels: {
+                silver: {
+                  type: 'coin-nav-grid',
+                  metal: 'silver',
+                  items: [
+                    { label: 'All Silver', grams: null },
+                    { label: '500 mg', grams: 0.50 },
+                    { label: '1 gm', grams: 1 },
+                    { label: '2 gm', grams: 2 },
+                    { label: '5 gm', grams: 5 },
+                    { label: '10 gm', grams: 10 },
+                    { label: '20 gm', grams: 20 },
+                    { label: '50 gm', grams: 50 },
+                    { label: '100 gm', grams: 100 },
+                  ],
+                },
+                gold22k: {
+                  type: 'coin-nav-grid',
+                  metal: 'gold22k',
+                  items: [
+                    { label: 'All Gold', grams: null },
+                    { label: '100 mg', grams: 0.10 },
+                    { label: '200 mg', grams: 0.20 },
+                    { label: '500 mg', grams: 0.50 },
+                    { label: '1 gm', grams: 1 },
+                    { label: '2 gm', grams: 2 },
+                    { label: '4 gm', grams: 4 },
+                    { label: '8 gm', grams: 8 },
+                    { label: '16 gm', grams: 16 },
+                    { label: '40 gm', grams: 40 },
+                  ],
+                },
+                gold24k: {
+                  type: 'coin-nav-grid',
+                  metal: 'gold24k',
+                  items: [
+                    { label: 'All Gold', grams: null },
+                    { label: '100 mg', grams: 0.10 },
+                    { label: '200 mg', grams: 0.20 },
+                    { label: '500 mg', grams: 0.50 },
+                    { label: '1 gm', grams: 1 },
+                    { label: '2 gm', grams: 2 },
+                    { label: '4 gm', grams: 4 },
+                    { label: '8 gm', grams: 8 },
+                    { label: '16 gm', grams: 16 },
+                    { label: '40 gm', grams: 40 },
+                  ],
+                },
+                price: {
+                  type: 'price-grid',
+                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
+                },
+              }
+            },
+
+            offers: {
+              filters: ['All Offers', 'Gold Offers', 'Diamond Offers', 'Festive Deals'],
+              filterKeys: ['alloffers', 'goldoffers', 'diamondoffers', 'festive'],
+              panels: {
+                alloffers: {
+                  type: 'offers-grid',
+                  items: [
+                    { label: 'Making Charge Off', emoji: '🏷️', badge: 'UPTO 20%' },
+                    { label: 'Exchange Bonus', emoji: '🔄', badge: 'EXTRA ₹500' },
+                    { label: 'New Arrivals', emoji: '✨', badge: 'FRESH STOCK' },
+                    { label: 'Clearance Sale', emoji: '🔥', badge: 'LIMITED' },
+                  ],
+                },
+                goldoffers: {
+                  type: 'offers-grid',
+                  items: [
+                    { label: 'Gold Making Off', emoji: '🥇', badge: 'UPTO 15%' },
+                    { label: 'Gold Exchange', emoji: '🔄', badge: 'BONUS ₹300' },
+                    { label: 'BIS Hallmark Gold', emoji: '✅', badge: 'CERTIFIED' },
+                    { label: 'Gold Coins Deal', emoji: '🪙', badge: 'SPECIAL PRICE' },
+                  ],
+                },
+                diamondoffers: {
+                  type: 'offers-grid',
+                  items: [
+                    { label: 'Diamond Making Off', emoji: '💎', badge: 'UPTO 25%' },
+                    { label: 'Solitaire Special', emoji: '💍', badge: 'EXCLUSIVE' },
+                    { label: 'Certified Diamond', emoji: '✅', badge: 'IGI/GIA' },
+                    { label: 'Buy 1 Get 1', emoji: '🎁', badge: 'LIMITED' },
+                  ],
+                },
+                festive: {
+                  type: 'offers-grid',
+                  items: [
+                    { label: 'Akshaya Tritiya', emoji: '🪔', badge: 'SPECIAL' },
+                    { label: 'Dhanteras Offer', emoji: '🏮', badge: 'DIWALI' },
+                    { label: 'Wedding Season', emoji: '💒', badge: 'BRIDAL' },
+                    { label: 'Anniversary Deals', emoji: '❤️', badge: 'COUPLE' },
+                  ],
+                },
+              }
+            },
+          }
+
+          const cfg = DROPDOWN_CONFIG[activeCategory] || DROPDOWN_CONFIG['all']
+          const panel = cfg.panels[activeFilter] || cfg.panels[cfg.filterKeys[0]]
+
+
+
+
+          const renderPanel = () => {
+            if (!panel) return null
+
+            if (panel.type === 'icon-grid') {
+              const CATEGORY_ROUTES = {
+                'Earrings': '/collection/earrings',
+                'Chains': '/collection/chains',
+                'Necklaces': '/collection/necklaces',
+                'Bangles': '/collection/bangles',
+                'Finger Rings': '/collection/rings',
+                'Bracelets': '/collection/bracelets',
+                'Gold Bracelets': '/collection/bracelets',
+                'Silver Bracelets': '/collection/bracelets',
+                // Gold category routes
+                'Gold Earrings': '/gold-earrings',
+                'Gold Chains': '/gold-chains',
+                'Gold Rings': '/gold-rings',
+                'Gold Bangles': '/gold-bangles',
+                'Gold Necklaces': '/gold-necklaces',
+                'Gold Bracelets': '/gold-bracelets',
+                // Silver category routes
+                'Silver Bangles': '/silver-bangles',
+                'Silver Earrings': '/silver-earrings',
+                'Silver Chains': '/silver-chains',
+                'Silver Rings': '/silver-rings',
+                'Silver Necklaces': '/silver-necklaces',
+                'Silver Bracelets': '/silver-bracelets',
+                'Silver Anklets': '/collection/all?metal=silver',
+                // Diamond category routes
+                'Diamond Earrings': '/collection/earrings',
+                'Diamond Rings': '/collection/rings',
+                'Diamond Necklaces': '/collection/necklaces',
+                'Diamond Bangles': '/collection/bangles',
+                'Diamond Bracelets': '/collection/bracelets',
+              }
+              return (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+                  {panel.items.map(item => (
+                    <div key={item}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        padding: '8px 10px', borderRadius: 8, cursor: 'pointer',
+                        transition: 'background 0.15s'
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fdf2f2'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      onClick={() => {
+                        const route = CATEGORY_ROUTES[item]
+                        if (route) { setShowDropdown(false); navigate(route) }
+                      }}>
+                      <div style={{
+                        width: 34, height: 34, borderRadius: '50%',
+                        background: '#f5f0e8', border: '0.5px solid #e8e0d0',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexShrink: 0, fontSize: 14
+                      }}>
+                        {panel.icon || '💍'}
+                      </div>
+                      <span style={{ fontSize: 13, color: '#1f2937' }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+
+            // if (panel.type === 'silver-coin-grid') {
+            //   return (
+            //     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10 }}>
+            //       {panel.items.map(item => {
+            //         const w = WEIGHTS_SILVER.find(x => x.label === item)
+            //         const price = w && metalPrices.silver != null ? (w.grams * metalPrices.silver).toFixed(2) : null
+            //         return (
+            //           <div key={item}
+            //             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+            //               padding: '10px 8px', borderRadius: 12, cursor: 'pointer',
+            //               border: '1px solid rgba(192,192,192,0.25)',
+            //               background: 'rgba(192,192,192,0.05)',
+            //               transition: 'all 0.2s' }}
+            //             onMouseEnter={e => {
+            //               e.currentTarget.style.background = 'rgba(192,192,192,0.18)'
+            //               e.currentTarget.style.borderColor = 'rgba(192,192,192,0.85)'
+            //               e.currentTarget.style.transform = 'translateY(-4px) scale(1.04)'
+            //               e.currentTarget.style.boxShadow = '0 8px 24px rgba(192,192,192,0.35)'
+            //             }}
+            //             onMouseLeave={e => {
+            //               e.currentTarget.style.background = 'rgba(192,192,192,0.05)'
+            //               e.currentTarget.style.borderColor = 'rgba(192,192,192,0.25)'
+            //               e.currentTarget.style.transform = 'translateY(0) scale(1)'
+            //               e.currentTarget.style.boxShadow = 'none'
+            //             }}
+            //           >
+            //             <img src={silverCoin} alt={item}
+            //               style={{ width: 54, height: 54, objectFit: 'contain',
+            //                 filter: 'drop-shadow(0 2px 6px rgba(192,192,192,0.6))',
+            //                 transition: 'all 0.25s' }} />
+            //             <div style={{ fontSize: 10, fontWeight: 800, color: '#c0c0c0',
+            //               background: 'rgba(192,192,192,0.12)', border: '1px solid rgba(192,192,192,0.3)',
+            //               borderRadius: 20, padding: '2px 8px' }}>{item}</div>
+            //             <div style={{ color: '#d1d5db', fontWeight: 700, fontSize: 11, fontFamily: 'monospace' }}>
+            //               {price ? `₹${price}` : '—'}
+            //             </div>
+            //             <div style={{ display: 'flex', gap: 4, width: '100%' }}>
+            //               <button
+            //                 onClick={e => {
+            //                   e.stopPropagation()
+            //                   if (w) addMetalToCart('silver_999', 'Silver 999', w, price, silverCoin)
+            //                   setShowDropdown(false)
+            //                 }}
+            //                 style={{ flex: 1, padding: '4px 0', background: 'rgba(192,192,192,0.15)',
+            //                   border: '1px solid rgba(192,192,192,0.45)', borderRadius: 7,
+            //                   color: '#c0c0c0', fontSize: 9, fontWeight: 800, cursor: 'pointer' }}
+            //               >🪙 Cart</button>
+            //               <button
+            //                 onClick={e => {
+            //                   e.stopPropagation()
+            //                   setOrderMetal('silver_999'); setOrderWeight(item)
+            //                   setOrderCount(1); setOrderMsg(''); setOrderPopup(true)
+            //                   setShowDropdown(false)
+            //                 }}
+            //                 style={{ flex: 1, padding: '4px 0', background: 'linear-gradient(90deg,#9ca3af,#e5e7eb)',
+            //                   border: 'none', borderRadius: 7,
+            //                   color: '#000', fontSize: 9, fontWeight: 900, cursor: 'pointer' }}
+            //               >🛒 Buy</button>
+            //             </div>
+            //           </div>
+            //         )
+            //       })}
+            //     </div>
+            //   )
+            // }
+
+
+
+            if (panel.type === 'price-grid') {
+              const priceImgMap = {
+                '< ₹25K': '/25k below.jpg',
+                '₹25K – ₹50K': '/25k-50k.jpg',
+                '₹50K – ₹1L': '/50k-1L.jpg',
+                '₹1L & Above': '/1L above.jpg',
+              }
+              return (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+                  {panel.items.map(p => {
+                    const imgSrc = priceImgMap[p.label]
+                    return (
+                      <div key={p.label} style={{ textAlign: 'center', cursor: 'pointer' }}
+                        onMouseEnter={e => { e.currentTarget.querySelector('.ph-box').style.borderColor = '#8B1A1A'; e.currentTarget.querySelector('.ph-label').style.color = '#8B1A1A' }}
+                        onMouseLeave={e => { e.currentTarget.querySelector('.ph-box').style.borderColor = '#e8e0d0'; e.currentTarget.querySelector('.ph-label').style.color = '#1f2937' }}
+                        onClick={() => {
+                          const priceMap = { '< ₹25K': 'below25k', '₹25K – ₹50K': '25k-50k', '₹50K – ₹1L': '50k-1L', '₹1L & Above': 'above1L' }
+                          const metalMap = { gold: 'gold', silver: 'silver', diamond: 'gold', earrings: '', rings: '', all: '' }
+                          const priceKey = priceMap[p.label]
+                          const metalParam = metalMap[activeCategory] ? `&metal=${metalMap[activeCategory]}` : ''
+                          setShowDropdown(false)
+                          navigate(`/collection/all?price=${priceKey}${metalParam}`)
+                        }}>
+                        <div className="ph-box" style={{
+                          width: '90%', height: '190px', borderRadius: 12,
+                          background: '#f5f0e8', border: '0.5px solid #e8e0d0',
+                          overflow: 'hidden', marginBottom: 8,
+                          transition: 'border-color 0.15s'
+                        }}>
+                          {imgSrc
+                            ? <img src={imgSrc} alt={p.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                            : <span style={{ fontSize: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{p.emoji}</span>
+                          }
+                        </div>
+                        <div className="ph-label" style={{ fontSize: 13, color: '#1f2937', transition: 'color 0.15s' }}>{p.label}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            }
+
+            if (panel.type === 'occasion-grid') {
+              const occasionImgMap = {
+                'Office Wear': '/Office Wear.jpg',
+                'Modern Wear': '/Modern Wear.jpg',
+                'Casual Wear': '/Casual Wear.jpg',
+                'Traditional Wear': '/Traditional Wear.jpg',
+              }
+              return (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+                  {panel.items.map(o => {
+                    const imgSrc = occasionImgMap[o.label]
+                    return (
+                      <div key={o.label} style={{ textAlign: 'center', cursor: 'pointer' }}
+                        onMouseEnter={e => { e.currentTarget.querySelector('.oh-box').style.borderColor = '#8B1A1A' }}
+                        onMouseLeave={e => { e.currentTarget.querySelector('.oh-box').style.borderColor = '#e8e0d0' }}>
+                        <div className="oh-box" style={{
+                          width: '100%',
+                          height: '190px',
+                          borderRadius: 12,
+                          background: '#f5f0e8',
+                          border: '0.5px solid #e8e0d0',
+                          overflow: 'hidden',
+                          marginBottom: 8,
+                          transition: 'border-color 0.15s'
+                        }}>
+                          {imgSrc
+                            ? <img src={imgSrc} alt={o.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                            : <span style={{ fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{o.emoji}</span>
+                          }
+                        </div>
+                        <div style={{ fontSize: 13, color: '#1f2937' }}>{o.label}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            }
+
+            if (panel.type === 'gender-grid') return (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, maxWidth: 460 }}>
+                {panel.items.map(g => {
+                  const genderImgMap = {
+                    'Women': "/Woman's Jewlley.jpg",
+                    'Her': "/Woman's Jewlley.jpg",
+                    'Men': "/Men's Jewellery.jpg",
+                    'Him': "/Men's Jewellery.jpg",
+                    'Kids & Teens': "/Kids Jewllery.jpg",
+                    'Kids': "/Kids Jewllery.jpg",
+                  }
+                  const imgSrc = genderImgMap[g.label]
+                  return (
+                    <div key={g.label} style={{ textAlign: 'center', cursor: 'pointer' }}
+                      onMouseEnter={e => { e.currentTarget.querySelector('.gh-box').style.borderColor = '#8B1A1A' }}
+                      onMouseLeave={e => { e.currentTarget.querySelector('.gh-box').style.borderColor = '#e8e0d0' }}
+                      onClick={() => {
+                        const gMap = { 'Women': 'women', 'Her': 'women', 'Men': 'men', 'Him': 'men', 'Kids & Teens': 'kids', 'Kids': 'kids' }
+                        const g2 = gMap[g.label]
+                        if (g2) { setShowDropdown(false); navigate(`/collection/all?gender=${g2}`) }
+                      }}>
+                      <div className="gh-box" style={{
+                        width: '100%', aspectRatio: '0.85', borderRadius: 12,
+                        background: '#f5f0e8', border: '0.5px solid #e8e0d0',
+                        overflow: 'hidden', marginBottom: 8,
+                        transition: 'border-color 0.15s'
+                      }}>
+                        {imgSrc
+                          ? <img src={imgSrc} alt={g.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                          : <span style={{ fontSize: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{g.emoji}</span>
+                        }
+                      </div>
+                      <div style={{ fontSize: 13, color: '#1f2937' }}>{g.label}</div>
+                    </div>
+                  )
+                })}
+              </div>
+            )
 
 if (panel.type === 'image-grid') {
   const weddingImgMap = {
@@ -1322,129 +1395,171 @@ if (panel.type === 'image-grid') {
         return (
           <div key={item.label} style={{ textAlign: 'center', cursor: 'pointer' }}
             onMouseEnter={e => { e.currentTarget.querySelector('.wh-box').style.borderColor = '#8B1A1A' }}
-            onMouseLeave={e => { e.currentTarget.querySelector('.wh-box').style.borderColor = '#e8e0d0' }}>
-            <div className="wh-box" style={{
-              width: '90%',
-              height: '190px',
-              borderRadius: 12,
-              background: '#f5f0e8',
-              border: '0.5px solid #e8e0d0',
-              overflow: 'hidden',
-              marginBottom: 8,
-              transition: 'border-color 0.15s'
+            onMouseLeave={e => { e.currentTarget.querySelector('.wh-box').style.borderColor = '#e8e0d0' }}
+            onClick={() => {
+              setShowDropdown(false)
+              navigate(`/collection/all?wedding_category=${encodeURIComponent(item.label)}`)
             }}>
-              {imgSrc
-                ? <img src={imgSrc} alt={item.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                : <span style={{ fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{item.emoji}</span>
-              }
-            </div>
-            <div style={{ fontSize: 13, color: '#1f2937' }}>{item.label}</div>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
+              
+                        <div className="wh-box" style={{
+                          width: '90%',
+                          height: '190px',
+                          borderRadius: 12,
+                          background: '#f5f0e8',
+                          border: '0.5px solid #e8e0d0',
+                          overflow: 'hidden',
+                          marginBottom: 8,
+                          transition: 'border-color 0.15s'
+                        }}>
+                          {imgSrc
+                            ? <img src={imgSrc} alt={item.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                            : <span style={{ fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{item.emoji}</span>
+                          }
+                        </div>
+                        <div style={{ fontSize: 13, color: '#1f2937' }}>{item.label}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            }
 
-      if (panel.type === 'community-grid') return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12 }}>
-          {panel.items.map(item => (
-            <div key={item} style={{ textAlign: 'center', cursor: 'pointer' }}
-              onMouseEnter={e => { e.currentTarget.querySelector('.ch-box').style.borderColor = '#8B1A1A'; e.currentTarget.querySelector('.ch-label').style.color = '#8B1A1A' }}
-              onMouseLeave={e => { e.currentTarget.querySelector('.ch-box').style.borderColor = '#e8e0d0'; e.currentTarget.querySelector('.ch-label').style.color = '#1f2937' }}>
-              <div className="ch-box" style={{ width: '100%', aspectRatio: '0.75', borderRadius: 10, background: 'linear-gradient(135deg,#fdf2f2,#f5f0e8)', border: '0.5px solid #e8e0d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, marginBottom: 6, transition: 'border-color 0.15s' }}>
-                👰
+            if (panel.type === 'community-grid') return (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12 }}>
+                {panel.items.map(item => (
+                  <div key={item} style={{ textAlign: 'center', cursor: 'pointer' }}
+                    onMouseEnter={e => { e.currentTarget.querySelector('.ch-box').style.borderColor = '#8B1A1A'; e.currentTarget.querySelector('.ch-label').style.color = '#8B1A1A' }}
+                    onMouseLeave={e => { e.currentTarget.querySelector('.ch-box').style.borderColor = '#e8e0d0'; e.currentTarget.querySelector('.ch-label').style.color = '#1f2937' }}>
+                    <div className="ch-box" style={{ width: '100%', aspectRatio: '0.75', borderRadius: 10, background: 'linear-gradient(135deg,#fdf2f2,#f5f0e8)', border: '0.5px solid #e8e0d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, marginBottom: 6, transition: 'border-color 0.15s' }}>
+                      👰
+                    </div>
+                    <div className="ch-label" style={{ fontSize: 11, color: '#1f2937', transition: 'color 0.15s', lineHeight: 1.3 }}>{item}</div>
+                  </div>
+                ))}
               </div>
-              <div className="ch-label" style={{ fontSize: 11, color: '#1f2937', transition: 'color 0.15s', lineHeight: 1.3 }}>{item}</div>
-            </div>
-          ))}
-        </div>
-      )
+            )
 
-      if (panel.type === 'giftcard-grid') return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, maxWidth: 360 }}>
-          {panel.items.map(item => (
-            <div key={item.label} style={{ cursor: 'pointer' }}
-              onMouseEnter={e => { e.currentTarget.querySelector('.gc-box').style.borderColor = '#8B1A1A' }}
-              onMouseLeave={e => { e.currentTarget.querySelector('.gc-box').style.borderColor = '#c9a0a0' }}>
-              <div className="gc-box" style={{ width: '100%', aspectRatio: '1.6', borderRadius: 12, background: 'linear-gradient(135deg,#6b0f0f,#8B1A1A)', border: '2px solid #c9a0a0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 8, transition: 'border-color 0.15s' }}>
-                <span style={{ fontSize: 28 }}>{item.emoji}</span>
-                <span style={{ fontSize: 11, color: '#fff', fontStyle: 'italic', letterSpacing: '0.5px', fontWeight: 300 }}>BitByte</span>
+            if (panel.type === 'giftcard-grid') return (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, maxWidth: 360 }}>
+                {panel.items.map(item => (
+                  <div key={item.label} style={{ cursor: 'pointer' }}
+                    onMouseEnter={e => { e.currentTarget.querySelector('.gc-box').style.borderColor = '#8B1A1A' }}
+                    onMouseLeave={e => { e.currentTarget.querySelector('.gc-box').style.borderColor = '#c9a0a0' }}>
+                    <div className="gc-box" style={{ width: '100%', aspectRatio: '1.6', borderRadius: 12, background: 'linear-gradient(135deg,#6b0f0f,#8B1A1A)', border: '2px solid #c9a0a0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 8, transition: 'border-color 0.15s' }}>
+                      <span style={{ fontSize: 28 }}>{item.emoji}</span>
+                      <span style={{ fontSize: 11, color: '#fff', fontStyle: 'italic', letterSpacing: '0.5px', fontWeight: 300 }}>BitByte</span>
+                    </div>
+                    <div style={{ fontSize: 13, color: '#1f2937', textAlign: 'center' }}>{item.label}</div>
+                  </div>
+                ))}
               </div>
-              <div style={{ fontSize: 13, color: '#1f2937', textAlign: 'center' }}>{item.label}</div>
-            </div>
-          ))}
-        </div>
-      )
+            )
 
-      if (panel.type === 'offers-grid') return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
-          {panel.items.map(o => (
-            <div key={o.label} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 12, background: '#fdf2f2', border: '0.5px solid #f3d5d5', cursor: 'pointer', transition: 'all 0.15s' }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#f7e0e0'; e.currentTarget.style.borderColor = '#8B1A1A' }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#fdf2f2'; e.currentTarget.style.borderColor = '#f3d5d5' }}>
-              <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#fff', border: '1px solid #f3d5d5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
-                {o.emoji}
+            if (panel.type === 'coin-nav-grid') {
+              return (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+                  {panel.items.map(item => (
+                    <div key={item.label}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        padding: '8px 10px', borderRadius: 8, cursor: 'pointer',
+                        transition: 'background 0.15s'
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fdf2f2'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      onClick={() => {
+                        setShowDropdown(false)
+                        if (panel.metal === 'silver') {
+                          navigate(item.grams ? `/silver-coins?weight=${encodeURIComponent(item.label)}` : '/silver-coins')
+                        } else {
+                          const grade = panel.metal === 'gold24k' ? '24k' : '22k'
+                          navigate(item.grams ? `/gold-coins?weight=${encodeURIComponent(item.label)}&grade=${grade}` : `/gold-coins?grade=${grade}`)
+                        }
+                      }}
+                    >
+                      <div style={{
+                        width: 34, height: 34, borderRadius: '50%',
+                        background: '#f5f0e8', border: '0.5px solid #e8e0d0',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexShrink: 0, fontSize: 14
+                      }}>
+                        {panel.metal === 'silver' ? '🥈' : '🥇'}
+                      </div>
+                      <span style={{ fontSize: 13, color: '#1f2937' }}>{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+            if (panel.type === 'offers-grid') return (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
+                {panel.items.map(o => (
+                  <div key={o.label} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 12, background: '#fdf2f2', border: '0.5px solid #f3d5d5', cursor: 'pointer', transition: 'all 0.15s' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#f7e0e0'; e.currentTarget.style.borderColor = '#8B1A1A' }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#fdf2f2'; e.currentTarget.style.borderColor = '#f3d5d5' }}>
+                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#fff', border: '1px solid #f3d5d5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
+                      {o.emoji}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 13, color: '#1f2937', fontWeight: 500 }}>{o.label}</div>
+                      <div style={{ fontSize: 10, color: '#8B1A1A', fontWeight: 700, letterSpacing: '0.5px', marginTop: 3, background: '#fce8e8', display: 'inline-block', padding: '2px 8px', borderRadius: 20 }}>{o.badge}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div>
-                <div style={{ fontSize: 13, color: '#1f2937', fontWeight: 500 }}>{o.label}</div>
-                <div style={{ fontSize: 10, color: '#8B1A1A', fontWeight: 700, letterSpacing: '0.5px', marginTop: 3, background: '#fce8e8', display: 'inline-block', padding: '2px 8px', borderRadius: 20 }}>{o.badge}</div>
+            )
+
+
+
+            return null
+          }
+
+          // Section title map
+          const sectionTitles = {
+            category: 'Browse by Category', price: 'Shop by Price', occasion: 'Shop by Occasion',
+            gender: 'Shop by Gender', goldcoin: 'Gold Coins by Weight', silvercoin: 'Silver Coins by Weight', men: 'For Men',
+            metal: 'By Metal & Stones', community: 'Shop by Community', giftsfor: 'Gifts for',
+            giftcard: 'Gift Cards', corporate: 'Corporate Gifting', wedding: 'Wedding Collections',
+            style: 'Shop by Style', alloffers: 'All Offers', goldoffers: 'Gold Offers',
+            diamondoffers: 'Diamond Offers', festive: 'Festive Deals',
+            silver: 'Silver Coins', gold22k: 'Gold 22K Coins', gold24k: 'Gold 24K Coins',
+          }
+
+          return (
+            <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 200, background: '#fff', borderBottom: '0.5px solid #e5e7eb', boxShadow: '0 8px 24px rgba(0,0,0,0.08)', display: 'flex', minHeight: '260px' }}>
+
+              {/* Left filter tabs */}
+              <div style={{ width: 190, borderRight: '0.5px solid #f3f4f6', padding: '20px 0', flexShrink: 0 }}>
+                {cfg.filters.map((f, i) => (
+                  <div
+                    key={cfg.filterKeys[i]}
+                    onMouseEnter={() => setActiveFilter(cfg.filterKeys[i])}
+                    style={{
+                      padding: '11px 22px', fontSize: 13, cursor: 'pointer',
+                      margin: '2px 10px', borderRadius: 8,
+                      color: activeFilter === cfg.filterKeys[i] ? '#8B1A1A' : '#4b5563',
+                      background: activeFilter === cfg.filterKeys[i] ? '#fdf2f2' : 'transparent',
+                      fontWeight: activeFilter === cfg.filterKeys[i] ? 600 : 400,
+                      transition: 'all 0.15s',
+                    }}
+                  >{f}</div>
+                ))}
               </div>
+
+              {/* Right panel */}
+              <div style={{ flex: 1, padding: '24px 28px', overflowY: 'auto', maxHeight: '420px' }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: '#8B1A1A', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, paddingBottom: 8, borderBottom: '0.5px solid #fce8e8' }}>
+                  {sectionTitles[activeFilter] || activeFilter}
+                </div>
+                {renderPanel()}
+              </div>
+
             </div>
-          ))}
-        </div>
-      )
-
- 
-
-      return null
-    }
-
-    // Section title map
-const sectionTitles = {
-      category: 'Browse by Category', price: 'Shop by Price', occasion: 'Shop by Occasion',
-      gender: 'Shop by Gender', goldcoin: 'Gold Coins by Weight', silvercoin: 'Silver Coins by Weight', men: 'For Men',
-      metal: 'By Metal & Stones', community: 'Shop by Community', giftsfor: 'Gifts for',
-      giftcard: 'Gift Cards', corporate: 'Corporate Gifting', wedding: 'Wedding Collections',
-      style: 'Shop by Style', alloffers: 'All Offers', goldoffers: 'Gold Offers',
-      diamondoffers: 'Diamond Offers', festive: 'Festive Deals',
-    }
-
-    return (
-      <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 200, background: '#fff', borderBottom: '0.5px solid #e5e7eb', boxShadow: '0 8px 24px rgba(0,0,0,0.08)', display: 'flex', minHeight: '260px' }}>
-
-        {/* Left filter tabs */}
-        <div style={{ width: 190, borderRight: '0.5px solid #f3f4f6', padding: '20px 0', flexShrink: 0 }}>
-          {cfg.filters.map((f, i) => (
-            <div
-              key={cfg.filterKeys[i]}
-              onMouseEnter={() => setActiveFilter(cfg.filterKeys[i])}
-              style={{
-                padding: '11px 22px', fontSize: 13, cursor: 'pointer',
-                margin: '2px 10px', borderRadius: 8,
-                color: activeFilter === cfg.filterKeys[i] ? '#8B1A1A' : '#4b5563',
-                background: activeFilter === cfg.filterKeys[i] ? '#fdf2f2' : 'transparent',
-                fontWeight: activeFilter === cfg.filterKeys[i] ? 600 : 400,
-                transition: 'all 0.15s',
-              }}
-            >{f}</div>
-          ))}
-        </div>
-
-        {/* Right panel */}
-        <div style={{ flex: 1, padding: '24px 28px', overflowY: 'auto', maxHeight: '420px' }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: '#8B1A1A', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, paddingBottom: 8, borderBottom: '0.5px solid #fce8e8' }}>
-            {sectionTitles[activeFilter] || activeFilter}
-          </div>
-          {renderPanel()}
-        </div>
-
+          )
+        })()}
       </div>
-    )
-  })()}
-</div>
 
-<HomeBannerSlider />
+      <HomeBannerSlider />
 
       <div style={{ position: 'relative', zIndex: 10, padding: '28px 40px', maxWidth: '1400px', margin: '0 auto' }}>
 
@@ -1830,268 +1945,268 @@ const sectionTitles = {
 
 
 
-{/* ── TODAY RATE POPUP ── */}
-{showTodayRate && (
-  <div
-    onClick={() => setShowTodayRate(false)}
-    style={{
-      position: 'fixed', inset: 0,
-      background: 'rgba(0,0,0,0.75)',
-      backdropFilter: 'blur(8px)',
-      zIndex: 1100,
-      display: 'flex', alignItems: 'center', justifyContent: 'center'
-    }}
-  >
-    <div
-      onClick={e => e.stopPropagation()}
-      style={{
-        background: '#fdf5ee',
-        borderRadius: 24,
-        width: '95%', maxWidth: 400,
-        overflow: 'hidden',
-        boxShadow: '0 32px 80px rgba(0,0,0,0.45)',
-        animation: 'fadeIn 0.3s ease'
-      }}
-    >
-      {/* Header */}
-      <div style={{
-        background: 'linear-gradient(135deg,#8B1A1A,#b91c1c)',
-        padding: '20px 24px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-      }}>
-        <div>
-          <div style={{ color: '#fff', fontWeight: 800, fontSize: 16 }}>📅 Today's Rate</div>
-          <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, marginTop: 3 }}>
-            📍 Chennai, India • ₹ per gram
-            {dbRateDate && <span style={{ marginLeft: 8, color: '#ffd700' }}>
-              {new Date(dbRateDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
-            </span>}
-          </div>
-        </div>
-        <button
-          onClick={() => setShowTodayRate(false)}
-          style={{
-            background: 'rgba(255,255,255,0.15)',
-            border: '1px solid rgba(255,255,255,0.3)',
-            color: '#fff', borderRadius: 8,
-            padding: '5px 12px', cursor: 'pointer', fontSize: 12
-          }}
-        >✕</button>
-      </div>
-
-      {/* Rate Cards */}
-      <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-
-        {/* Silver 1g */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          background: 'rgba(192,192,192,0.08)',
-          border: '1px solid rgba(192,192,192,0.3)',
-          borderRadius: 14, padding: '14px 18px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 28 }}>🥈</span>
-            <div>
-              <div style={{ color: '#9ca3af', fontWeight: 800, fontSize: 13 }}>SILVER 999</div>
-              <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
-            </div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ color: '#9ca3af', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
-              {metalPrices.silver ? `₹${metalPrices.silver.toFixed(2)}` : '—'}
-            </div>
-            <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
-          </div>
-        </div>
-
-        {/* Gold 22K 1g */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          background: 'rgba(251,191,36,0.08)',
-          border: '1px solid rgba(251,191,36,0.4)',
-          borderRadius: 14, padding: '14px 18px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 28 }}>🏅</span>
-            <div>
-              <div style={{ color: '#fbbf24', fontWeight: 800, fontSize: 13 }}>GOLD 22K</div>
-              <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
-            </div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ color: '#fbbf24', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
-              {metalPrices.gold22k ? `₹${metalPrices.gold22k.toFixed(2)}` : '—'}
-            </div>
-            <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
-          </div>
-        </div>
-
-        {/* Gold 24K 1g */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          background: 'rgba(255,215,0,0.08)',
-          border: '1px solid rgba(255,215,0,0.4)',
-          borderRadius: 14, padding: '14px 18px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 28 }}>🥇</span>
-            <div>
-              <div style={{ color: '#ffd700', fontWeight: 800, fontSize: 13 }}>GOLD 24K</div>
-              <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
-            </div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ color: '#ffd700', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
-              {metalPrices.gold24k ? `₹${metalPrices.gold24k.toFixed(2)}` : '—'}
-            </div>
-            <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
-          </div>
-        </div>
-
-        <div style={{ textAlign: 'center', fontSize: 10, color: '#b09080', marginTop: 4 }}>
-          Rates update every 30 seconds • BitByte Jewels
-        </div>
-      </div>
-    </div>
-  </div>
-)}
-
-{/* ── ORDER SUMMARY POPUP ── */}
-{showOrderSummary && (
-  <div
-    onClick={() => setShowOrderSummary(false)}
-    style={{
-      position: 'fixed', inset: 0,
-      background: 'rgba(0,0,0,0.82)',
-      backdropFilter: 'blur(10px)',
-      zIndex: 1100,
-      display: 'flex', alignItems: 'center', justifyContent: 'center'
-    }}
-  >
-    <div
-      onClick={e => e.stopPropagation()}
-      style={{
-        background: '#fdf5ee',
-        borderRadius: 24,
-        width: '95%', maxWidth: 480,
-        maxHeight: '88vh',
-        display: 'flex', flexDirection: 'column',
-        overflow: 'hidden',
-        boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
-        animation: 'fadeIn 0.3s ease'
-      }}
-    >
-      {/* Header */}
-      <div style={{
-        padding: '20px 24px',
-        borderBottom: '1px solid #e8ddd5',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: '#fff'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 20 }}>🏆</span>
-          <span style={{ color: '#8B1A1A', fontWeight: 800, fontSize: 15, letterSpacing: '0.5px' }}>
-            ORDER SUMMARY
-          </span>
-        </div>
-        <button
-          onClick={() => setShowOrderSummary(false)}
-          style={{
-            background: 'rgba(239,68,68,0.1)',
-            border: '1px solid rgba(239,68,68,0.3)',
-            color: '#f87171', borderRadius: 8,
-            padding: '5px 14px', cursor: 'pointer', fontSize: 12
-          }}
-        >✕ Close</button>
-      </div>
-
-      {/* Period Tabs */}
-      <div style={{ display: 'flex', gap: 8, padding: '16px 24px 0', background: '#fff' }}>
-        {['today', 'week', 'month'].map(p => (
-          <button
-            key={p}
-            onClick={() => setSummaryPeriod(p)}
+        {/* ── TODAY RATE POPUP ── */}
+        {showTodayRate && (
+          <div
+            onClick={() => setShowTodayRate(false)}
             style={{
-              flex: 1, padding: '10px 0', borderRadius: 10,
-              border: summaryPeriod === p ? 'none' : '1px solid #e8ddd5',
-              background: summaryPeriod === p ? 'linear-gradient(90deg,#34d399,#22d3ee)' : 'transparent',
-              color: summaryPeriod === p ? '#003b40' : '#7c5c4a',
-              fontWeight: 800, fontSize: 12,
-              textTransform: 'uppercase', letterSpacing: '0.5px',
-              cursor: 'pointer', transition: 'all 0.2s ease'
+              position: 'fixed', inset: 0,
+              background: 'rgba(0,0,0,0.75)',
+              backdropFilter: 'blur(8px)',
+              zIndex: 1100,
+              display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}
           >
-            {p === 'today' ? 'Today' : p === 'week' ? 'Week' : 'Month'}
-          </button>
-        ))}
-      </div>
-
-      {/* Title */}
-      <div style={{
-        padding: '12px 24px 0', background: '#fff',
-        display: 'flex', alignItems: 'center', gap: 8
-      }}>
-        <span style={{ fontSize: 14 }}>📦</span>
-        <span style={{ color: '#8B1A1A', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-          {summaryPeriod === 'today' ? "Today's" : summaryPeriod === 'week' ? "This Week's" : "This Month's"} Orders
-        </span>
-      </div>
-
-      {/* Cards */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 24px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {[
-          { key: 'gold_22k', label: 'GOLD 22K', icon: '🥇', color: '#fbbf24', rgba: '251,191,36' },
-          { key: 'gold_24k', label: 'GOLD 24K', icon: '🥇', color: '#ffd700', rgba: '255,215,0' },
-          { key: 'silver_999', label: 'SILVER 999', icon: '🥈', color: '#9ca3af', rgba: '156,163,175' },
-        ].map(({ key, label, icon, color, rgba }) => {
-          const data = orderSummary?.[summaryPeriod]?.[key]
-          return (
-            <div key={key} style={{
-              background: `rgba(${rgba},0.08)`,
-              border: `1px solid rgba(${rgba},0.35)`,
-              borderRadius: 16, padding: '16px 20px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <span style={{ fontSize: 18 }}>{icon}</span>
-                <span style={{ color, fontWeight: 800, fontSize: 13, letterSpacing: '1px' }}>{label}</span>
-              </div>
-              {[
-                { label: 'Orders', value: data ? `${data.orders}` : '0' },
-                { label: 'Grams', value: data ? (data.grams >= 1 ? `${data.grams.toFixed(2)} gm` : `${(data.grams * 1000).toFixed(2)} mg`) : '0.00 mg' },
-                { label: 'Total Amount', value: data ? `₹${Number(data.amount).toLocaleString('en-IN')}` : '₹0', highlight: true },
-              ].map(({ label: l, value, highlight }) => (
-                <div key={l} style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '7px 0',
-                  borderBottom: l !== 'Total Amount' ? `1px solid rgba(${rgba},0.15)` : 'none'
-                }}>
-                  <span style={{ color: '#7c5c4a', fontSize: 13 }}>{l}</span>
-                  <span style={{
-                    color: highlight ? '#16a34a' : color,
-                    fontWeight: highlight ? 800 : 700,
-                    fontSize: highlight ? 15 : 13,
-                    fontFamily: 'monospace'
-                  }}>{value}</span>
+            <div
+              onClick={e => e.stopPropagation()}
+              style={{
+                background: '#fdf5ee',
+                borderRadius: 24,
+                width: '95%', maxWidth: 400,
+                overflow: 'hidden',
+                boxShadow: '0 32px 80px rgba(0,0,0,0.45)',
+                animation: 'fadeIn 0.3s ease'
+              }}
+            >
+              {/* Header */}
+              <div style={{
+                background: 'linear-gradient(135deg,#8B1A1A,#b91c1c)',
+                padding: '20px 24px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+              }}>
+                <div>
+                  <div style={{ color: '#fff', fontWeight: 800, fontSize: 16 }}>📅 Today's Rate</div>
+                  <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, marginTop: 3 }}>
+                    📍 Chennai, India • ₹ per gram
+                    {dbRateDate && <span style={{ marginLeft: 8, color: '#ffd700' }}>
+                      {new Date(dbRateDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
+                    </span>}
+                  </div>
                 </div>
-              ))}
-            </div>
-          )
-        })}
+                <button
+                  onClick={() => setShowTodayRate(false)}
+                  style={{
+                    background: 'rgba(255,255,255,0.15)',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    color: '#fff', borderRadius: 8,
+                    padding: '5px 12px', cursor: 'pointer', fontSize: 12
+                  }}
+                >✕</button>
+              </div>
 
-        <button
-          onClick={fetchOrderSummary}
-          style={{
-            width: '100%', padding: 10,
-            background: 'rgba(139,26,26,0.06)',
-            border: '1px solid rgba(139,26,26,0.2)',
-            borderRadius: 12, color: '#8B1A1A',
-            fontSize: 12, fontWeight: 700, cursor: 'pointer', marginTop: 4
-          }}
-        >🔄 Refresh</button>
-      </div>
-    </div>
-  </div>
-)}
+              {/* Rate Cards */}
+              <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+                {/* Silver 1g */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  background: 'rgba(192,192,192,0.08)',
+                  border: '1px solid rgba(192,192,192,0.3)',
+                  borderRadius: 14, padding: '14px 18px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <span style={{ fontSize: 28 }}>🥈</span>
+                    <div>
+                      <div style={{ color: '#9ca3af', fontWeight: 800, fontSize: 13 }}>SILVER 999</div>
+                      <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: '#9ca3af', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
+                      {metalPrices.silver ? `₹${metalPrices.silver.toFixed(2)}` : '—'}
+                    </div>
+                    <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
+                  </div>
+                </div>
+
+                {/* Gold 22K 1g */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  background: 'rgba(251,191,36,0.08)',
+                  border: '1px solid rgba(251,191,36,0.4)',
+                  borderRadius: 14, padding: '14px 18px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <span style={{ fontSize: 28 }}>🏅</span>
+                    <div>
+                      <div style={{ color: '#fbbf24', fontWeight: 800, fontSize: 13 }}>GOLD 22K</div>
+                      <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: '#fbbf24', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
+                      {metalPrices.gold22k ? `₹${metalPrices.gold22k.toFixed(2)}` : '—'}
+                    </div>
+                    <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
+                  </div>
+                </div>
+
+                {/* Gold 24K 1g */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  background: 'rgba(255,215,0,0.08)',
+                  border: '1px solid rgba(255,215,0,0.4)',
+                  borderRadius: 14, padding: '14px 18px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <span style={{ fontSize: 28 }}>🥇</span>
+                    <div>
+                      <div style={{ color: '#ffd700', fontWeight: 800, fontSize: 13 }}>GOLD 24K</div>
+                      <div style={{ color: '#7c5c4a', fontSize: 11, marginTop: 2 }}>1 gram rate</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: '#ffd700', fontWeight: 900, fontSize: 22, fontFamily: 'monospace' }}>
+                      {metalPrices.gold24k ? `₹${metalPrices.gold24k.toFixed(2)}` : '—'}
+                    </div>
+                    <div style={{ color: '#7c5c4a', fontSize: 10 }}>per gram</div>
+                  </div>
+                </div>
+
+                <div style={{ textAlign: 'center', fontSize: 10, color: '#b09080', marginTop: 4 }}>
+                  Rates update every 30 seconds • BitByte Jewels
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── ORDER SUMMARY POPUP ── */}
+        {showOrderSummary && (
+          <div
+            onClick={() => setShowOrderSummary(false)}
+            style={{
+              position: 'fixed', inset: 0,
+              background: 'rgba(0,0,0,0.82)',
+              backdropFilter: 'blur(10px)',
+              zIndex: 1100,
+              display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}
+          >
+            <div
+              onClick={e => e.stopPropagation()}
+              style={{
+                background: '#fdf5ee',
+                borderRadius: 24,
+                width: '95%', maxWidth: 480,
+                maxHeight: '88vh',
+                display: 'flex', flexDirection: 'column',
+                overflow: 'hidden',
+                boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
+                animation: 'fadeIn 0.3s ease'
+              }}
+            >
+              {/* Header */}
+              <div style={{
+                padding: '20px 24px',
+                borderBottom: '1px solid #e8ddd5',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                background: '#fff'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 20 }}>🏆</span>
+                  <span style={{ color: '#8B1A1A', fontWeight: 800, fontSize: 15, letterSpacing: '0.5px' }}>
+                    ORDER SUMMARY
+                  </span>
+                </div>
+                <button
+                  onClick={() => setShowOrderSummary(false)}
+                  style={{
+                    background: 'rgba(239,68,68,0.1)',
+                    border: '1px solid rgba(239,68,68,0.3)',
+                    color: '#f87171', borderRadius: 8,
+                    padding: '5px 14px', cursor: 'pointer', fontSize: 12
+                  }}
+                >✕ Close</button>
+              </div>
+
+              {/* Period Tabs */}
+              <div style={{ display: 'flex', gap: 8, padding: '16px 24px 0', background: '#fff' }}>
+                {['today', 'week', 'month'].map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setSummaryPeriod(p)}
+                    style={{
+                      flex: 1, padding: '10px 0', borderRadius: 10,
+                      border: summaryPeriod === p ? 'none' : '1px solid #e8ddd5',
+                      background: summaryPeriod === p ? 'linear-gradient(90deg,#34d399,#22d3ee)' : 'transparent',
+                      color: summaryPeriod === p ? '#003b40' : '#7c5c4a',
+                      fontWeight: 800, fontSize: 12,
+                      textTransform: 'uppercase', letterSpacing: '0.5px',
+                      cursor: 'pointer', transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {p === 'today' ? 'Today' : p === 'week' ? 'Week' : 'Month'}
+                  </button>
+                ))}
+              </div>
+
+              {/* Title */}
+              <div style={{
+                padding: '12px 24px 0', background: '#fff',
+                display: 'flex', alignItems: 'center', gap: 8
+              }}>
+                <span style={{ fontSize: 14 }}>📦</span>
+                <span style={{ color: '#8B1A1A', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  {summaryPeriod === 'today' ? "Today's" : summaryPeriod === 'week' ? "This Week's" : "This Month's"} Orders
+                </span>
+              </div>
+
+              {/* Cards */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '16px 24px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  { key: 'gold_22k', label: 'GOLD 22K', icon: '🥇', color: '#fbbf24', rgba: '251,191,36' },
+                  { key: 'gold_24k', label: 'GOLD 24K', icon: '🥇', color: '#ffd700', rgba: '255,215,0' },
+                  { key: 'silver_999', label: 'SILVER 999', icon: '🥈', color: '#9ca3af', rgba: '156,163,175' },
+                ].map(({ key, label, icon, color, rgba }) => {
+                  const data = orderSummary?.[summaryPeriod]?.[key]
+                  return (
+                    <div key={key} style={{
+                      background: `rgba(${rgba},0.08)`,
+                      border: `1px solid rgba(${rgba},0.35)`,
+                      borderRadius: 16, padding: '16px 20px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                        <span style={{ fontSize: 18 }}>{icon}</span>
+                        <span style={{ color, fontWeight: 800, fontSize: 13, letterSpacing: '1px' }}>{label}</span>
+                      </div>
+                      {[
+                        { label: 'Orders', value: data ? `${data.orders}` : '0' },
+                        { label: 'Grams', value: data ? (data.grams >= 1 ? `${data.grams.toFixed(2)} gm` : `${(data.grams * 1000).toFixed(2)} mg`) : '0.00 mg' },
+                        { label: 'Total Amount', value: data ? `₹${Number(data.amount).toLocaleString('en-IN')}` : '₹0', highlight: true },
+                      ].map(({ label: l, value, highlight }) => (
+                        <div key={l} style={{
+                          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                          padding: '7px 0',
+                          borderBottom: l !== 'Total Amount' ? `1px solid rgba(${rgba},0.15)` : 'none'
+                        }}>
+                          <span style={{ color: '#7c5c4a', fontSize: 13 }}>{l}</span>
+                          <span style={{
+                            color: highlight ? '#16a34a' : color,
+                            fontWeight: highlight ? 800 : 700,
+                            fontSize: highlight ? 15 : 13,
+                            fontFamily: 'monospace'
+                          }}>{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                })}
+
+                <button
+                  onClick={fetchOrderSummary}
+                  style={{
+                    width: '100%', padding: 10,
+                    background: 'rgba(139,26,26,0.06)',
+                    border: '1px solid rgba(139,26,26,0.2)',
+                    borderRadius: 12, color: '#8B1A1A',
+                    fontSize: 12, fontWeight: 700, cursor: 'pointer', marginTop: 4
+                  }}
+                >🔄 Refresh</button>
+              </div>
+            </div>
+          </div>
+        )}
 
 
         {/* ── PLACE ORDER POPUP ── */}
@@ -2472,7 +2587,7 @@ const sectionTitles = {
           </div>
         </div>
 
-{/* ── BHARATHY WORLD SECTION ── */}
+        {/* ── BHARATHY WORLD SECTION ── */}
         <div style={{ marginBottom: '40px', marginTop: '40px', textAlign: 'center' }}>
 
           <div style={{ fontSize: 28, fontWeight: 700, color: '#1a0a0a', marginBottom: 6 }}>
@@ -2726,7 +2841,7 @@ const sectionTitles = {
 
           </div>
         </div>
-{/* ── END JEWELRY SHOWCASE ── */}
+        {/* ── END JEWELRY SHOWCASE ── */}
 
 
 
@@ -2742,26 +2857,26 @@ const sectionTitles = {
           <div style={{ fontSize: 22, fontWeight: 800, color: '#1a0a0a', letterSpacing: 2, marginBottom: 6 }}>SHOP BY GENDER</div>
           <div style={{ fontSize: 14, color: '#7c5c4a', marginBottom: 28 }}>Find Jewelry for Women, Men, and Kids</div>
 
-         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24, maxWidth: 1300, margin: '0 auto', padding: '0 40px', alignItems: 'start' }}>
-         {[
-  { label: "Women's Jewellery", img: "/Woman's Jewlley.jpg", gender: 'women' },
-  { label: "Men's Jewellery",   img: "/Men's Jewellery.jpg", gender: 'men' },
-  { label: "Kid's Jewellery",   img: "/Kids Jewllery.jpg",   gender: 'kids' },
-].map((item, i) => (
-  <div
-    key={item.label}
-    style={{ cursor: 'pointer', textAlign: 'center' }}
-    onClick={() => navigate(`/collection/all?gender=${item.gender}`)}
-    onMouseEnter={e => {
-      e.currentTarget.querySelector('.sbg-img').style.transform = 'scale(1.03)'
-      e.currentTarget.querySelector('.sbg-label').style.color = '#8B1A1A'
-    }}
-    onMouseLeave={e => {
-      e.currentTarget.querySelector('.sbg-img').style.transform = 'scale(1)'
-      e.currentTarget.querySelector('.sbg-label').style.color = '#b8860b'
-    }}
-  >
-<div style={{
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24, maxWidth: 1300, margin: '0 auto', padding: '0 40px', alignItems: 'start' }}>
+            {[
+              { label: "Women's Jewellery", img: "/Woman's Jewlley.jpg", gender: 'women' },
+              { label: "Men's Jewellery", img: "/Men's Jewellery.jpg", gender: 'men' },
+              { label: "Kid's Jewellery", img: "/Kids Jewllery.jpg", gender: 'kids' },
+            ].map((item, i) => (
+              <div
+                key={item.label}
+                style={{ cursor: 'pointer', textAlign: 'center' }}
+                onClick={() => navigate(`/collection/all?gender=${item.gender}`)}
+                onMouseEnter={e => {
+                  e.currentTarget.querySelector('.sbg-img').style.transform = 'scale(1.03)'
+                  e.currentTarget.querySelector('.sbg-label').style.color = '#8B1A1A'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.querySelector('.sbg-img').style.transform = 'scale(1)'
+                  e.currentTarget.querySelector('.sbg-label').style.color = '#b8860b'
+                }}
+              >
+                <div style={{
                   borderRadius: 16, overflow: 'hidden',
                   border: '1px solid #e8ddd5',
                   boxShadow: '0 4px 16px rgba(139,26,26,0.08)',
@@ -2782,7 +2897,7 @@ const sectionTitles = {
                 </div>
               </div>
             ))}
-</div>
+          </div>
         </div>
 
         {/* ── FEATURED JEWELLERY COLLECTIONS ── */}
