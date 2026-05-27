@@ -197,7 +197,7 @@ setProductImages([]); setProductPreviewUrls([]); setLivePrice(null); setNetWeigh
   // ── EDIT OPEN ──
   const openEdit = p => {
     setEditProduct(p)
-    setEditForm({ category: p.category, metal: p.metal, grade: p.grade, name: p.name, description: p.description || '', weight_grams: p.weight_grams || '', tag: p.tag || '' })
+    setEditForm({ category: p.category, metal: p.metal, grade: p.grade, name: p.name, description: p.description || '', weight_grams: p.weight_grams || '', tag: p.tag || '', wedding_category: p.wedding_category || '' })
     setEditImages([]); setEditPreviews([]); setEditMsg('')
     setEditLivePrice(p.price ? String(p.price) : null)
   }
@@ -692,10 +692,21 @@ const handleDelete = async (id) => {
                 </div>
               </div>
 
-              {/* name / tag */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-                <div>
-                  <label style={lblStyle}>Name *</label>
+            {/* Wedding Category */}
+<div style={{ marginBottom: '12px' }}>
+  <label style={lblStyle}>Wedding Category</label>
+  <select value={editForm.wedding_category || ''} onChange={e => setEditForm(f => ({ ...f, wedding_category: e.target.value }))} style={{ ...inpStyle, cursor: 'pointer' }}>
+    <option value="" style={{ background: optionBg }}>-- None --</option>
+    {['Wedding Ring','Wedding Necklaces','Wedding Chain','Wedding Bangles','Wedding Earring'].map(w => (
+      <option key={w} value={w} style={{ background: optionBg }}>{w}</option>
+    ))}
+  </select>
+</div>
+
+{/* name / tag */}
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+  <div>
+    <label style={lblStyle}>Name *</label>
                   <input value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} style={inpStyle} />
                 </div>
                 <div>
