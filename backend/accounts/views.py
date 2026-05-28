@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
-from .models import User, AdminProfile, DealerProfile, SubDealerProfile, PromotorProfile, CustomerProfile, Announcement, AnnouncementReply, ProfileUpdateRequest, MetalRate, MetalOrder, JewelryProduct, JewelryProductImage, HomeBanner
+from .models import User, AdminProfile, DealerProfile, SubDealerProfile, PromotorProfile, CustomerProfile, Announcement, AnnouncementReply, ProfileUpdateRequest, MetalRate, MetalOrder, JewelryProduct, JewelryProductImage, HomeBanner, CartItem
 from .serializers import *
 from django.utils import timezone
 from datetime import timedelta
@@ -886,7 +886,73 @@ class HomeBannerDetailView(APIView):
             banner.delete()
             return Response({'message': 'Banner deleted'})
         except HomeBanner.DoesNotExist:
-            return Response({'error': 'Not found'}, status=404)            
+            return Response({'error': 'Not found'}, status=404)   
+
+
+class CartView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """User's cart items fetch"""
+        items = CartItem.objects.filter(user=request.user).select_related('product').prefetch_related('product__images')
+        serializer = CartItemSerializer(items, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def post(self, request):
+        """Add to cart - product_id + qty"""
+        product_id = request.data.get('product_id')
+        qty = int(request.data.get('qty', 1))
+
+        if not product_id:
+            return Response({'error': 'product_id required'}, status=400)
+
+        try:
+            product = JewelryProduct.objects.get(id=product_id, is_active=True)
+        except JewelryProduct.DoesNotExist:
+            return Response({'error': 'Product not found'}, status=404)
+
+        # Already in cart → qty update
+        item, created = CartItem.objects.get_or_create(
+            user=request.user,
+            product=product,
+            defaults={'qty': qty}
+        )
+        if not created:
+            item.qty += qty
+            item.save()
+
+        serializer = CartItemSerializer(item, context={'request': request})
+        return Response(serializer.data, status=201 if created else 200)
+
+    def delete(self, request):
+        """Remove specific item - product_id send பண்ணு"""
+        product_id = request.data.get('product_id')
+        if not product_id:
+            return Response({'error': 'product_id required'}, status=400)
+
+        CartItem.objects.filter(user=request.user, product_id=product_id).delete()
+        return Response({'message': 'Removed from cart'})
+
+
+class CartItemQtyView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, pk):
+        """Update qty for a cart item"""
+        try:
+            item = CartItem.objects.get(id=pk, user=request.user)
+        except CartItem.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)
+
+        qty = int(request.data.get('qty', 1))
+        if qty < 1:
+            item.delete()
+            return Response({'message': 'Item removed'})
+
+        item.qty = qty
+        item.save()
+        serializer = CartItemSerializer(item, context={'request': request})
+        return Response(serializer.data)                     
 
 
 @api_view(['GET'])

@@ -562,4 +562,19 @@ class HomeBanner(models.Model):
         ordering = ['slot']
 
     def __str__(self):
-        return f"Banner {self.slot}"                      
+        return f"Banner {self.slot}"        
+
+
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_items')
+    product = models.ForeignKey(
+        JewelryProduct, on_delete=models.CASCADE, related_name='cart_items'
+    )
+    qty = models.IntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'product']  # same product twice add பண்ண qty++ ஆகும்
+
+    def __str__(self):
+        return f"{self.user.email} - {self.product.name} x {self.qty}"                      

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import logo from '../assets/logo.png'
-import { addToCart } from './card_section'
+import { addToCartDB } from '../collection/card_section'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -312,34 +312,15 @@ const handleMouseMove = (e) => {
   setZoomPixel({ x: px, y: py })
 }
 
-  const handleAddToCart = () => {
+const handleAddToCart = async () => {
     if (!product) return
-
-// AFTER — metalLabel and ringType add பண்ணுங்க
-const cartProduct = {
-  ...product,
-  id: product.id,
-  name: productName,
-  title: productName,
-  desc: productDesc,
-  description: productDesc,
-  img: mainImage,
-  image: mainImage,
-  metal,
-  metalLabel: metal === 'gold' ? 'Gold' : 'Silver',
-  category,
-  ringType: category,
-  quantity: qty,
-  price: displayPrice || 0,
-}
-
-    addToCart(cartProduct)
-    setShowAdded(true)
-
-    setTimeout(() => {
-      setShowAdded(false)
-    }, 1600)
+    const result = await addToCartDB(product.id, qty)
+    if (result) {
+      setShowAdded(true)
+      setTimeout(() => setShowAdded(false), 1600)
+    }
   }
+  
 
   if (loading) {
     return (

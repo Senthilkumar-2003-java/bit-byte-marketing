@@ -8,7 +8,7 @@ import logo from '../assets/logo.png'
 import goldCoin from '../assets/gold-coin-transparent.png'
 import silverCoin from '../assets/silver-coin-transparent.png'
 
-import { getCartCount, addToCart } from '../collection/card_section'
+import { getCartCountDB, addToCartDB } from '../collection/card_section'
 
 // const PARTICLES = Array.from({ length: 15 }, (_, i) => ({
 //   id: i, size: Math.random() * 60 + 10, x: Math.random() * 100,
@@ -132,7 +132,7 @@ export default function CustomerDashboard() {
   const [msg, setMsg] = useState('')
   const [msgType, setMsgType] = useState('')
   const [hoveredJewel, setHoveredJewel] = useState(null)
-  const [cartCount, setCartCount] = useState(getCartCount())
+  const [cartCount, setCartCount] = useState(0)
   const [showDropdown, setShowDropdown] = useState(false)
   const [activeFilter, setActiveFilter] = useState('category')
   const [activeCategory, setActiveCategory] = useState('all')
@@ -230,8 +230,13 @@ export default function CustomerDashboard() {
   // }, [dark])
 
 
-  useEffect(() => {
-    const handler = () => setCartCount(getCartCount())
+useEffect(() => {
+    const updateCount = async () => {
+      const count = await getCartCountDB()
+      setCartCount(count)
+    }
+    updateCount()
+    const handler = () => updateCount()
     window.addEventListener('bb_cart_update', handler)
     return () => window.removeEventListener('bb_cart_update', handler)
   }, [])
@@ -412,24 +417,11 @@ export default function CustomerDashboard() {
     } catch { }
   }
 
-  const addMetalToCart = (metalType, metalLabel, weightObj, price, img) => {
-    addToCart({
-      id: `${metalType}_${weightObj.label}`,
-      name: `${metalLabel} - ${weightObj.label}`,
-      desc: `${weightObj.label} coin saved from today's metal rate section`,
-      img,
-      tag: weightObj.label,
-      metal: metalType,
-      metalLabel,
-      ringType: 'Coin',
-      weightLabel: weightObj.label,
-      weightGrams: weightObj.grams,
-      price: price ? Number(price) : 0,
-    })
-
-    setCartCount(getCartCount())
-    setMsg(`✅ ${weightObj.label} ${metalLabel} added to cart`)
-    setMsgType('success')
+const addMetalToCart = async (metalType, metalLabel, weightObj, price, img) => {
+    // Metal coins - product id இல்லாததால் DB cart support இல்ல
+    // Future-ல metal coin product create பண்ணா id கொடுக்கலாம்
+    setMsg(`ℹ️ Metal coins - Place Order button use பண்ணுங்க`)
+    setMsgType('info')
   }
 
 
