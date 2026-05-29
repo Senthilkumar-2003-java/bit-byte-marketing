@@ -49,6 +49,14 @@ function HomeBannerSlider() {
   return (
     <div style={{ width: '100%', overflow: 'hidden', position: 'relative', height: '850px', background: '#f5f0e8' }}>
       <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Montserrat', 'Inter', system-ui, sans-serif !important;
+}
+h1, h2, h3 {
+  font-family: 'Playfair Display', Georgia, serif !important;
+}
         @keyframes slideLeft {
           from { transform: translateX(0); }
           to   { transform: translateX(-100%); }
@@ -668,191 +676,357 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
         <div key={p.id} style={{ position: 'absolute', left: `${p.x}%`, bottom: '-100px', width: p.size, height: p.size, borderRadius: '40% 60% 60% 40% / 40% 40% 60% 60%', border: `1px solid ${accent}44`, opacity: p.opacity, animation: `antigravity ${p.duration}s ${p.delay}s infinite linear`, '--op': p.opacity, pointerEvents: 'none', zIndex: 0 }} />
       ))} */}
 
-      {/* TOP NAV */}
-      {/* TOP NAV */}
-      <div
-        style={{
-          background: '#fff',
-          borderBottom: '0.5px solid #e5e7eb',
-          padding: '18px 40px',
-          display: 'grid',
-          gridTemplateColumns: '260px 1fr 260px',
-          alignItems: 'center',
-          gap: '24px',
-          position: 'sticky',
-          top: 0,
-          zIndex: 300
-        }}
-      >
-        {/* Logo */}
-        <div
-          style={{
-            color: '#8B1A1A',
-            fontWeight: 800,
-            fontSize: '24px',
-            letterSpacing: '3px'
-          }}
-        >
-          BitByte Jewels
-        </div>
-
-        {/* Center Search bar */}
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ width: '100%', maxWidth: 680, position: 'relative' }}>
-            <span
-              style={{
-                position: 'absolute',
-                left: 18,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: '#8B1A1A',
-                fontSize: 18
-              }}
-            >
-              🔍
-            </span>
-
-            <input
-              placeholder="Search gold & diamond jewellery..."
-              style={{
-                width: '100%',
-                border: '1px solid #d1d5db',
-                borderRadius: 28,
-                padding: '14px 18px 14px 48px',
-                fontSize: 15,
-                outline: 'none',
-                color: '#374151',
-                boxSizing: 'border-box'
-              }}
-            />
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 16, color: '#8B1A1A', fontSize: 22 }}>
-
-          <button
-            onClick={() => setShowTodayRate(true)}
-            style={{
-              background: 'linear-gradient(90deg,#b8860b,#d4a017)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 20,
-              padding: '8px 18px',
-              fontSize: 13,
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              whiteSpace: 'nowrap',
-              boxShadow: '0 2px 8px rgba(184,134,11,0.3)'
-            }}
-          >
-            📅 Today Rate
-          </button>
-
-          <button
-            onClick={() => setShowOrderSummary(true)}
-            style={{
-              background: 'linear-gradient(90deg,#8B1A1A,#b91c1c)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 20,
-              padding: '8px 18px',
-              fontSize: 13,
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              whiteSpace: 'nowrap',
-              boxShadow: '0 2px 8px rgba(139,26,26,0.25)'
-            }}
-          >
-            🏆 Order Summary
-          </button>
-          <span
-  style={{ cursor: 'pointer', position: 'relative', fontSize: 22 }}
-  onClick={() => navigate('/wishlist')}
+ {/* TOP NAV */}
+<div
+  style={{
+    background: '#fff',
+    borderBottom: '1px solid #f0e8e0',
+    padding: '0 32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'sticky',
+    top: 0,
+    zIndex: 300,
+    height: '72px',
+    boxShadow: '0 2px 12px rgba(139,26,26,0.06)',
+    gap: '20px',
+  }}
 >
-  {wishlistCount > 0 ? '❤️' : '♡'}
-  {wishlistCount > 0 && (
-    <span style={{
-      position: 'absolute', top: '-6px', right: '-8px',
-      background: '#e11d48', color: '#fff',
-      borderRadius: '50%', width: '16px', height: '16px',
-      fontSize: '9px', fontWeight: 900,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      lineHeight: 1,
-    }}>
-      {wishlistCount}
+  {/* Logo */}
+<div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15, cursor: 'pointer', flexShrink: 0 }}>
+  <span style={{
+    color: '#8B1A1A',
+    fontWeight: 700,
+    fontSize: '26px',
+    letterSpacing: '1px',
+    fontFamily: '"Playfair Display", Georgia, serif',
+    fontStyle: 'italic',
+    lineHeight: 1,
+  }}>BitByte</span>
+  <span style={{
+    color: '#b8860b',
+    fontWeight: 600,
+    fontSize: '10px',
+    letterSpacing: '6px',
+    textTransform: 'uppercase',
+    fontFamily: '"Montserrat", sans-serif',
+    marginTop: '3px',
+    paddingLeft: '2px',
+  }}>✦ Jewels ✦</span>
+</div>
+
+{/* Search */}
+<div style={{ flex: 1, display: 'flex', justifyContent: 'center', maxWidth: 640 }}>
+  <div style={{ width: '100%', position: 'relative' }}>
+      <span style={{
+        position: 'absolute', left: 16, top: '50%',
+        transform: 'translateY(-50%)', color: '#8B1A1A',
+        display: 'flex', alignItems: 'center',
+      }}>
+        <svg width="17" height="17" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="14" cy="14" r="9"/>
+          <path d="M21 21l7 7"/>
+        </svg>
+      </span>
+
+      <input
+        placeholder="Search gold & diamond jewellery..."
+        style={{
+          width: '100%',
+          border: '1.5px solid #e8ddd5',
+          borderRadius: 32,
+          padding: '11px 18px 11px 46px',
+          fontSize: 14,
+          outline: 'none',
+          color: '#374151',
+          boxSizing: 'border-box',
+          background: '#fdf8f4',
+          transition: 'border-color 0.2s, box-shadow 0.2s',
+        }}
+        onFocus={e => {
+          e.target.style.borderColor = '#8B1A1A'
+          e.target.style.boxShadow = '0 0 0 3px rgba(139,26,26,0.08)'
+        }}
+        onBlur={e => {
+          e.target.style.borderColor = '#e8ddd5'
+          e.target.style.boxShadow = 'none'
+        }}
+      />
+    </div>
+  </div>
+
+  {/* Right Icons */}
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+
+    <button
+      onClick={() => setShowTodayRate(true)}
+      style={{
+        background: 'linear-gradient(90deg,#b8860b,#d4a017)',
+        color: '#fff',
+        border: 'none',
+        borderRadius: 22,
+        padding: '8px 16px',
+        fontSize: 12,
+        fontWeight: 700,
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 5,
+        whiteSpace: 'nowrap',
+        boxShadow: '0 2px 8px rgba(184,134,11,0.3)',
+        transition: 'transform 0.2s, box-shadow 0.2s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(184,134,11,0.45)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(184,134,11,0.3)' }}
+>
+  <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="4" y="6" width="24" height="22" rx="2"/>
+    <path d="M4 12h24"/>
+    <path d="M10 4v4"/><path d="M22 4v4"/>
+    <path d="M10 18h4"/><path d="M10 23h8"/>
+  </svg>
+  Today Rate
+</button>
+
+    <button
+      onClick={() => setShowOrderSummary(true)}
+      style={{
+        background: 'linear-gradient(90deg,#8B1A1A,#b91c1c)',
+        color: '#fff',
+        border: 'none',
+        borderRadius: 22,
+        padding: '8px 16px',
+        fontSize: 12,
+        fontWeight: 700,
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 5,
+        whiteSpace: 'nowrap',
+        boxShadow: '0 2px 8px rgba(139,26,26,0.25)',
+        transition: 'transform 0.2s, box-shadow 0.2s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(139,26,26,0.4)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(139,26,26,0.25)' }}
+ >
+  <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 4l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/>
+  </svg>
+  Order Summary
+</button>
+
+    {/* Wishlist */}
+    <span
+      style={{ cursor: 'pointer', position: 'relative', fontSize: 22, transition: 'transform 0.2s' }}
+      onClick={() => navigate('/wishlist')}
+      onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.15)'}
+      onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+    >
+      {wishlistCount > 0 ? '❤️' : '🤍'}
+      {wishlistCount > 0 && (
+        <span style={{
+          position: 'absolute', top: '-6px', right: '-8px',
+          background: '#e11d48', color: '#fff',
+          borderRadius: '50%', width: '16px', height: '16px',
+          fontSize: '9px', fontWeight: 900,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>{wishlistCount}</span>
+      )}
     </span>
-  )}
-</span>
 
-          <span style={{ cursor: 'pointer' }}>👤</span>
-          <span
-            style={{ cursor: 'pointer', position: 'relative' }}
-            onClick={() => navigate('/cart')}
-          >🛒</span>
-        </div>
+    {/* Profile */}
+    <span
+      style={{ cursor: 'pointer', fontSize: 22, transition: 'transform 0.2s' }}
+      onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.15)'}
+      onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+    >👤</span>
 
-      </div>
+    {/* Cart */}
+    <span
+      style={{ cursor: 'pointer', position: 'relative', fontSize: 22, transition: 'transform 0.2s' }}
+      onClick={() => navigate('/cart')}
+      onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.15)'}
+      onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+    >
+      🛒
+      {cartCount > 0 && (
+        <span style={{
+          position: 'absolute', top: '-6px', right: '-8px',
+          background: '#8B1A1A', color: '#fff',
+          borderRadius: '50%', width: '16px', height: '16px',
+          fontSize: '9px', fontWeight: 900,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>{cartCount}</span>
+      )}
+    </span>
+
+  </div>
+</div>
 
       {/* CATEGORY NAV WITH DROPDOWN */}
       <div style={{ position: 'sticky', top: '73px', zIndex: 250, background: '#fff' }} onMouseLeave={() => { setShowDropdown(false) }}>
 
-        {/* Top category bar */}
-        <div
-          style={{
-            borderBottom: '0.5px solid #f0f0f0',
-            padding: '0 40px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: '#fff',
-            minHeight: 64,
-            width: '100%',
-            boxSizing: 'border-box'
-          }}
-        >
-          {[
+{/* Top category bar */}
+<style>{`
+  @keyframes borderSlide {
+    from { width: 0; left: 50%; }
+    to   { width: 100%; left: 0; }
+  }
+  .cat-item { position: relative; }
+  .cat-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    width: 0; height: 3px;
+    background: linear-gradient(90deg, #8B1A1A, #b8860b);
+    border-radius: 2px 2px 0 0;
+    transition: width 0.3s ease, left 0.3s ease;
+  }
+  .cat-item:hover::after,
+  .cat-item.active::after {
+    width: 100%; left: 0;
+  }
+  .cat-item:hover .cat-icon {
+    transform: translateY(-3px) scale(1.18);
+    filter: drop-shadow(0 4px 8px rgba(139,26,26,0.35));
+  }
+  .cat-item:hover .cat-label {
+    color: #8B1A1A;
+    font-weight: 700;
+    text-shadow: 0 0 12px rgba(139,26,26,0.18);
+  }
+  .cat-item.active .cat-label {
+    color: #8B1A1A;
+    font-weight: 700;
+  }
+`}</style>
 
-            { name: ' All Jewellery', key: 'all' },
-            { name: '🥇 Gold', key: 'gold' },
-            { name: '💎 Diamond', key: 'diamond' },
-            { name: '🪞 Earrings', key: 'earrings' },
-            { name: '💍 Rings', key: 'rings' },
-            { name: '🥈 Silver', key: 'silver' },
-            { name: '🪙 Coins', key: 'coins' },
-            { name: '🏷️ Offers', key: 'offers' },
-            { name: '💒 Wedding', key: 'wedding' },
-            { name: '🎁 Gifting', key: 'gifting' },
+<div
+  style={{
+    borderBottom: '1px solid #f0e8e0',
+    padding: '0 40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    background: '#fff',
+    minHeight: 72,
+    width: '100%',
+    boxSizing: 'border-box',
+  }}
+>
+  {[
+{
+  name: 'All Jewellery', key: 'all',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M6 12l10-6 10 6v10l-10 6-10-6z"/><path d="M6 12l10 6 10-6"/><line x1="16" y1="18" x2="16" y2="28"/></svg>
+},
+{
+  name: 'Gold', key: 'gold',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><polygon points="16,4 19.5,12.5 28,13.5 22,19.5 23.5,28 16,24 8.5,28 10,19.5 4,13.5 12.5,12.5"/></svg>
+},
+{
+  name: 'Diamond', key: 'diamond',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4l10 8-10 16L6 12z"/><path d="M6 12h20"/><path d="M11 12l5 16"/><path d="M21 12l-5 16"/><path d="M6 12l5-8"/><path d="M26 12l-5-8"/></svg>
+},
+{
+  name: 'Platinum', key: 'platinum',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="6"/><circle cx="16" cy="16" r="2"/><line x1="16" y1="6" x2="16" y2="4"/><line x1="16" y1="28" x2="16" y2="26"/><line x1="6" y1="16" x2="4" y2="16"/><line x1="28" y1="16" x2="26" y2="16"/></svg>
+},
+{
+  name: 'Silver', key: 'silver',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M6 10h20v12a4 4 0 01-4 4H10a4 4 0 01-4-4V10z"/><path d="M6 10l3-5h14l3 5"/><path d="M12 10v16"/><path d="M20 10v16"/><path d="M6 16h20"/></svg>
+},
+{
+  name: 'Coins', key: 'coins',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="7"/><path d="M16 9v2"/><path d="M16 21v2"/><path d="M9 16h2"/><path d="M21 16h2"/><path d="M16 13v3l2 2"/></svg>
+},
+{
+  name: 'Offers', key: 'offers',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M4 16L16 4l12 12v12H20v-7h-8v7H4z"/><circle cx="12" cy="13" r="1.5" fill="currentColor"/><circle cx="20" cy="13" r="1.5" fill="currentColor"/></svg>
+},
+{
+  name: 'Wedding', key: 'wedding',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M16 27s-11-7-11-14a7 7 0 0111-5.7A7 7 0 0127 13c0 7-11 14-11 14z"/><circle cx="11" cy="10" r="2.5"/><circle cx="21" cy="10" r="2.5"/><path d="M11 12.5v3"/><path d="M21 12.5v3"/></svg>
+},
+{
+  name: 'BJ-LIVE', key: 'bjlive',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="5"/><circle cx="16" cy="16" r="10" strokeDasharray="3 2"/><path d="M8 8l2 2"/><path d="M22 8l-2 2"/><path d="M8 24l2-2"/><path d="M22 24l-2-2"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>
+},
+{
+  name: 'Gifting', key: 'gifting',
+  svg: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="13" width="24" height="4" rx="1"/><rect x="6" y="17" width="20" height="11" rx="1"/><path d="M16 13v15"/><path d="M16 13c0 0-4-6 0-8 2-1 4 1 4 4s-2 4-4 4z"/><path d="M16 13c0 0 4-6 0-8-2-1-4 1-4 4s2 4 4 4z"/></svg>
+},
+
+  ].map(cat => {
+    const isActive = showDropdown && activeCategory === cat.key
+    return (
+<div
+  key={cat.key}
+  className={`cat-item${isActive ? ' active' : ''}`}
+  onMouseEnter={() => {
+    if (cat.key === 'bjlive') {
+      setShowDropdown(false)
+      return
+    }
+    setShowDropdown(true)
+    setActiveCategory(cat.key)
+    const defaults = { all: 'category', gold: 'category', diamond: 'category', platinum: 'category', silver: 'category', coins: 'silver', wedding: 'category', gifting: 'giftsfor', offers: 'alloffers' }
+    setActiveFilter(defaults[cat.key] || 'category')
+  }}
+  onClick={() => {
+    if (cat.key === 'bjlive') navigate('/bj-live')
+  }}
 
 
-          ].map(cat => (
-            <div
-              key={cat.key}
-              onMouseEnter={() => {
-                setShowDropdown(true)
-                setActiveCategory(cat.key)
-                // Set default filter for each category
-                const defaults = { all: 'category', gold: 'category', diamond: 'category', earrings: 'category', rings: 'category', silver: 'category', coins: 'silver', wedding: 'category', gifting: 'giftsfor', offers: 'alloffers' }
-                setActiveFilter(defaults[cat.key] || 'category')
-              }}
-              style={{
-                padding: '20px 18px',
-                fontSize: 18,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                color: (showDropdown && activeCategory === cat.key) ? '#8B1A1A' : '#374151',
-                borderBottom: (showDropdown && activeCategory === cat.key) ? '3px solid #8B1A1A' : '3px solid transparent',
-                fontWeight: (showDropdown && activeCategory === cat.key) ? 600 : 500,
-                transition: 'all 0.15s',
-              }}
-            >{cat.name}</div>
-          ))}
-        </div>
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 4,
+          padding: '12px 14px',
+          cursor: 'pointer',
+          userSelect: 'none',
+          minWidth: 64,
+        }}
+      >
+{/* Tanishq-style SVG line icon */}
+<div
+  className="cat-icon"
+  style={{
+    width: 40,
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: isActive ? '#8B1A1A' : '#6b5c4a',
+    transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+    transform: isActive ? 'translateY(-4px) scale(1.15)' : 'translateY(0) scale(1)',
+    filter: isActive
+      ? 'drop-shadow(0 4px 8px rgba(139,26,26,0.3))'
+      : 'none',
+  }}
+>
+  {cat.svg}
+</div>
+
+        {/* Label */}
+        <span
+  className="cat-label"
+  style={{
+    fontSize: 11,
+    fontWeight: isActive ? 700 : 500,
+    color: isActive ? '#8B1A1A' : '#4b3a2a',
+    whiteSpace: 'nowrap',
+    transition: 'color 0.25s, letter-spacing 0.25s',
+    letterSpacing: isActive ? '0.8px' : '0.3px',
+    fontFamily: '"Montserrat", sans-serif',
+    textTransform: 'uppercase',
+  }}
+>{cat.name}</span>
+      </div>
+    )
+  })}
+</div>
 
         {/* Dropdown panel */}
         {showDropdown && (() => {
@@ -977,15 +1151,15 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
               }
             },
 
-            earrings: {
-              filters: ['Category', 'Price', 'Occasion', 'Gender',],
-              filterKeys: ['category', 'price', 'occasion', 'gender',],
-              panels: {
-                category: {
-                  type: 'icon-grid',
-                  items: ['Men\'s Gold Earring', 'Women\'s Gold Earring', 'Kids Gold Earring', 'Gold Stud Earring', 'Gold Hoop Earring', 'Gold Drop Earring', 'Gold Stone Earring', 'Gold Plain Earring'],
-                  icon: '💍',
-                },
+            platinum: {
+  filters: ['Category', 'Price', 'Occasion', 'Gender'],
+  filterKeys: ['category', 'price', 'occasion', 'gender'],
+  panels: {
+    category: {
+      type: 'icon-grid',
+      items: ['Platinum Rings', 'Platinum Necklaces', 'Platinum Coins', 'Platinum Bangles', 'Platinum Bracelets', 'Platinum Earrings'],
+      icon: '⬡',
+    },
                 price: {
                   type: 'price-grid',
                   items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
@@ -1001,29 +1175,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
               }
             },
 
-            rings: {
-              filters: ['Category', 'Price', 'Occasion', 'Gender',],
-              filterKeys: ['category', 'price', 'occasion', 'gender',],
-              panels: {
-                category: {
-                  type: 'icon-grid',
-                  items: ['Casual Rings', 'Couple Rings', 'Diamond Engagement Rings', 'Engagement Rings', 'Gold Engagement Rings', 'Men\'s Rings', 'Platinum Engagement Rings'],
-                  icon: '💍',
-                },
-                price: {
-                  type: 'price-grid',
-                  items: [{ label: '< ₹25K', emoji: '🪙' }, { label: '₹25K – ₹50K', emoji: '💛' }, { label: '₹50K – ₹1L', emoji: '💎' }, { label: '₹1L & Above', emoji: '👑' }],
-                },
-                occasion: {
-                  type: 'occasion-grid',
-                  items: [{ label: 'Office Wear', emoji: '💼' }, { label: 'Modern Wear', emoji: '🚗' }, { label: 'Casual Wear', emoji: '☀️' }, { label: 'Traditional Wear', emoji: '🪔' }],
-                },
-                gender: {
-                  type: 'gender-grid',
-                  items: [{ label: 'Women', emoji: '👩' }, { label: 'Men', emoji: '👨' }, { label: 'Kids & Teens', emoji: '👧' }],
-                },
-              }
-            },
+
 
             silver: {
               filters: ['Category', 'Price', 'Occasion', 'Gender'],
@@ -1179,7 +1331,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
                 // Silver category routes
                 'Silver Bangles': '/silver-bangles',
                 'Silver Earrings': '/silver-earrings',
-                'Silver Chains': '/silver-chains',
+                'Silver Chains': '/silver-chain',
                 'Silver Rings': '/silver-rings',
                 'Silver Necklaces': '/silver-necklaces',
                 'Silver Bracelets': '/silver-bracelets',
@@ -1191,34 +1343,92 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
                 'Diamond Bangles': '/collection/bangles',
                 'Diamond Bracelets': '/collection/bracelets',
               }
-              return (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
-                  {panel.items.map(item => (
-                    <div key={item}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: 10,
-                        padding: '8px 10px', borderRadius: 8, cursor: 'pointer',
-                        transition: 'background 0.15s'
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.background = '#fdf2f2'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                      onClick={() => {
-                        const route = CATEGORY_ROUTES[item]
-                        if (route) { setShowDropdown(false); navigate(route) }
-                      }}>
-                      <div style={{
-                        width: 34, height: 34, borderRadius: '50%',
-                        background: '#f5f0e8', border: '0.5px solid #e8e0d0',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, fontSize: 14
-                      }}>
-                        {panel.icon || '💍'}
-                      </div>
-                      <span style={{ fontSize: 13, color: '#1f2937' }}>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              )
+const ITEM_ICONS = {
+  'Earrings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="7" r="2.5"/><path d="M11 9.5v4"/><path d="M8.5 13.5h5l-1.2 6-1.3 3-1.3-3-1.2-6z"/><circle cx="21" cy="7" r="2.5"/><path d="M21 9.5v4"/><path d="M18.5 13.5h5l-1.2 6-1.3 3-1.3-3-1.2-6z"/></svg>,
+  'Finger Rings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="19" r="8"/><circle cx="16" cy="19" r="4.5"/><path d="M13 11l-2-4h10l-2 4"/></svg>,
+  'Chains': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="10" cy="10" rx="4" ry="2.5" transform="rotate(-45 10 10)"/><ellipse cx="16" cy="16" rx="4" ry="2.5" transform="rotate(-45 16 16)"/><ellipse cx="22" cy="22" rx="4" ry="2.5" transform="rotate(-45 22 22)"/></svg>,
+  'Necklaces': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6c0 10 4 16 10 18 6-2 10-8 10-18"/><circle cx="16" cy="26" r="2.5"/></svg>,
+  'Bangles': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="6.5"/></svg>,
+  'Bracelets': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M8 20c0 4.4 3.6 8 8 8s8-3.6 8-8"/><rect x="5" y="12" width="6" height="8" rx="2"/><rect x="21" y="12" width="6" height="8" rx="2"/></svg>,
+  'Gold Earrings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="7" r="2.5"/><path d="M11 9.5v4"/><path d="M8.5 13.5h5l-1.2 6-1.3 3-1.3-3-1.2-6z"/><circle cx="21" cy="7" r="2.5"/><path d="M21 9.5v4"/><path d="M18.5 13.5h5l-1.2 6-1.3 3-1.3-3-1.2-6z"/></svg>,
+  'Gold Chains': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="10" cy="10" rx="4" ry="2.5" transform="rotate(-45 10 10)"/><ellipse cx="16" cy="16" rx="4" ry="2.5" transform="rotate(-45 16 16)"/><ellipse cx="22" cy="22" rx="4" ry="2.5" transform="rotate(-45 22 22)"/></svg>,
+  'Gold Rings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="19" r="8"/><circle cx="16" cy="19" r="4.5"/><path d="M13 11l-2-4h10l-2 4"/></svg>,
+  'Gold Bangles': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="6.5"/></svg>,
+  'Gold Necklaces': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6c0 10 4 16 10 18 6-2 10-8 10-18"/><circle cx="16" cy="26" r="2.5"/></svg>,
+  'Gold Bracelets': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M8 20c0 4.4 3.6 8 8 8s8-3.6 8-8"/><rect x="5" y="12" width="6" height="8" rx="2"/><rect x="21" y="12" width="6" height="8" rx="2"/></svg>,
+  'Diamond Earrings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="7" r="2"/><path d="M11 9v3"/><path d="M8 12h6l-3 8z"/><circle cx="21" cy="7" r="2"/><path d="M21 9v3"/><path d="M18 12h6l-3 8z"/></svg>,
+  'Diamond Rings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="20" r="7"/><circle cx="16" cy="20" r="3.5"/><path d="M12 13l-2-5h12l-2 5"/><path d="M14 8l2 5 2-5"/></svg>,
+  'Diamond Necklaces': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6c0 10 4 16 10 18 6-2 10-8 10-18"/><path d="M13 24l3 4 3-4"/></svg>,
+  'Diamond Bangles': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="6"/><path d="M16 6l2 2-2 2-2-2z" fill="currentColor" stroke="none"/></svg>,
+  'Diamond Bracelets': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M8 20c0 4.4 3.6 8 8 8s8-3.6 8-8"/><rect x="5" y="12" width="6" height="8" rx="2"/><rect x="21" y="12" width="6" height="8" rx="2"/><circle cx="16" cy="4" r="1.5" fill="currentColor" stroke="none"/></svg>,
+  'Silver Bangles': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="6.5"/></svg>,
+  'Silver Bracelets': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M8 20c0 4.4 3.6 8 8 8s8-3.6 8-8"/><rect x="5" y="12" width="6" height="8" rx="2"/><rect x="21" y="12" width="6" height="8" rx="2"/></svg>,
+  'Silver Earrings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="7" r="2.5"/><path d="M11 9.5v4"/><path d="M8.5 13.5h5l-2.5 9z"/><circle cx="21" cy="7" r="2.5"/><path d="M21 9.5v4"/><path d="M18.5 13.5h5l-2.5 9z"/></svg>,
+  'Silver Chains': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="10" cy="10" rx="4" ry="2.5" transform="rotate(-45 10 10)"/><ellipse cx="16" cy="16" rx="4" ry="2.5" transform="rotate(-45 16 16)"/><ellipse cx="22" cy="22" rx="4" ry="2.5" transform="rotate(-45 22 22)"/></svg>,
+  'Silver Rings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="19" r="8"/><circle cx="16" cy="19" r="4.5"/><path d="M13 11l-2-4h10l-2 4"/></svg>,
+  'Silver Necklaces': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6c0 10 4 16 10 18 6-2 10-8 10-18"/><circle cx="16" cy="26" r="2.5"/></svg>,
+  'Silver Anklets': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="18" r="9"/><circle cx="16" cy="18" r="5.5"/><path d="M12 28l4 2 4-2"/></svg>,
+  'Platinum Rings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="19" r="8"/><circle cx="16" cy="19" r="4.5"/><path d="M13 11l-2-4h10l-2 4"/><path d="M11 7.5l1.5 1h7l1.5-1"/></svg>,
+  'Platinum Necklaces': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6c0 10 4 16 10 18 6-2 10-8 10-18"/><circle cx="16" cy="26" r="2.5"/><path d="M14 26l2 3 2-3"/></svg>,
+  'Platinum Coins': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="7"/><line x1="16" y1="9" x2="16" y2="23"/><line x1="9" y1="16" x2="23" y2="16"/></svg>,
+  'Platinum Bangles': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="6.5"/><circle cx="16" cy="6" r="1.5" fill="currentColor" stroke="none"/></svg>,
+  'Platinum Bracelets': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M8 20c0 4.4 3.6 8 8 8s8-3.6 8-8"/><rect x="5" y="12" width="6" height="8" rx="2"/><rect x="21" y="12" width="6" height="8" rx="2"/></svg>,
+  'Platinum Earrings': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="7" r="2.5"/><path d="M11 9.5v4"/><path d="M8.5 13.5h5l-1.2 6-1.3 3-1.3-3-1.2-6z"/><circle cx="21" cy="7" r="2.5"/><path d="M21 9.5v4"/><path d="M18.5 13.5h5l-1.2 6-1.3 3-1.3-3-1.2-6z"/></svg>,
+  'Corporate Gifts': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="13" width="24" height="4" rx="1"/><rect x="6" y="17" width="20" height="11" rx="1"/><path d="M16 13v15"/><path d="M16 13c0 0-3-5 0-7 1.5-1 3.5 1 3 3s-3 4-3 4z"/><path d="M16 13c0 0 3-5 0-7-1.5-1-3.5 1-3 3s3 4 3 4z"/></svg>,
+  'Bulk Orders': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="8" width="10" height="10" rx="1"/><rect x="13" y="8" width="10" height="10" rx="1"/><rect x="8" y="18" width="10" height="10" rx="1"/></svg>,
+  'Custom Engraving': <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 26l4-4 12-12-4-4L6 18z"/><path d="M22 6l4 4"/><path d="M6 26l-2 2"/></svg>,
+}
+
+return (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+    {panel.items.map(item => (
+      <div key={item}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 12,
+          padding: '10px 12px', borderRadius: 10, cursor: 'pointer',
+          transition: 'all 0.18s ease',
+          border: '1px solid transparent',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = '#fdf2f2'
+          e.currentTarget.style.borderColor = 'rgba(139,26,26,0.15)'
+          e.currentTarget.querySelector('.cii').style.color = '#8B1A1A'
+          e.currentTarget.querySelector('.cii').style.borderColor = '#8B1A1A'
+          e.currentTarget.querySelector('.cil').style.color = '#8B1A1A'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = 'transparent'
+          e.currentTarget.style.borderColor = 'transparent'
+          e.currentTarget.querySelector('.cii').style.color = '#6b5c4a'
+          e.currentTarget.querySelector('.cii').style.borderColor = '#e8e0d0'
+          e.currentTarget.querySelector('.cil').style.color = '#1f2937'
+        }}
+        onClick={() => {
+          const route = CATEGORY_ROUTES[item]
+          if (route) { setShowDropdown(false); navigate(route) }
+        }}>
+        <div className="cii" style={{
+          width: 36, height: 36, borderRadius: '50%',
+          background: '#faf6f0', border: '1px solid #e8e0d0',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0, color: '#6b5c4a',
+          transition: 'all 0.18s ease',
+        }}>
+          {ITEM_ICONS[item] || <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="5"/></svg>}
+        </div>
+        <span className="cil" style={{
+          fontSize: 13,
+          color: '#1f2937',
+          fontFamily: '"Cormorant Garamond", Georgia, serif',
+          fontWeight: 600,
+          letterSpacing: '0.3px',
+          transition: 'color 0.18s ease',
+          lineHeight: 1.3,
+        }}>{item}</span>
+      </div>
+    ))}
+  </div>
+)
             }
 
             // if (panel.type === 'silver-coin-grid') {
@@ -1323,7 +1533,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
                             : <span style={{ fontSize: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{p.emoji}</span>
                           }
                         </div>
-                        <div className="ph-label" style={{ fontSize: 13, color: '#1f2937', transition: 'color 0.15s' }}>{p.label}</div>
+                        <div className="ph-label" style={{ fontSize: 14, color: '#1f2937', transition: 'color 0.15s', fontFamily: '"Cormorant Garamond", Georgia, serif', fontWeight: 600, letterSpacing: '0.3px' }}>{p.label}</div>
                       </div>
                     )
                   })}
@@ -1365,7 +1575,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
                             : <span style={{ fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{o.emoji}</span>
                           }
                         </div>
-                        <div style={{ fontSize: 13, color: '#1f2937' }}>{o.label}</div>
+                        <div style={{ fontSize: 14, color: '#1f2937', fontFamily: '"Cormorant Garamond", Georgia, serif', fontWeight: 600, letterSpacing: '0.3px' }}>{o.label}</div>
                       </div>
                     )
                   })}
@@ -1405,7 +1615,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
                           : <span style={{ fontSize: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{g.emoji}</span>
                         }
                       </div>
-                      <div style={{ fontSize: 13, color: '#1f2937' }}>{g.label}</div>
+                      <div style={{ fontSize: 14, color: '#1f2937', fontFamily: '"Cormorant Garamond", Georgia, serif', fontWeight: 600, letterSpacing: '0.3px' }}>{g.label}</div>
                     </div>
                   )
                 })}
@@ -1448,7 +1658,7 @@ if (panel.type === 'image-grid') {
                             : <span style={{ fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{item.emoji}</span>
                           }
                         </div>
-                        <div style={{ fontSize: 13, color: '#1f2937' }}>{item.label}</div>
+                        <div style={{ fontSize: 14, color: '#1f2937', fontFamily: '"Cormorant Garamond", Georgia, serif', fontWeight: 600, letterSpacing: '0.3px' }}>{item.label}</div>
                       </div>
                     )
                   })}
@@ -1465,7 +1675,7 @@ if (panel.type === 'image-grid') {
                     <div className="ch-box" style={{ width: '100%', aspectRatio: '0.75', borderRadius: 10, background: 'linear-gradient(135deg,#fdf2f2,#f5f0e8)', border: '0.5px solid #e8e0d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, marginBottom: 6, transition: 'border-color 0.15s' }}>
                       👰
                     </div>
-                    <div className="ch-label" style={{ fontSize: 11, color: '#1f2937', transition: 'color 0.15s', lineHeight: 1.3 }}>{item}</div>
+                    <div className="ch-label" style={{ fontSize: 13, color: '#1f2937', transition: 'color 0.15s', lineHeight: 1.3, fontFamily: '"Cormorant Garamond", Georgia, serif', fontWeight: 600 }}>{item}</div>
                   </div>
                 ))}
               </div>
@@ -1515,15 +1725,41 @@ onClick={() => {
   }
 }}
                     >
-                      <div style={{
-                        width: 34, height: 34, borderRadius: '50%',
-                        background: '#f5f0e8', border: '0.5px solid #e8e0d0',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, fontSize: 14
-                      }}>
-                        {panel.metal === 'silver' ? '🥈' : '🥇'}
-                      </div>
-                      <span style={{ fontSize: 13, color: '#1f2937' }}>{item.label}</span>
+                     <div style={{
+  width: 36, height: 36, borderRadius: '50%',
+  background: panel.metal === 'silver' ? 'rgba(192,192,192,0.1)' : 'rgba(184,134,11,0.08)',
+  border: panel.metal === 'silver' ? '1px solid rgba(192,192,192,0.4)' : '1px solid rgba(184,134,11,0.35)',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  flexShrink: 0,
+  color: panel.metal === 'silver' ? '#9ca3af' : '#b8860b',
+  transition: 'all 0.2s ease',
+}}>
+  {panel.metal === 'silver' ? (
+    <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="16" cy="16" r="11"/>
+      <circle cx="16" cy="16" r="7"/>
+      <path d="M16 9v2"/><path d="M16 21v2"/>
+      <path d="M9 16h2"/><path d="M21 16h2"/>
+      <path d="M13 13l1.5 1.5"/><path d="M17.5 17.5l1.5 1.5"/>
+    </svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="16" cy="16" r="11"/>
+      <circle cx="16" cy="16" r="7"/>
+      <path d="M16 9v2"/><path d="M16 21v2"/>
+      <path d="M9 16h2"/><path d="M21 16h2"/>
+      <polygon points="16,11 17.5,14.5 21,15 18.5,17.5 19,21 16,19.5 13,21 13.5,17.5 11,15 14.5,14.5" strokeWidth="1.2"/>
+    </svg>
+  )}
+</div>
+
+                      <span style={{
+  fontSize: 14,
+  color: '#1f2937',
+  fontFamily: '"Cormorant Garamond", Georgia, serif',
+  fontWeight: 600,
+  letterSpacing: '0.3px',
+}}>{item.label}</span>
                     </div>
                   ))}
                 </div>
@@ -1560,7 +1796,7 @@ onClick={() => {
             giftcard: 'Gift Cards', corporate: 'Corporate Gifting', wedding: 'Wedding Collections',
             style: 'Shop by Style', alloffers: 'All Offers', goldoffers: 'Gold Offers',
             diamondoffers: 'Diamond Offers', festive: 'Festive Deals',
-            silver: 'Silver Coins', gold22k: 'Gold 22K Coins', gold24k: 'Gold 24K Coins',
+            silver: '✦ Silver Coins', gold22k: '✦ Gold 22K Coins', gold24k: '✦ Gold 24K Coins',
           }
 
           return (
@@ -1572,21 +1808,24 @@ onClick={() => {
                   <div
                     key={cfg.filterKeys[i]}
                     onMouseEnter={() => setActiveFilter(cfg.filterKeys[i])}
-                    style={{
-                      padding: '11px 22px', fontSize: 13, cursor: 'pointer',
-                      margin: '2px 10px', borderRadius: 8,
-                      color: activeFilter === cfg.filterKeys[i] ? '#8B1A1A' : '#4b5563',
-                      background: activeFilter === cfg.filterKeys[i] ? '#fdf2f2' : 'transparent',
-                      fontWeight: activeFilter === cfg.filterKeys[i] ? 600 : 400,
-                      transition: 'all 0.15s',
-                    }}
+                   style={{
+  padding: '11px 22px', fontSize: 13, cursor: 'pointer',
+  margin: '2px 10px', borderRadius: 8,
+  color: activeFilter === cfg.filterKeys[i] ? '#8B1A1A' : '#4b5563',
+  background: activeFilter === cfg.filterKeys[i] ? '#fdf2f2' : 'transparent',
+  fontWeight: activeFilter === cfg.filterKeys[i] ? 700 : 400,
+  fontFamily: '"Cormorant Garamond", Georgia, serif',
+  fontSize: 15,
+  letterSpacing: '0.3px',
+  transition: 'all 0.15s',
+}}
                   >{f}</div>
                 ))}
               </div>
 
               {/* Right panel */}
               <div style={{ flex: 1, padding: '24px 28px', overflowY: 'auto', maxHeight: '420px' }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#8B1A1A', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, paddingBottom: 8, borderBottom: '0.5px solid #fce8e8' }}>
+               <div style={{ fontSize: 11, fontWeight: 700, color: '#8B1A1A', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: 16, paddingBottom: 8, borderBottom: '0.5px solid #fce8e8', fontFamily: '"Montserrat", sans-serif' }}>
                   {sectionTitles[activeFilter] || activeFilter}
                 </div>
                 {renderPanel()}
@@ -2626,6 +2865,126 @@ onClick={() => {
         </div>
 
  
+
+{/* ── COIN PROMOTE BANNER ── */}
+<div style={{ marginBottom: '40px', marginTop: '40px', padding: '0 40px' }}>
+
+  {/* Heading */}
+  <div style={{ fontSize: 22, fontWeight: 800, color: '#1a0a0a', marginBottom: 6 }}>
+    Easy to buy Gold with our Latest Gold Purchase Plan & Advances !
+  </div>
+
+  {/* 2 Banners side by side */}
+<div style={{
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: 35,
+  width: '100%',
+  margin: '24px auto 0',
+  padding: '0'
+}}>
+
+    {/* LEFT BANNER */}
+    <div style={{
+      position: 'relative',
+      borderRadius: 16,
+      overflow: 'hidden',
+      height: '520px',
+      cursor: 'pointer',
+      boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+      marginLeft: '-100px',
+    }}
+      onMouseEnter={e => e.currentTarget.querySelector('.cp-img').style.transform = 'scale(1.03)'}
+      onMouseLeave={e => e.currentTarget.querySelector('.cp-img').style.transform = 'scale(1)'}
+    >
+      <img
+        className="cp-img"
+        src="/coin_promote.png"
+        alt="Gold Purchase Plans"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+          transition: 'transform 0.4s ease',
+        }}
+      />
+      {/* Bottom button */}
+      <div style={{
+        position: 'absolute',
+        bottom: 28,
+        left: '50%',
+        transform: 'translateX(-50%)'
+      }}>
+        <button style={{
+          background: '#e91e8c',
+          color: '#fff',
+          border: 'none',
+          borderRadius: 24,
+          padding: '12px 32px',
+          fontSize: 14,
+          fontWeight: 700,
+          cursor: 'pointer',
+          boxShadow: '0 4px 16px rgba(233,30,140,0.4)',
+          whiteSpace: 'nowrap'
+        }}>
+          Start Now
+        </button>
+      </div>
+    </div>
+
+    {/* RIGHT BANNER */}
+    <div style={{
+      position: 'relative',
+      borderRadius: 16,
+      overflow: 'hidden',
+      height: '520px',
+      cursor: 'pointer',
+      boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+      marginRight: '-110px',
+    }}
+      onMouseEnter={e => e.currentTarget.querySelector('.cp-img2').style.transform = 'scale(1.03)'}
+      onMouseLeave={e => e.currentTarget.querySelector('.cp-img2').style.transform = 'scale(1)'}
+    >
+      <img
+        className="cp-img2"
+        src="/coin_promote.png"
+        alt="Advance Booking"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+          transition: 'transform 0.4s ease'
+        }}
+      />
+      {/* Bottom button */}
+      <div style={{
+        position: 'absolute',
+        bottom: 28,
+        left: '50%',
+        transform: 'translateX(-50%)'
+      }}>
+        <button style={{
+          background: '#e91e8c',
+          color: '#fff',
+          border: 'none',
+          borderRadius: 24,
+          padding: '12px 32px',
+          fontSize: 14,
+          fontWeight: 700,
+          cursor: 'pointer',
+          boxShadow: '0 4px 16px rgba(233,30,140,0.4)',
+          whiteSpace: 'nowrap'
+        }}>
+          Book Advance
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{/* ── END COIN PROMOTE BANNER ── */}
 
 
 

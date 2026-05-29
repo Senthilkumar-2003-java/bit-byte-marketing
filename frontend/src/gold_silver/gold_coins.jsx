@@ -32,6 +32,7 @@ export default function GoldCoins() {
   const [loading, setLoading] = useState(true)
   const [metalPrices, setMetalPrices] = useState({ gold22k: null, gold24k: null })
   const [hoveredId, setHoveredId] = useState(null)
+  const [wishlistedIds, setWishlistedIds] = useState(new Set())
   const [metalType, setMetalType] = useState(gradeFilter === '24k' ? '24k' : '22k')
   const canvasRef = useRef(null)
 
@@ -76,6 +77,31 @@ useEffect(() => {
       })
       .catch(() => { setProducts([]); setLoading(false) })
   }, [weightFilter, gradeFilter, metalType])
+
+  useEffect(() => {
+    import('../api').then(({ default: api }) => {
+      api.get('/wishlist/').then(res => {
+        setWishlistedIds(new Set(res.data.items.map(i => i.product_id)))
+      }).catch(() => {})
+    })
+  }, [])
+
+  const toggleWishlist = async (e, productId) => {
+    e.stopPropagation()
+    const api = (await import('../api')).default
+    try {
+      const res = await api.post('/wishlist/', { product_id: productId })
+      setWishlistedIds(prev => {
+        const next = new Set(prev)
+        if (res.data.action === 'added') next.add(productId)
+        else next.delete(productId)
+        return next
+      })
+      window.dispatchEvent(new Event('bb_wishlist_update'))
+    } catch {}
+  }
+
+
 
   // Particle canvas
   useEffect(() => {
@@ -303,9 +329,14 @@ useEffect(() => {
                     }
                     <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)' }} />
 
-                    {/* Grade badge */}
-                    <div style={{ position:'absolute', top:'10px', right:'10px', background: p.grade==='24k' ? 'rgba(255,215,0,0.9)' : 'rgba(251,191,36,0.9)', color:'#000', borderRadius:20, padding:'3px 10px', fontSize:10, fontWeight:900 }}>
-                      {p.grade?.toUpperCase() || '22K'}
+                   {/* heart + Grade badge */}
+                    <div style={{ position:'absolute', top:'10px', right:'10px', display:'flex', alignItems:'center', gap:'6px', zIndex:10 }}>
+                      <button onClick={e => toggleWishlist(e, p.id)} style={{ width:'28px', height:'28px', borderRadius:'50%', border: wishlistedIds.has(p.id) ? '1.5px solid #e11d48' : '1.5px solid rgba(255,255,255,0.35)', background: wishlistedIds.has(p.id) ? 'rgba(225,29,72,0.18)' : 'rgba(0,0,0,0.4)', backdropFilter:'blur(8px)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', fontSize:'13px', transition:'all 0.2s ease' }}>
+                        {wishlistedIds.has(p.id) ? '❤️' : '🤍'}
+                      </button>
+                      <div style={{ background: p.grade==='24k' ? 'rgba(255,215,0,0.9)' : 'rgba(251,191,36,0.9)', color:'#000', borderRadius:20, padding:'3px 10px', fontSize:10, fontWeight:900 }}>
+                        {p.grade?.toUpperCase() || '22K'}
+                      </div>
                     </div>
 
                     {/* Tag */}

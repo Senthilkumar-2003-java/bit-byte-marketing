@@ -35,6 +35,7 @@ import CoinsCollection from './collection/coins_collection'
 import GoldCoins from './gold_silver/gold_coins'
 import SilverCoins from './gold_silver/silver_coins'
 import WishlistPage from './collection/WishlistPage'
+import CustomerNavbar from './collection/CustomerNavbar'
 
 
 function ProtectedRoute({ children, role }) {
@@ -73,6 +74,7 @@ export default function App() {
       <Route path="/customer" element={
       <ProtectedRoute role="customer"><CustomerDashboard /></ProtectedRoute>
        } />
+       
 
         {/* ring Routes */}
        <Route path="/collection/rings" element={<RingCollection />} />
@@ -126,6 +128,8 @@ export default function App() {
 <Route path="/wishlist" element={
   <ProtectedRoute role="customer"><WishlistPage /></ProtectedRoute>
 } />
+
+
 
       </Routes>
     </BrowserRouter>

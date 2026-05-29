@@ -77,7 +77,7 @@ const getImageUrl = img => {
   let imagePath = typeof img === 'object'
     ? (img.image || img.url || img.file || img.path || img.image_url || img.product_image || '')
     : img
-  if (!imagePath || typeof imagePath !== 'string') return null
+  if (!imagePath || typeof imagePath !== 'string' || imagePath.trim() === '') return null
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath
   return `${API_BASE}/${imagePath.replace(/^\/+/, '')}`
 }
@@ -754,10 +754,13 @@ onClick={() => {
     cursor: 'none',
   }}
 >
-<img
-  className="pd-main-img"
-  src={mainImage || ''}
-  onError={e => { e.currentTarget.style.display = 'none' }}
+
+{mainImage && (
+  <img
+    className="pd-main-img"
+    src={mainImage}
+    onError={e => { e.currentTarget.style.display = 'none' }}
+    
                 style={{
                   maxWidth: '100%',
                   maxHeight: '100%',
@@ -767,7 +770,9 @@ onClick={() => {
                 }}
               />
 
-              {showZoom && mainImage && (
+              )}
+
+  {showZoom && mainImage && (
   <div style={{
     position: 'absolute',
     left: zoomPixel.x - 100,

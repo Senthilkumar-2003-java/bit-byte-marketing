@@ -44,6 +44,7 @@ export default function SilverChain() {
   const [selectedItem, setSelectedItem] = useState(null)
   const [silverChains, setSilverChains] = useState([])
 const [loading, setLoading] = useState(true)
+const [wishlistedIds, setWishlistedIds] = useState(new Set())
   const canvasRef = useRef(null)
 
   const bg = dark ? '#020617' : '#f8fafc'
@@ -70,6 +71,31 @@ useEffect(() => {
       .catch(() => setLoading(false))
   })
 }, [])
+
+useEffect(() => {
+    import('../api').then(({ default: api }) => {
+      api.get('/wishlist/').then(res => {
+        setWishlistedIds(new Set(res.data.items.map(i => i.product_id)))
+      }).catch(() => {})
+    })
+  }, [])
+
+  const toggleWishlist = async (e, productId) => {
+    e.stopPropagation()
+    const api = (await import('../api')).default
+    try {
+      const res = await api.post('/wishlist/', { product_id: productId })
+      setWishlistedIds(prev => {
+        const next = new Set(prev)
+        if (res.data.action === 'added') next.add(productId)
+        else next.delete(productId)
+        return next
+      })
+      window.dispatchEvent(new Event('bb_wishlist_update'))
+    } catch {}
+  }
+
+
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -330,8 +356,13 @@ useEffect(() => {
                     {item.tag}
                   </div>
 
-                  <div style={{ position: 'absolute', top: '10px', right: '10px', width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(192,192,192,0.15)', border: '1px solid rgba(192,192,192,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: silverColor, fontSize: '10px', fontWeight: 900 }}>
-                    {item.id}
+                  <div style={{ position:'absolute', top:'10px', right:'10px', display:'flex', alignItems:'center', gap:'6px', zIndex:10 }}>
+                    <button onClick={e => toggleWishlist(e, item.id)} style={{ width:'30px', height:'30px', borderRadius:'50%', border: wishlistedIds.has(item.id) ? '1.5px solid #e11d48' : '1.5px solid rgba(255,255,255,0.35)', background: wishlistedIds.has(item.id) ? 'rgba(225,29,72,0.18)' : 'rgba(0,0,0,0.4)', backdropFilter:'blur(8px)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', fontSize:'14px', transition:'all 0.2s ease' }}>
+                      {wishlistedIds.has(item.id) ? '❤️' : '🤍'}
+                    </button>
+                    <div style={{ width:'24px', height:'24px', borderRadius:'50%', background:'rgba(192,192,192,0.15)', border:'1px solid rgba(192,192,192,0.4)', display:'flex', alignItems:'center', justifyContent:'center', color:silverColor, fontSize:'10px', fontWeight:900 }}>
+                      {item.id}
+                    </div>
                   </div>
 
                   {isHovered && (
