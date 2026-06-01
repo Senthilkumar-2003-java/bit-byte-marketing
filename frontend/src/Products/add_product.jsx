@@ -93,6 +93,9 @@ const [productSaving, setProductSaving] = useState(false)
 const [livePrice, setLivePrice] = useState(null)   // final price with tax
 const [netWeight, setNetWeight] = useState(null)    // cross - stone
 const [baseMetalAmt, setBaseMetalAmt] = useState(null) // netWeight × rate
+const [makingAmt, setMakingAmt] = useState(null)       // ← NEW
+const [discountAmt, setDiscountAmt] = useState(null)
+const [originalPrice, setOriginalPrice] = useState(null)
 
   // Edit modal
   const [editProduct, setEditProduct] = useState(null)
@@ -137,33 +140,72 @@ const [baseMetalAmt, setBaseMetalAmt] = useState(null) // netWeight × rate
     setLoadingProducts(false)
   }
 
-const calcAll = (crossW, stoneW, metal, grade, makingCharge, wastageCharge, stoneVal) => {
-  const cw = parseFloat(crossW) || 0
-  const sw = parseFloat(stoneW) || 0
-  const mc = parseFloat(makingCharge) || 0
-  const wc = parseFloat(wastageCharge) || 0
-  const sv = parseFloat(stoneVal) || 0
+const calcAll = (crossW, stoneW, metal, grade, makingChargePct, discountPct, stoneVal) => {
+  const cw    = parseFloat(crossW) || 0
+  const sw    = parseFloat(stoneW) || 0
+  const mcPct = parseFloat(makingChargePct) || 0   // Making Charge %
+  const disPct = parseFloat(discountPct) || 0       // Discount %
+  const sv    = parseFloat(stoneVal) || 0
 
   if (!cw || cw <= 0 || !metal) {
-    setNetWeight(null); setBaseMetalAmt(null); setLivePrice(null); return
+    setNetWeight(null); setBaseMetalAmt(null)
+    setLivePrice(null); setMakingAmt(null); setDiscountAmt(null)
+    return
   }
 
   const nw = cw - sw
-  if (nw <= 0) { setNetWeight(null); setBaseMetalAmt(null); setLivePrice(null); return }
+  if (nw <= 0) {
+    setNetWeight(null); setBaseMetalAmt(null)
+    setLivePrice(null); setMakingAmt(null); setDiscountAmt(null)
+    return
+  }
 
-  const rate = metal === 'gold'
-    ? (grade === '22k' ? metalPrices.gold22k : metalPrices.gold24k)
-    : metalPrices.silver
+  // ── Pick today's rate per gram ──
+  let rate = null
+  if (metal === 'gold')     rate = grade === '24k' ? metalPrices.gold24k : metalPrices.gold22k
+  else if (metal === 'diamond') rate = grade === '24k' ? metalPrices.gold24k : metalPrices.gold22k
+  else if (metal === 'platinum') rate = metalPrices.gold22k  // replace with platinum rate when available
+  else if (metal === 'silver')   rate = metalPrices.silver
 
-  if (!rate) { setNetWeight(nw); setBaseMetalAmt(null); setLivePrice(null); return }
+  if (!rate) {
+    setNetWeight(nw); setBaseMetalAmt(null)
+    setLivePrice(null); setMakingAmt(null); setDiscountAmt(null)
+    return
+  }
 
-  const base = nw * rate                        // net weight × today rate
-  const sub  = base + mc + wc + sv                   // + making charge + westage charge +stone value
-  const total = (sub * 1.03).toFixed(2)         // + 3% tax
+  // ── Step 1: Base = Net Weight × Today Rate ──
+  const base = nw * rate                         // e.g. 8 × 14100 = 1,12,800
+
+ // ── Step 2: Making Charge = Rate × Making% ──
+  const makingAmtVal = rate * (mcPct / 100)        // 14,100 × 3% = ₹423
+
+  // ── Step 3: Rate + Making = effective rate per gram ──
+  const rateWithMaking = rate + makingAmtVal        // 14,100 + 423 = ₹14,523
+
+  // ── Step 4: Discount % on (Rate + Making) together ──
+  const discAmtVal = rateWithMaking * (disPct / 100) // 14,523 × 2% = ₹290.46
+
+  // ── Step 5: Effective rate after discount ──
+  const effectiveRate = rateWithMaking - discAmtVal  // 14,523 - 290.46 = ₹14,232.54
+
+  // ── Step 6: Final base = Net Weight × effective rate ──
+  const finalBase = nw * effectiveRate               // 8 × 14,232.54 = ₹1,13,860.32
+
+  // ── Step 7: Add Stone Value ──
+  const withStone = finalBase + sv
+
+  // ── Step 8: GST 3% ──
+  const total = (withStone * 1.03).toFixed(2)
+
+// Original = no discount applied (rateWithMaking × nw + sv) × 1.03
+  const originalTotal = ((nw * rateWithMaking + sv) * 1.03).toFixed(2)
 
   setNetWeight(nw)
-  setBaseMetalAmt(base.toFixed(2))
+  setBaseMetalAmt((nw * rate).toFixed(2))
+  setMakingAmt(makingAmtVal.toFixed(2))
+  setDiscountAmt(discAmtVal.toFixed(2))
   setLivePrice(total)
+  setOriginalPrice(originalTotal)   // ← NEW
 }
 
   // ── ADD ──
@@ -183,11 +225,12 @@ fd.append('net_weight', netWeight || 0)
 // fd.append('making_charge', productForm.making_charge || 0)
 // fd.append('stone_value', productForm.stone_value || 0)
 if (livePrice) fd.append('price', livePrice)
+  if (originalPrice) fd.append('original_price', originalPrice)
       productImages.forEach(img => fd.append('uploaded_images', img))
       await api.post('/jewelry-products/', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
       setProductMsg('✅ Product added!')
       setProductForm({ category: '', metal: '', grade: '', name: '', description: '', cross_weight: '', stone_weight: '', making_charge: '', stone_value: '', tag: '' })
-setProductImages([]); setProductPreviewUrls([]); setLivePrice(null); setNetWeight(null); setBaseMetalAmt(null)
+      setProductImages([]); setProductPreviewUrls([]); setLivePrice(null); setNetWeight(null); setBaseMetalAmt(null); setMakingAmt(null); setDiscountAmt(null); setOriginalPrice(null)
       setShowAddForm(false)
       fetchProducts()
     } catch (err) { setProductMsg('❌ ' + JSON.stringify(err.response?.data || err.message)) }
@@ -315,6 +358,19 @@ const handleDelete = async (id) => {
 
  {/* Row 1 - category / Wedding Category / metal / grade */}
 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+  {/* Metal FIRST */}
+  <div>
+    <label style={lblStyle}>Metal *</label>
+    <select value={productForm.metal} onChange={e => setProductForm(f => ({ ...f, metal: e.target.value, grade: '', category: '' }))} style={{ ...inpStyle, cursor: 'pointer' }}>
+      <option value="" style={{ background: optionBg }}>-- Select --</option>
+      <option value="gold" style={{ background: optionBg }}>🏅 Gold</option>
+      <option value="silver" style={{ background: optionBg }}>🥈 Silver</option>
+      <option value="diamond" style={{ background: optionBg }}>💎 Diamond</option>
+      <option value="platinum" style={{ background: optionBg }}>⚪ Platinum</option>
+    </select>
+  </div>
+
+  {/* Product second */}
   <div>
     <label style={lblStyle}>Product *</label>
     <select value={productForm.category} onChange={e => setProductForm(f => ({ ...f, category: e.target.value }))} style={{ ...inpStyle, cursor: 'pointer' }}>
@@ -322,6 +378,8 @@ const handleDelete = async (id) => {
       {CATEGORIES.map(c => <option key={c.key} value={c.key} style={{ background: optionBg }}>{c.emoji} {c.label}</option>)}
     </select>
   </div>
+
+  {/* Wedding Category */}
   <div>
     <label style={lblStyle}>Wedding Category</label>
     <select value={productForm.wedding_category} onChange={e => setProductForm(f => ({ ...f, wedding_category: e.target.value }))} style={{ ...inpStyle, cursor: 'pointer' }}>
@@ -329,26 +387,36 @@ const handleDelete = async (id) => {
       {WEDDING_CATEGORIES.map(w => <option key={w} value={w} style={{ background: optionBg }}>{w}</option>)}
     </select>
   </div>
-  <div>
-    <label style={lblStyle}>Metal *</label>
-    <select value={productForm.metal} onChange={e => setProductForm(f => ({ ...f, metal: e.target.value, grade: '' }))} style={{ ...inpStyle, cursor: 'pointer' }}>
-      <option value="" style={{ background: optionBg }}>-- Select --</option>
-      <option value="gold" style={{ background: optionBg }}>🏅 Gold</option>
-      <option value="silver" style={{ background: optionBg }}>🥈 Silver</option>
-      <option value="diamond" style={{ background: optionBg }}>💎 Diamond</option>
-    </select>
-  </div>
-  {productForm.metal !== 'diamond' && (
-    <div>
-      <label style={lblStyle}>Grade *</label>
-      <select value={productForm.grade} onChange={e => setProductForm(f => ({ ...f, grade: e.target.value }))} style={{ ...inpStyle, cursor: 'pointer' }}>
-        <option value="" style={{ background: optionBg }}>-- Select --</option>
-        {(productForm.metal === 'gold' ? ['22k', '24k'] : productForm.metal === 'silver' ? ['999'] : []).map(g => (
-          <option key={g} value={g} style={{ background: optionBg }}>{g.toUpperCase()}</option>
-        ))}
-      </select>
-    </div>
-  )}
+
+  {/* Grade — smart logic */}
+  {(() => {
+    const m = productForm.metal
+    const cat = productForm.category
+    // Hide grade for diamond (diamond has its own 18k/22k below in a different spot... wait we show it)
+    // Actually: diamond → show 18k/22k; platinum → 950; gold/silver coins → 22k/24k; gold earrings & others → 22k only; silver → 999
+    if (!m || m === '') return <div />
+
+    let gradeOptions = []
+    if (m === 'diamond') gradeOptions = ['18k', '22k']
+    else if (m === 'platinum') gradeOptions = ['950']
+    else if (m === 'silver') gradeOptions = ['999']
+    else if (m === 'gold') {
+      if (cat === 'coins') gradeOptions = ['22k', '24k']
+      else gradeOptions = ['22k']  // all other gold products only 22k
+    }
+
+    return (
+      <div>
+        <label style={lblStyle}>Grade *</label>
+        <select value={productForm.grade} onChange={e => setProductForm(f => ({ ...f, grade: e.target.value }))} style={{ ...inpStyle, cursor: 'pointer' }}>
+          <option value="" style={{ background: optionBg }}>-- Select --</option>
+          {gradeOptions.map(g => (
+            <option key={g} value={g} style={{ background: optionBg }}>{g.toUpperCase()}</option>
+          ))}
+        </select>
+      </div>
+    )
+  })()}
 </div>
 
 {/* Row 2 - Product Name / Occasion / Tag */}
@@ -460,28 +528,38 @@ const handleDelete = async (id) => {
 {productForm.metal !== 'diamond' && (
 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '14px', marginBottom: '16px' }}>
   
-  {/* Making Charge */}
+{/* Making Charge % */}
   <div>
-    <label style={lblStyle}>Making Charge (₹)</label>
-    <input type="number" step="1" value={productForm.making_charge}
+    <label style={lblStyle}>Making Charge (%)</label>
+    <input type="number" step="0.01" value={productForm.making_charge}
       onChange={e => {
         const v = e.target.value
         setProductForm(f => ({ ...f, making_charge: v }))
         calcAll(productForm.cross_weight, productForm.stone_weight, productForm.metal, productForm.grade, v, productForm.wastage_charge, productForm.stone_value)
       }}
-      placeholder="e.g. 1800" style={inpStyle} />
+      placeholder="e.g. 2" style={inpStyle} />
+    {makingAmt && (
+      <div style={{ fontSize: '10px', color: '#22d3ee', marginTop: '4px' }}>
+        = ₹{Number(makingAmt).toLocaleString('en-IN')}
+      </div>
+    )}
   </div>
 
-    {/* Wastage Charge */}
+  {/* Discount % (from Making Charge only) */}
   <div>
-    <label style={lblStyle}>Wastage Charge (₹)</label>
-    <input type="number" step="1" value={productForm.wastage_charge}
+    <label style={lblStyle}>Discount (%)</label>
+    <input type="number" step="0.01" value={productForm.wastage_charge}
       onChange={e => {
         const v = e.target.value
         setProductForm(f => ({ ...f, wastage_charge: v }))
         calcAll(productForm.cross_weight, productForm.stone_weight, productForm.metal, productForm.grade, productForm.making_charge, v, productForm.stone_value)
       }}
-      placeholder="e.g. 1500" style={inpStyle} />
+      placeholder="e.g. 4" style={inpStyle} />
+    {discountAmt && (
+      <div style={{ fontSize: '10px', color: '#f472b6', marginTop: '4px' }}>
+        − ₹{Number(discountAmt).toLocaleString('en-IN')} off making
+      </div>
+    )}
   </div>
 
   {/* Stone Value */}

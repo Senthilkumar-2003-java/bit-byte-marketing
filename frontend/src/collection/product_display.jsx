@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { addToCartDB } from '../collection/card_section'
+import CustomerNavbar from './CustomerNavbar'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -587,95 +588,7 @@ onClick={() => {
       ))}
 
       {/* Navbar */}
-      <div
-        className="pd-navbar"
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          background: glass,
-          borderBottom: `1px solid ${border}`,
-          padding: '18px 40px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          backdropFilter: 'blur(16px)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <img
-            src={logo}
-            alt="BitByte"
-            style={{
-              width: 60,
-              height: 50,
-              borderRadius: 10,
-              objectFit: 'contain',
-            }}
-          />
-          <div>
-            <div style={{ color: accentColor, fontWeight: 900, fontSize: 18 }}>
-              BITBYTE JEWELLERS
-            </div>
-            <div style={{ color: subtext, fontSize: 12, fontWeight: 700 }}>
-              Product Details
-            </div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-          <button
-            className="top-btn"
-            onClick={() => navigate(-1)}
-            style={{
-              border: `1px solid ${border}`,
-              background: inputBg,
-              color: text,
-              borderRadius: 999,
-              padding: '11px 16px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            ← Back
-          </button>
-
-          <button
-            className="top-btn"
-            onClick={() => setDark(!dark)}
-            style={{
-              border: `1px solid ${border}`,
-              background: dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-              color: text,
-              borderRadius: 999,
-              padding: '11px 16px',
-              fontWeight: 900,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            {dark ? '☀ Light' : '🌙 Dark'}
-          </button>
-
-          <button
-            className="top-btn"
-            onClick={() => navigate('/cart')}
-            style={{
-              border: 'none',
-              background: `linear-gradient(135deg, ${accentColor}, ${isGold ? '#f59e0b' : '#94a3b8'})`,
-              color: '#020617',
-              borderRadius: 999,
-              padding: '11px 18px',
-              fontWeight: 950,
-              cursor: 'pointer',
-              boxShadow: `0 12px 30px ${accentGlow}`,
-              transition: 'all 0.2s ease',
-            }}
-          >
-            🛒 Cart
-          </button>
-        </div>
-      </div>
+<CustomerNavbar />
 
       <main
         className="pd-wrap"
@@ -980,20 +893,63 @@ onClick={() => {
                 marginBottom: 24,
               }}
             >
-              <div style={{ color: subtext, fontSize: 13, fontWeight: 800, marginBottom: 8 }}>
-                Price
-              </div>
+            <div style={{ color: subtext, fontSize: 13, fontWeight: 800, marginBottom: 8 }}>
+  Price
+</div>
 
-              <div
-                style={{
-                  color: accentColor,
-                  fontSize: 36,
-                  fontWeight: 950,
-                  letterSpacing: '-0.03em',
-                }}
-              >
-                {displayPrice ? `₹${displayPrice.toLocaleString('en-IN')}` : 'Contact for Price'}
-              </div>
+{(() => {
+  const discountPct = parseFloat(product?.wastage_charge) || 0
+  const originalAmt = parseFloat(product?.original_price) || 0
+  const hasDiscount = discountPct > 0 && originalAmt > 0 && displayPrice
+
+  return (
+    <>
+      {/* % Off badge */}
+      {hasDiscount && (
+        <div style={{ marginBottom: '10px' }}>
+          <span style={{
+            background: 'rgba(74,222,128,0.15)',
+            border: '1px solid rgba(74,222,128,0.4)',
+            color: '#4ade80',
+            fontSize: '12px', fontWeight: 800,
+            padding: '4px 12px', borderRadius: '999px'
+          }}>
+            {discountPct}% Off
+          </span>
+        </div>
+      )}
+
+      {/* Final price big */}
+      <div style={{
+        color: accentColor,
+        fontSize: 36, fontWeight: 950,
+        letterSpacing: '-0.03em', lineHeight: 1.1
+      }}>
+        {displayPrice ? `₹${displayPrice.toLocaleString('en-IN')}` : 'Contact for Price'}
+      </div>
+
+      {/* Original struck + savings — only if discount */}
+      {hasDiscount && (
+        <>
+          <div style={{
+            color: '#64748b', fontSize: 17,
+            fontWeight: 500, textDecoration: 'line-through',
+            marginTop: '5px', opacity: 0.85
+          }}>
+            ₹{originalAmt.toLocaleString('en-IN')}
+          </div>
+          <div style={{
+            color: '#4ade80', fontSize: 13,
+            fontWeight: 700, marginTop: '5px'
+          }}>
+            You save ₹{(originalAmt - displayPrice).toLocaleString('en-IN')}
+          </div>
+        </>
+      )}
+    </>
+  )
+})()}
+
 
               {!product.is_active && (
   <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '12px', padding: '10px 16px', marginBottom: '16px', color: '#f87171', fontWeight: 700, fontSize: '13px', textAlign: 'center' }}>

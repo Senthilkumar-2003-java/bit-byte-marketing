@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import goldCoin from '../assets/gold-coin-transparent.png'
 import silverCoin from '../assets/silver-coin-transparent.png'
+import CustomerNavbar from './CustomerNavbar'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -73,26 +74,7 @@ export default function CoinsCollection() {
       `}</style>
 
       {/* NAVBAR */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e5e7eb', padding: '14px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <img src={logo} alt="BB" style={{ width: 50, height: 42, borderRadius: 8, objectFit: 'contain' }} />
-          <div>
-            <div style={{ color: '#8B1A1A', fontWeight: 800, fontSize: 18 }}>
-              {isGold ? '🥇 Gold Coins' : '🥈 Silver Coins'}
-            </div>
-            <div style={{ color: '#7c5c4a', fontSize: 12 }}>
-              {weightFilter ? `Showing: ${weightFilter}` : `All ${isGold ? 'Gold' : 'Silver'} Coins`}
-              {gradeFilter && ` • ${gradeFilter.toUpperCase()}`}
-            </div>
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => navigate('/customer')}
-            style={{ padding: '9px 20px', background: '#8B1A1A', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
-            ← Dashboard
-          </button>
-        </div>
-      </div>
+  <CustomerNavbar />
 
       {/* HEADER BANNER */}
       <div style={{

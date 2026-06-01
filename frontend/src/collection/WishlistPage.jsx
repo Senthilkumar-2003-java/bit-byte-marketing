@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
+import CustomerNavbar from './CustomerNavbar'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -31,13 +32,7 @@ export default function WishlistPage() {
     <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Inter",system-ui,sans-serif' }}>
 
       {/* Navbar */}
-      <div style={{ background: '#fff', borderBottom: '0.5px solid #e5e7eb', padding: '18px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ color: '#8B1A1A', fontWeight: 800, fontSize: '24px', letterSpacing: '3px' }}>BitByte Jewels</div>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button onClick={() => navigate(-1)} style={{ padding: '8px 18px', background: 'rgba(139,26,26,0.08)', border: '1px solid rgba(139,26,26,0.25)', color: '#8B1A1A', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>← Back</button>
-          <button onClick={() => navigate('/customer')} style={{ padding: '8px 18px', background: '#8B1A1A', border: 'none', color: '#fff', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>Dashboard</button>
-        </div>
-      </div>
+     <CustomerNavbar />
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px' }}>
 

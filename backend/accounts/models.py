@@ -517,6 +517,7 @@ class JewelryProduct(models.Model):
     stone_value   = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0)
     tax_percent   = models.DecimalField(max_digits=5, decimal_places=2, default=3.00)
     price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    original_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     tag = models.CharField(max_length=50, blank=True)
     occasion = models.CharField(max_length=50, blank=True)
     wedding_category = models.CharField(max_length=50, blank=True)

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import logo from '../assets/logo.png'
+import CustomerNavbar from './CustomerNavbar'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -77,19 +78,7 @@ if (params.length) url += `?${params.join('&')}`
     <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Inter",system-ui,sans-serif' }}>
       <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{to{transform:rotate(360deg)}}`}</style>
 
-      {/* NAVBAR */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e5e7eb', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <img src={logo} alt="BB" style={{ width: 40, height: 34, borderRadius: 8, objectFit: 'contain' }} />
-          <span style={{ color: '#8B1A1A', fontWeight: 800, fontSize: 16 }}>
-            {metalFilter ? `${metalFilter.charAt(0).toUpperCase() + metalFilter.slice(1)} Jewellery` : 'All Collections'}
-          </span>
-        </div>
-        <button onClick={() => navigate('/customer')}
-          style={{ padding: '8px 18px', background: '#8B1A1A', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
-          ← Back
-        </button>
-      </div>
+<CustomerNavbar />
 
       {/* HEADER */}
       <div style={{ textAlign: 'center', padding: '40px 20px 24px' }}>

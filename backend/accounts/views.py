@@ -788,7 +788,7 @@ class JewelryProductDetailView(APIView):
 
         for field in ['category', 'metal', 'grade', 'name', 'description',
                       'cross_weight', 'stone_weight', 'net_weight',
-                      'making_charge', 'stone_value', 'price', 'tag', 'is_active']:
+                      'making_charge', 'stone_value', 'price', 'original_price', 'tag', 'is_active']:
             if field in request.data:
                 setattr(product, field, request.data[field])
         product.save()

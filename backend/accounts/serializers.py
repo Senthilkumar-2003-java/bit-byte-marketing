@@ -439,7 +439,7 @@ class JewelryProductSerializer(serializers.ModelSerializer):
             'id', 'category', 'metal', 'grade', 'name', 'description',
             'cross_weight', 'stone_weight', 'net_weight',
             'making_charge','wastage_charge', 'stone_value', 'tax_percent',
-            'price', 'tag', 'occasion', 'wedding_category', 'gender', 'is_active',
+            'price', 'original_price', 'tag', 'occasion', 'wedding_category', 'gender', 'is_active',
             'created_at', 'images', 'uploaded_images'
         ]
         read_only_fields = ['created_at']

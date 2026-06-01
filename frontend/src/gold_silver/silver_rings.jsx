@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { addToCart } from '../collection/card_section'
+import CustomerNavbar from '../collection/CustomerNavbar'
 
 const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   id: i, size: Math.random() * 50 + 8, x: Math.random() * 100,
@@ -222,19 +223,7 @@ useEffect(() => {
       ))}
 
       {/* ── Navbar ── */}
-      <div style={{ position:'relative', zIndex:10, background:glass, borderBottom:`1px solid ${border}`, padding:'18px 40px', display:'flex', justifyContent:'space-between', alignItems:'center', backdropFilter:'blur(16px)' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
-          <img src={logo} alt="BitByte" style={{ width:60, height:50, borderRadius:'10px', objectFit:'contain' }} />
-          <span style={{ color:silverColor, fontWeight:700, fontSize:'14px' }}>🥈 Silver Rings Collection</span>
-        </div>
-        <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
-          <button onClick={() => navigate('/collection/rings')} style={{ padding:'8px 16px', background:'rgba(192,192,192,0.1)', border:'1px solid rgba(192,192,192,0.35)', color:silverColor, borderRadius:'10px', fontSize:'13px', cursor:'pointer', fontWeight:600 }}>← Back</button>
-          <button onClick={() => navigate('/customer')} style={{ padding:'8px 16px', background:'rgba(52,211,153,0.1)', border:'1px solid rgba(52,211,153,0.35)', color:'#34d399', borderRadius:'10px', fontSize:'13px', cursor:'pointer', fontWeight:600 }}>Dashboard</button>
-          <button onClick={() => setDark(!dark)} style={{ padding:'8px 14px', borderRadius:'14px', border:`1px solid ${border}`, background:'transparent', color:text, cursor:'pointer', fontWeight:600, fontSize:'13px' }}>
-            {dark ? '☀️ Light' : '🌙 Dark'}
-          </button>
-        </div>
-      </div>
+<CustomerNavbar />
 
       <div style={{ position:'relative', zIndex:10, padding:'40px', maxWidth:'1300px', margin:'0 auto' }}>
 

@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import silverCoin from '../assets/silver-coin-transparent.png'
 import { addToCart } from '../collection/card_section'
+import CustomerNavbar from '../collection/CustomerNavbar'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -185,23 +186,7 @@ export default function SilverCoins() {
       <div style={{ position:'absolute', borderRadius:'50%', filter:'blur(90px)', animation:'float-orb 20s infinite ease-in-out', zIndex:0, bottom:'5%', right:'5%', width:'500px', height:'500px', background:'rgba(148,163,184,0.05)', animationDelay:'-7s' }} />
 
       {/* NAVBAR */}
-      <div style={{ position:'relative', zIndex:10, background:glass, borderBottom:`1px solid ${border}`, padding:'18px 40px', display:'flex', justifyContent:'space-between', alignItems:'center', backdropFilter:'blur(16px)' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
-          <img src={logo} alt="BB" style={{ width:60, height:50, borderRadius:'10px', objectFit:'contain' }} />
-          <div>
-            <div style={{ color:silverColor, fontWeight:900, fontSize:'16px' }}>🥈 Silver Coins Collection</div>
-            <div style={{ color:subtext, fontSize:'11px', marginTop:'2px' }}>
-              {weightFilter ? `Showing: ${weightFilter} coins` : 'All Silver Coins'}
-            </div>
-          </div>
-        </div>
-        <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
-          <button onClick={() => navigate('/customer')} style={{ padding:'8px 16px', background:'rgba(52,211,153,0.1)', border:'1px solid rgba(52,211,153,0.35)', color:'#34d399', borderRadius:'10px', fontSize:'13px', cursor:'pointer', fontWeight:600 }}>Dashboard</button>
-          <button onClick={() => setDark(!dark)} style={{ padding:'8px 14px', borderRadius:'14px', border:`1px solid ${border}`, background:'transparent', color:text, cursor:'pointer', fontWeight:600, fontSize:'13px' }}>
-            {dark ? '☀️ Light' : '🌙 Dark'}
-          </button>
-        </div>
-      </div>
+<CustomerNavbar />
 
       <div style={{ position:'relative', zIndex:10, padding:'40px', maxWidth:'1300px', margin:'0 auto' }}>
 

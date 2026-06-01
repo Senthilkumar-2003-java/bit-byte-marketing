@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
+import CustomerNavbar from './CustomerNavbar'
 
 const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   id: i,
@@ -229,22 +230,7 @@ const cardBg = 'rgba(0,0,0,0.03)'
         <div key={p.id} style={{ position: 'absolute', left: `${p.x}%`, bottom: '-100px', width: p.size, height: p.size, borderRadius: '40% 60% 60% 40% / 40% 40% 60% 60%', border: `1px solid ${accent}44`, opacity: p.opacity, animation: `antigravity ${p.duration}s ${p.delay}s infinite linear`, '--op': p.opacity, pointerEvents: 'none', zIndex: 0 }} />
       ))}
 
-      <div style={{ position: 'relative', zIndex: 10, background: glass, borderBottom: `1px solid ${border}`, padding: '18px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(16px)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img src={logo} alt="BitByte Logo" style={{ width: 60, height: 50, borderRadius: '10px', objectFit: 'contain' }} />
-          <span style={{ color: '#fbbf24', fontWeight: 700, fontSize: '14px' }}>📿 Necklaces Collections</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <button onClick={() => navigate('/customer')} style={{ padding: '8px 18px', background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.35)', color: '#34d399', borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>
-            ← Back to Dashboard
-          </button>
-
-          <button onClick={() => setDark(!dark)} style={{ padding: '8px 16px', borderRadius: '16px', border: `1px solid ${border}`, background: 'transparent', color: text, cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>
-            {dark ? '☀️ Light' : '🌙 Dark'}
-          </button>
-        </div>
-      </div>
+ <CustomerNavbar />
 
       <div style={{ position: 'relative', zIndex: 10, padding: '60px 40px', maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '60px', animation: 'fadeInUp 0.5s ease both' }}>

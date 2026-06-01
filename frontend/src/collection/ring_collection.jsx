@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
+import CustomerNavbar from './CustomerNavbar'
 
 const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   id: i, size: Math.random() * 50 + 8, x: Math.random() * 100,
@@ -149,23 +150,7 @@ p { color: #3d2b1f; line-height: 1.7; }
       ))}
 
       {/* Navbar */}
-      <div style={{ position: 'relative', zIndex: 10, background: '#fff', borderBottom: '0.5px solid #e5e7eb', padding: '18px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(16px)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img src={logo} alt="BitByte Logo" style={{ width: 60, height: 50, borderRadius: '10px', objectFit: 'contain' }} />
-          <span style={{ color: '#6ee7b7', fontWeight: 700, fontSize: '14px' }}>💍 Ring Collections</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <button
-            onClick={() => navigate('/customer')}
-            style={{ padding: '8px 18px', background: 'rgba(139,26,26,0.08)', border: '1px solid rgba(139,26,26,0.3)', color: '#8B1A1A', borderRadius: '10px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
-          >
-            ← Back to Dashboard
-          </button>
-          <button onClick={() => setDark(!dark)} style={{ padding: '8px 16px', borderRadius: '16px', border: `1px solid ${border}`, background: 'transparent', color: text, cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>
-            {dark ? '☀️ Light' : '🌙 Dark'}
-          </button>
-        </div>
-      </div>
+    <CustomerNavbar />
 
       {/* Main Content */}
       <div style={{ position: 'relative', zIndex: 10, padding: '60px 40px', maxWidth: '1100px', margin: '0 auto' }}>
