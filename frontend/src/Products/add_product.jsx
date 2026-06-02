@@ -29,37 +29,44 @@ const SUBCATEGORIES = {
     gold: ["Men's Gold Ring","Women's Gold Ring","Couple Gold Ring","Kids Gold Ring","Gold Engagement Ring","Gold Wedding Ring","Gold Stone Ring","Gold Plain Ring"],
     silver: ["Men's Silver Ring","Women's Silver Ring","Couple Silver Ring","Kids Silver Ring","Silver Engagement Ring","Silver Wedding Ring","Silver Stone Ring","Silver Plain Ring"],
     diamond: ["Men's Diamond Ring","Women's Diamond Ring","Couple Diamond Ring","Kids Diamond Ring","Diamond Engagement Ring","Diamond Wedding Ring","Diamond Solitaire Ring","Diamond Eternity Ring"],
+    platinum: ["Men's Platinum Ring","Women's Platinum Ring","Couple Platinum Ring","Platinum Engagement Ring","Platinum Wedding Ring","Platinum Solitaire Ring","Platinum Plain Ring"],
   },
   necklaces: {
     gold: ["Men's Gold Necklace","Women's Gold Necklace","Couple Gold Necklace","Kids Gold Necklace","Gold Bridal Necklace","Gold Wedding Necklace","Gold Stone Necklace","Gold Plain Necklace"],
     silver: ["Men's Silver Necklace","Women's Silver Necklace","Couple Silver Necklace","Kids Silver Necklace","Silver Bridal Necklace","Silver Wedding Necklace","Silver Stone Necklace","Silver Plain Necklace"],
     diamond: ["Women's Diamond Necklace","Diamond Bridal Necklace","Diamond Pendant Necklace","Diamond Wedding Necklace","Diamond Statement Necklace","Diamond Plain Necklace"],
+    platinum: ["Women's Platinum Necklace","Platinum Pendant Necklace","Platinum Wedding Necklace","Platinum Plain Necklace"],
   },
   bangles: {
     gold: ["Men's Gold Bangle","Women's Gold Bangle","Couple Gold Bangle","Kids Gold Bangle","Gold Bridal Bangle","Gold Wedding Bangle","Gold Stone Bangle","Gold Plain Bangle"],
     silver: ["Men's Silver Bangle","Women's Silver Bangle","Couple Silver Bangle","Kids Silver Bangle","Silver Bridal Bangle","Silver Wedding Bangle","Silver Stone Bangle","Silver Plain Bangle"],
     diamond: ["Women's Diamond Bangle","Diamond Bridal Bangle","Diamond Wedding Bangle","Diamond Stone Bangle","Diamond Plain Bangle"],
+    platinum: ["Women's Platinum Bangle","Platinum Bridal Bangle","Platinum Wedding Bangle","Platinum Plain Bangle"],
   },
   bracelets: {
     gold: ["Men's Gold Bracelet","Women's Gold Bracelet","Couple Gold Bracelet","Kids Gold Bracelet","Gold Bridal Bracelet","Gold Wedding Bracelet","Gold Stone Bracelet","Gold Plain Bracelet","Gold Charm Bracelet","Gold Kada Bracelet"],
     silver: ["Men's Silver Bracelet","Women's Silver Bracelet","Couple Silver Bracelet","Kids Silver Bracelet","Silver Bridal Bracelet","Silver Wedding Bracelet","Silver Stone Bracelet","Silver Plain Bracelet","Silver Charm Bracelet","Silver Kada Bracelet"],
     diamond: ["Women's Diamond Bracelet","Diamond Tennis Bracelet","Diamond Bridal Bracelet","Diamond Wedding Bracelet","Diamond Charm Bracelet","Diamond Plain Bracelet"],
+    platinum: ["Women's Platinum Bracelet","Platinum Tennis Bracelet","Platinum Wedding Bracelet","Platinum Charm Bracelet","Platinum Plain Bracelet"],
   },
   earrings: {
     gold: ["Men's Gold Earring","Women's Gold Earring","Kids Gold Earring","Gold Stud Earring","Gold Hoop Earring","Gold Drop Earring","Gold Stone Earring","Gold Plain Earring"],
     silver: ["Men's Silver Earring","Women's Silver Earring","Kids Silver Earring","Silver Stud Earring","Silver Hoop Earring","Silver Drop Earring","Silver Stone Earring","Silver Plain Earring"],
     diamond: ["Women's Diamond Earring","Diamond Stud Earring","Diamond Hoop Earring","Diamond Drop Earring","Diamond Jhumka Earring","Diamond Plain Earring"],
+    platinum: ["Women's Platinum Earring","Platinum Stud Earring","Platinum Hoop Earring","Platinum Drop Earring","Platinum Plain Earring"],
   },
   chains: {
     gold: ["Men's Gold Chain","Women's Gold Chain","Kids Gold Chain","Gold Wedding Chain","Gold Rope Chain","Gold Box Chain","Gold Stone Chain","Gold Plain Chain"],
     silver: ["Men's Silver Chain","Women's Silver Chain","Kids Silver Chain","Silver Wedding Chain","Silver Rope Chain","Silver Box Chain","Silver Stone Chain","Silver Plain Chain"],
     diamond: ["Men's Diamond Chain","Women's Diamond Chain","Diamond Pendant Chain","Diamond Wedding Chain","Diamond Plain Chain"],
+    platinum: ["Men's Platinum Chain","Women's Platinum Chain","Platinum Pendant Chain","Platinum Wedding Chain","Platinum Plain Chain"],
   },
-coins: {
-  gold: ["100 mg Gold Coin","200 mg Gold Coin","500 mg Gold Coin","1 gm Gold Coin","2 gm Gold Coin","4 gm Gold Coin","8 gm Gold Coin","16 gm Gold Coin","40 gm Gold Coin","Gold Lakshmi Coin","Gold Ganesha Coin","Gold Gift Coin"],
-  silver: ["500 mg Silver Coin","1 gm Silver Coin","2 gm Silver Coin","5 gm Silver Coin","10 gm Silver Coin","20 gm Silver Coin","50 gm Silver Coin","100 gm Silver Coin","Silver Lakshmi Coin","Silver Ganesha Coin","Silver Gift Coin"],
-  diamond: [],
-},
+  coins: {
+    gold: ["100 mg Gold Coin","200 mg Gold Coin","500 mg Gold Coin","1 gm Gold Coin","2 gm Gold Coin","4 gm Gold Coin","8 gm Gold Coin","16 gm Gold Coin","40 gm Gold Coin","Gold Lakshmi Coin","Gold Ganesha Coin","Gold Gift Coin"],
+    silver: ["500 mg Silver Coin","1 gm Silver Coin","2 gm Silver Coin","5 gm Silver Coin","10 gm Silver Coin","20 gm Silver Coin","50 gm Silver Coin","100 gm Silver Coin","Silver Lakshmi Coin","Silver Ganesha Coin","Silver Gift Coin"],
+    diamond: [],
+    platinum: ["1 gm Platinum Coin","2 gm Platinum Coin","5 gm Platinum Coin","10 gm Platinum Coin","Platinum Gift Coin"],
+  },
 }
 
 const getImageUrl = img => {
@@ -77,7 +84,10 @@ export default function AddProduct() {
   const [products, setProducts]           = useState([])
   const [loadingProducts, setLoadingProducts] = useState(false)
   const [showAddForm, setShowAddForm]     = useState(false)
-  const [metalPrices, setMetalPrices]     = useState({ gold22k: null, gold24k: null, silver: null })
+  const [metalPrices, setMetalPrices] = useState({
+  gold22k: null, gold24k: null, silver: null,
+  diamond18k: null, diamond22k: null, platinum92: null
+})
 
   // Add form
 
@@ -123,11 +133,19 @@ const [originalPrice, setOriginalPrice] = useState(null)
   const inpStyle = { width: '100%', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '10px', padding: '11px 14px', color: text, fontSize: '14px', boxSizing: 'border-box', outline: 'none', fontFamily: 'inherit', transition: 'border-color 0.2s' }
   const lblStyle = { display: 'block', color: subtext, fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '7px' }
 
-  useEffect(() => {
-    api.get('/metal-rates/').then(res => {
-      setMetalPrices({ gold22k: parseFloat(res.data.gold_22k), gold24k: parseFloat(res.data.gold_24k), silver: parseFloat(res.data.silver_999) })
-    }).catch(() => {})
-  }, [])
+useEffect(() => {
+  api.get('/metal-rates/').then(res => {
+    const d = res.data
+    setMetalPrices({
+      gold22k:     parseFloat(d.gold_22k)    || 0,
+      gold24k:     parseFloat(d.gold_24k)    || 0,
+      silver:      parseFloat(d.silver_999)  || 0,
+      diamond18k:  parseFloat(d.diamond_18k) || 0,
+      diamond22k:  parseFloat(d.diamond_22k) || 0,
+      platinum92:  parseFloat(d.platinum_92) || 0,
+    })
+  }).catch(() => {})
+}, [])
 
   useEffect(() => { fetchProducts() }, [activeCategory])
 
@@ -160,12 +178,17 @@ const calcAll = (crossW, stoneW, metal, grade, makingChargePct, discountPct, sto
     return
   }
 
-  // ── Pick today's rate per gram ──
+// ── Pick today's rate per gram ──
   let rate = null
-  if (metal === 'gold')     rate = grade === '24k' ? metalPrices.gold24k : metalPrices.gold22k
-  else if (metal === 'diamond') rate = grade === '24k' ? metalPrices.gold24k : metalPrices.gold22k
-  else if (metal === 'platinum') rate = metalPrices.gold22k  // replace with platinum rate when available
-  else if (metal === 'silver')   rate = metalPrices.silver
+  if (metal === 'gold') {
+    rate = grade === '24k' ? metalPrices.gold24k : metalPrices.gold22k
+  } else if (metal === 'diamond') {
+    rate = grade === '18k' ? metalPrices.diamond18k : metalPrices.diamond22k
+  } else if (metal === 'platinum') {
+    rate = metalPrices.platinum92
+  } else if (metal === 'silver') {
+    rate = metalPrices.silver
+  }
 
   if (!rate) {
     setNetWeight(nw); setBaseMetalAmt(null)
@@ -214,7 +237,7 @@ const calcAll = (crossW, stoneW, metal, grade, makingChargePct, discountPct, sto
     if (!productForm.cross_weight)   { setProductMsg('❌ Cross Weight required');   return }
     if (!productForm.category)       { setProductMsg('❌ Category required'); return }
     if (!productForm.metal)          { setProductMsg('❌ Metal required');    return }
-    if (productForm.metal !== 'diamond' && !productForm.grade) { setProductMsg('❌ Grade required'); return }
+    if (!productForm.grade) { setProductMsg('❌ Grade required'); return }
     setProductSaving(true)
     try {
       const fd = new FormData()
@@ -398,7 +421,7 @@ const handleDelete = async (id) => {
 
     let gradeOptions = []
     if (m === 'diamond') gradeOptions = ['18k', '22k']
-    else if (m === 'platinum') gradeOptions = ['950']
+    else if (m === 'platinum') gradeOptions = ['92']
     else if (m === 'silver') gradeOptions = ['999']
     else if (m === 'gold') {
       if (cat === 'coins') gradeOptions = ['22k', '24k']
@@ -508,27 +531,12 @@ const handleDelete = async (id) => {
   </div>
 </div>
 
-{/* Diamond Price — only show when metal is diamond */}
-{productForm.metal === 'diamond' && (
-  <div style={{ marginBottom: '14px' }}>
-    <label style={lblStyle}>Diamond Product Price (₹) *</label>
-    <input
-      type="number"
-      step="1"
-      value={livePrice || ''}
-      onChange={e => setLivePrice(e.target.value)}
-      placeholder="Enter diamond product price manually"
-      style={{ ...inpStyle, color: '#a78bfa', fontWeight: 800, border: '1px solid rgba(167,139,250,0.5)' }}
-    />
-    <div style={{ fontSize: '10px', color: '#a78bfa', marginTop: '4px' }}>💎 Diamond price enter pannunga manually</div>
-  </div>
-)}
 
-{/* Making Charge + Stone Value + Final Price — hide for diamond */}
-{productForm.metal !== 'diamond' && (
+
+{/* Making Charge + Stone Value + Final Price — ALL metals */}
 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '14px', marginBottom: '16px' }}>
-  
-{/* Making Charge % */}
+
+  {/* Making Charge % */}
   <div>
     <label style={lblStyle}>Making Charge (%)</label>
     <input type="number" step="0.01" value={productForm.making_charge}
@@ -545,7 +553,7 @@ const handleDelete = async (id) => {
     )}
   </div>
 
-  {/* Discount % (from Making Charge only) */}
+  {/* Discount % */}
   <div>
     <label style={lblStyle}>Discount (%)</label>
     <input type="number" step="0.01" value={productForm.wastage_charge}
@@ -574,7 +582,7 @@ const handleDelete = async (id) => {
       placeholder="e.g. 2000" style={inpStyle} />
   </div>
 
-  {/* Live Rate Price (with 3% tax) */}
+  {/* Total Price (auto) */}
   <div>
     <label style={lblStyle}>Total Price (with 3% tax)</label>
     <div style={{
@@ -590,9 +598,17 @@ const handleDelete = async (id) => {
         ✅ Includes 3% GST
       </div>
     )}
+    {!livePrice && productForm.metal && productForm.grade && (
+      <div style={{ fontSize: '10px', color: '#f87171', marginTop: '4px' }}>
+        ⚠️ No rate entered for {productForm.metal} {productForm.grade}
+      </div>
+    )}
   </div>
+
 </div>
-)}
+
+  
+
 
             {/* Images */}
             <div style={{ marginBottom: '18px' }}>

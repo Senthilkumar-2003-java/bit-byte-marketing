@@ -394,9 +394,21 @@ export default function CustomerNavbar() {
             'Silver Chains': '/silver-chain', 'Silver Rings': '/silver-rings',
             'Silver Necklaces': '/silver-necklaces', 'Silver Bracelets': '/silver-bracelets',
             'Silver Anklets': '/collection/all?metal=silver',
-            'Diamond Earrings': '/collection/earrings', 'Diamond Rings': '/collection/rings',
-            'Diamond Necklaces': '/collection/necklaces', 'Diamond Bangles': '/collection/bangles',
-            'Diamond Bracelets': '/collection/bracelets',
+                // Diamond  ← CHANGE THESE
+    'Diamond Earrings': '/diamond-earrings',
+    'Diamond Rings': '/diamond-rings',
+    'Diamond Necklaces': '/diamond-necklaces',
+    'Diamond Bangles': '/diamond-bangles',
+    'Diamond Bracelets': '/diamond-bracelets',
+
+     // Platinum  ← THESE ARE ALREADY CORRECT
+    'Platinum Rings': '/platinum-rings',
+    'Platinum Necklaces': '/platinum-necklaces',
+    'Platinum Coins': '/collection/coins',
+    'Platinum Bangles': '/platinum-bangles',
+    'Platinum Bracelets': '/platinum-bracelets',
+    'Platinum Earrings': '/platinum-earrings',
+
           }
 
           const ITEM_ICONS = {

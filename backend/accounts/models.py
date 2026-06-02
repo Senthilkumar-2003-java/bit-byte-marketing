@@ -499,11 +499,14 @@ class JewelryProduct(models.Model):
         ('gold', 'Gold'),
         ('silver', 'Silver'),
         ('diamond', 'Diamond'),
+        ('platinum', 'Platinum'),
     ]
     GRADE_CHOICES = [
         ('22k', '22K'),
         ('24k', '24K'),
         ('999', '999'),
+        ('18k', '18K'),
+        ('92', '92'),
         ('', 'N/A'),
     ]
 

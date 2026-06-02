@@ -1,0 +1,182 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import CustomerNavbar from '../collection/CustomerNavbar'
+
+const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
+
+const TAG_COLORS = {
+  Bestseller: { bg: 'rgba(52,211,153,0.2)', border: 'rgba(52,211,153,0.5)', color: '#34d399' },
+  Bridal: { bg: 'rgba(244,114,182,0.2)', border: 'rgba(244,114,182,0.5)', color: '#f472b6' },
+  Premium: { bg: 'rgba(226,232,240,0.2)', border: 'rgba(226,232,240,0.5)', color: '#e2e8f0' },
+  Statement: { bg: 'rgba(167,139,250,0.2)', border: 'rgba(167,139,250,0.5)', color: '#a78bfa' },
+  New: { bg: 'rgba(244,114,182,0.2)', border: 'rgba(244,114,182,0.5)', color: '#f472b6' },
+  Limited: { bg: 'rgba(226,232,240,0.15)', border: 'rgba(226,232,240,0.4)', color: '#e2e8f0' },
+}
+
+const ACCENT = '#e2e8f0'
+const ACCENT_GLOW = 'rgba(226,232,240,0.28)'
+
+export default function PlatinumBracelets() {
+  const navigate = useNavigate()
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [hovered, setHovered] = useState(null)
+  const [wishlistedIds, setWishlistedIds] = useState(new Set())
+  const [gradeFilter, setGradeFilter] = useState('all')
+
+  const getImageUrl = (img) => {
+    if (!img) return null
+    const src = typeof img === 'object' ? (img.image || '') : img
+    if (!src) return null
+    if (src.startsWith('http')) return src
+    return `${API_BASE}/${src.replace(/^\/+/, '')}`
+  }
+
+  const tagStyle = (tag) => TAG_COLORS[tag] || { bg: 'rgba(226,232,240,0.1)', border: 'rgba(226,232,240,0.3)', color: ACCENT }
+
+  useEffect(() => {
+    import('../api').then(({ default: api }) => {
+      api.get('/jewelry-products/?category=bracelets&metal=platinum')
+        .then(res => { setProducts(Array.isArray(res.data) ? res.data : []); setLoading(false) })
+        .catch(() => setLoading(false))
+    })
+  }, [])
+
+  useEffect(() => {
+    import('../api').then(({ default: api }) => {
+      api.get('/wishlist/').then(res => {
+        setWishlistedIds(new Set(res.data.items.map(i => i.product_id)))
+      }).catch(() => {})
+    })
+  }, [])
+
+  const toggleWishlist = async (e, productId) => {
+    e.stopPropagation()
+    const api = (await import('../api')).default
+    try {
+      const res = await api.post('/wishlist/', { product_id: productId })
+      setWishlistedIds(prev => {
+        const next = new Set(prev)
+        res.data.action === 'added' ? next.add(productId) : next.delete(productId)
+        return next
+      })
+      window.dispatchEvent(new Event('bb_wishlist_update'))
+    } catch {}
+  }
+
+  const filteredProducts = gradeFilter === 'all' ? products : products.filter(p => p.grade === gradeFilter)
+  const GRADES = ['all', '92']
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: '"Inter",system-ui,sans-serif' }}>
+      <style>{`
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+        @keyframes shine { 0%{left:-80%} 100%{left:120%} }
+        .dm-card { animation: fadeInUp 0.5s ease both; }
+        .dm-card:nth-child(1){animation-delay:0.05s} .dm-card:nth-child(2){animation-delay:0.10s}
+        .dm-card:nth-child(3){animation-delay:0.15s} .dm-card:nth-child(4){animation-delay:0.20s}
+        .dm-card:nth-child(5){animation-delay:0.25s} .dm-card:nth-child(6){animation-delay:0.30s}
+        .dm-img-wrap img { transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+        .dm-card:hover .dm-img-wrap img { transform:scale(1.1) translateY(-4px) !important; }
+        .dm-shine { position:absolute;top:0;left:-80%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(226,232,240,0.15),transparent);transform:skewX(-20deg);opacity:0; }
+        .dm-card:hover .dm-shine { opacity:1; animation:shine 0.6s ease; }
+      `}</style>
+
+      <CustomerNavbar />
+
+      <div style={{ padding: '40px', maxWidth: '1400px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(226,232,240,0.08)', border: '1px solid rgba(226,232,240,0.25)', borderRadius: '20px', padding: '5px 14px', marginBottom: '14px' }}>
+              <span style={{ color: ACCENT, fontSize: '11px' }}>✦</span>
+              <span style={{ color: ACCENT, fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Premium Platinum Collection</span>
+            </div>
+            <h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px', color: '#020617' }}>
+              ⬡{' '}
+              <span style={{ background: 'linear-gradient(90deg,#e2e8f0,#fff,#e2e8f0)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'shimmer 3s linear infinite' }}>
+                Platinum Bracelets
+              </span>
+            </h1>
+            <p style={{ color: '#64748b', fontSize: '13px', margin: '8px 0 0', fontWeight: 500 }}>
+              {filteredProducts.length} exclusive designs
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px' }}>
+            {GRADES.map(g => (
+              <button key={g} onClick={() => setGradeFilter(g)}
+                style={{ padding: '7px 18px', borderRadius: '20px', border: `1px solid ${gradeFilter === g ? ACCENT : 'rgba(226,232,240,0.3)'}`, background: gradeFilter === g ? 'rgba(226,232,240,0.15)' : 'transparent', color: gradeFilter === g ? ACCENT : '#64748b', fontWeight: 800, fontSize: '12px', cursor: 'pointer', transition: 'all 0.2s ease' }}>
+                {g === 'all' ? 'All' : g.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }}>
+          {loading ? (
+            <div style={{ gridColumn: 'span 3', textAlign: 'center', color: '#64748b', padding: '60px 0' }}>⏳ Loading products...</div>
+          ) : filteredProducts.length === 0 ? (
+            <div style={{ gridColumn: 'span 3', textAlign: 'center', color: '#64748b', padding: '60px 0' }}>No platinum bracelets found.</div>
+          ) : filteredProducts.map((product) => {
+            const isHovered = hovered === product.id
+            const tag = tagStyle(product.tag)
+            const imgUrl = getImageUrl(product.images?.[0])
+            return (
+              <div key={product.id} className="dm-card"
+                onClick={() => navigate(`/product-display?category=bracelets&metal=platinum&id=${product.id}`)}
+                onMouseEnter={() => setHovered(product.id)}
+                onMouseLeave={() => setHovered(null)}
+                style={{
+                  borderRadius: '20px', overflow: 'hidden', cursor: 'pointer', position: 'relative',
+                  border: `1px solid ${isHovered ? 'rgba(226,232,240,0.55)' : 'rgba(226,232,240,0.18)'}`,
+                  background: isHovered ? 'rgba(226,232,240,0.05)' : '#fff',
+                  transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
+                  boxShadow: isHovered ? `0 20px 50px ${ACCENT_GLOW}` : '0 2px 12px rgba(0,0,0,0.06)',
+                  transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+                }}>
+                <div className="dm-shine" />
+                <div className="dm-img-wrap" style={{ position: 'relative', height: '240px', background: '#f8fafc' }}>
+                  {imgUrl ? (
+                    <img src={imgUrl} alt={product.name}
+                      onError={e => { e.currentTarget.style.display = 'none' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '60px' }}>{'⬡'}</div>
+                  )}
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(2,6,23,0.7) 0%, transparent 55%)' }} />
+                  {product.grade && (
+                    <div style={{ position: 'absolute', top: '10px', left: '10px', background: 'rgba(226,232,240,0.2)', border: '1px solid rgba(226,232,240,0.5)', borderRadius: '16px', padding: '3px 10px', color: ACCENT, fontSize: '9px', fontWeight: 800, backdropFilter: 'blur(8px)' }}>
+                      ⬡ {product.grade.toUpperCase()}
+                    </div>
+                  )}
+                  {product.tag && (
+                    <div style={{ position: 'absolute', top: product.grade ? '34px' : '10px', left: '10px', background: tag.bg, border: `1px solid ${tag.border}`, borderRadius: '16px', padding: '3px 10px', color: tag.color, fontSize: '9px', fontWeight: 800, backdropFilter: 'blur(8px)' }}>
+                      {product.tag}
+                    </div>
+                  )}
+                  <button onClick={e => toggleWishlist(e, product.id)}
+                    style={{ position: 'absolute', top: '10px', right: '10px', width: '30px', height: '30px', borderRadius: '50%', border: wishlistedIds.has(product.id) ? '1.5px solid #e11d48' : '1.5px solid rgba(255,255,255,0.35)', background: wishlistedIds.has(product.id) ? 'rgba(225,29,72,0.18)' : 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '14px' }}>
+                    {wishlistedIds.has(product.id) ? '❤️' : '🤍'}
+                  </button>
+                </div>
+                <div style={{ padding: '14px 16px' }}>
+                  <div style={{ color: isHovered ? ACCENT : '#020617', fontWeight: 800, fontSize: '14px', marginBottom: '4px', transition: 'color 0.3s' }}>{product.name}</div>
+                  {product.description && <div style={{ color: '#64748b', fontSize: '11px', lineHeight: '1.5', marginBottom: '8px' }}>{product.description}</div>}
+                  {product.price && <div style={{ color: ACCENT, fontWeight: 900, fontSize: '15px', fontFamily: 'monospace' }}>₹{Number(product.price).toLocaleString('en-IN')}</div>}
+                </div>
+                {isHovered && (
+                  <div style={{ padding: '0 16px 14px', animation: 'fadeInUp 0.2s ease' }}>
+                    <div style={{ width: '100%', padding: '8px', background: `linear-gradient(90deg,${ACCENT},#fff)`, borderRadius: '10px', color: '#000', fontWeight: 800, fontSize: '11px', textAlign: 'center' }}>
+                      👁 View Details
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}

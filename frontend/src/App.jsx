@@ -36,6 +36,22 @@ import GoldCoins from './gold_silver/gold_coins'
 import SilverCoins from './gold_silver/silver_coins'
 import WishlistPage from './collection/WishlistPage'
 import CustomerNavbar from './collection/CustomerNavbar'
+// ── DIAMOND IMPORTS ──         ← ADD ALL 6
+import DiamondRings from './Diamond/ring'
+import DiamondNecklaces from './Diamond/necklaces'
+import DiamondEarrings from './Diamond/earrings'
+import DiamondChains from './Diamond/chain'
+import DiamondBracelets from './Diamond/bracelets'
+import DiamondBangles from './Diamond/bangles'
+
+// ── PLATINUM IMPORTS ──        ← ADD ALL 6
+import PlatinumRings from './Platinum/ring'
+import PlatinumNecklaces from './Platinum/necklaces'
+import PlatinumEarrings from './Platinum/earrings'
+import PlatinumChains from './Platinum/chain'
+import PlatinumBracelets from './Platinum/bracelets'
+import PlatinumBangles from './Platinum/bangles'
+
 
 
 function ProtectedRoute({ children, role }) {
@@ -80,26 +96,46 @@ export default function App() {
        <Route path="/collection/rings" element={<RingCollection />} />
        <Route path="/gold-rings" element={<GoldRings />} />
        <Route path="/silver-rings" element={<SilverRings />} />
+       <Route path="/diamond-rings" element={<DiamondRings />} />       {/* ADD */}
+       <Route path="/platinum-rings" element={<PlatinumRings />} /> 
 
                {/* Bangle Routes */}
         <Route path="/collection/bangles" element={<BanglesCollection />} />
         <Route path="/gold-bangles" element={<GoldBangles />} />
         <Route path="/silver-bangles" element={<SilverBangles />} />
+        <Route path="/diamond-bangles" element={<DiamondBangles />} />   {/* ADD */}
+        <Route path="/platinum-bangles" element={<PlatinumBangles />} /> {/* ADD */}
+
 
               {/* Earring Routes */}
         <Route path="/collection/earrings" element={<EarringsCollection />} />
         <Route path="/gold-earrings" element={<GoldEarrings />} />
         <Route path="/silver-earrings" element={<SilverEarrings />} />
+        <Route path="/diamond-earrings" element={<DiamondEarrings />} />   {/* ADD */}
+        <Route path="/platinum-earrings" element={<PlatinumEarrings />} />
 
                {/* Chain Routes */}
         <Route path="/collection/chains" element={<ChainsCollection />} />
         <Route path="/gold-chain" element={<GoldChain />} />
         <Route path="/silver-chain" element={<SilverChain />} />
+        <Route path="/diamond-chain" element={<DiamondChains />} />     {/* ADD */}
+        <Route path="/platinum-chain" element={<PlatinumChains />} />   {/* ADD */}
+
 
                 {/* Necklace Routes */}
         <Route path="/collection/necklaces" element={<NecklacesCollection />} />
         <Route path="/gold-necklaces" element={<GoldNecklaces />} />
         <Route path="/silver-necklaces" element={<SilverNecklaces />} />
+        <Route path="/diamond-necklaces" element={<DiamondNecklaces />} />   {/* ADD */}
+        <Route path="/platinum-necklaces" element={<PlatinumNecklaces />} /> {/* ADD */}
+
+           {/* ── BRACELET ROUTES ── */}
+        <Route path="/collection/bracelets" element={<BraceletsCollection />} />
+        <Route path="/gold-bracelets" element={<GoldBracelets />} />
+        <Route path="/silver-bracelets" element={<SilverBracelets />} />
+        <Route path="/diamond-bracelets" element={<DiamondBracelets />} />   {/* ADD */}
+        <Route path="/platinum-bracelets" element={<PlatinumBracelets />} /> {/* ADD */}
+
 
                {/* card section */}
         <Route path="/cart" element={<CardSection />} />
@@ -121,9 +157,8 @@ export default function App() {
 <Route path="/gold-coins" element={<GoldCoins />} />
 <Route path="/silver-coins" element={<SilverCoins />} />
 
-<Route path="/collection/bracelets" element={<BraceletsCollection />} />
-<Route path="/gold-bracelets" element={<GoldBracelets />} />
-<Route path="/silver-bracelets" element={<SilverBracelets />} />
+
+
 
 <Route path="/wishlist" element={
   <ProtectedRoute role="customer"><WishlistPage /></ProtectedRoute>
