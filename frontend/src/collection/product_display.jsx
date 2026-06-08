@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { addToCartDB } from '../collection/card_section'
 import CustomerNavbar from './CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -113,9 +114,9 @@ setProducts(filtered.slice(0, 4))
     <div style={{ position: 'relative', zIndex: 5, padding: '0 40px 80px', maxWidth: 1600, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
-        <h2 style={{ margin: 0, fontSize: 28, fontWeight: 800, color: '#1c1410', fontFamily: '"Cormorant Garamond", Georgia, serif' }}>
-          More from this collection
-        </h2>
+<h2 style={{ margin: 0, fontSize: 28, fontWeight: 800, color: '#1c1410', fontFamily: '"Playfair Display", Georgia, serif' }}>
+  More from this collection
+</h2>
         <button
           onClick={() => navigate(`/collection/all?metal=${metal}${gender && gender !== 'all' ? `&gender=${gender}` : ''}${occasion ? `&occasion=${occasion}` : ''}`)}
           style={{ padding: '8px 22px', borderRadius: 999, border: '1.5px solid #1c1410', background: 'transparent', color: '#1c1410', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}
@@ -159,9 +160,9 @@ setProducts(filtered.slice(0, 4))
 </div>
 
               <div style={{ padding: '12px 14px' }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#1c1410', marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {p.name}
-                </div>
+<div style={{ fontSize: 13, fontWeight: 700, color: '#1c1410', marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: '"Cormorant Garamond", Georgia, serif' }}>
+  {p.name}
+</div>
                 <div style={{ fontSize: 11, color: '#92400e', marginBottom: 6, opacity: 0.75 }}>
                   {p.metal?.toUpperCase()} {p.grade?.toUpperCase()}{p.net_weight ? ` • ${parseFloat(p.net_weight)}gm` : ''}
                 </div>
@@ -274,9 +275,9 @@ function ProductInfoAndBreakup({ product, metal }) {
         padding: '36px 48px',
         marginBottom: 20,
       }}>
-        <div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 40, marginBottom: 20 }}>
-          Product Information
-        </div>
+<div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 40, marginBottom: 20, fontFamily: '"Playfair Display", Georgia, serif' }}>
+  Product Information
+</div>
         <div style={{
   background: '#fff',
   borderRadius: 12,
@@ -285,12 +286,12 @@ function ProductInfoAndBreakup({ product, metal }) {
   minWidth: 600,
   boxShadow: '0 1px 8px rgba(0,0,0,0.07)',
 }}>
-<div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Metal and Purity</div>
-<div style={{ color: '#92400e', fontSize: 16, marginBottom: 20 }}>{metalLabel} {purityLabel}</div>
-<div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Weight</div>
-<div style={{ color: '#92400e', fontSize: 16, marginBottom: 20 }}>{netWt > 0 ? `${netWt}gms` : crossWt > 0 ? `${crossWt}gms` : '—'}</div>
-<div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Product Description</div>
-<div style={{ color: '#92400e', fontSize: 16, lineHeight: 1.8 }}>
+<div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 18, marginBottom: 4, fontFamily: '"Playfair Display", Georgia, serif' }}>Metal and Purity</div>
+<div style={{ color: '#92400e', fontSize: 16, marginBottom: 20, fontFamily: '"Montserrat", sans-serif' }}>{metalLabel} {purityLabel}</div>
+<div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 18, marginBottom: 4, fontFamily: '"Playfair Display", Georgia, serif' }}>Weight</div>
+<div style={{ color: '#92400e', fontSize: 16, marginBottom: 20, fontFamily: '"Montserrat", sans-serif' }}>{netWt > 0 ? `${netWt}gms` : crossWt > 0 ? `${crossWt}gms` : '—'}</div>
+<div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 18, marginBottom: 4, fontFamily: '"Playfair Display", Georgia, serif' }}>Product Description</div>
+<div style={{ color: '#92400e', fontSize: 16, lineHeight: 1.8, fontFamily: '"Montserrat", sans-serif' }}>
   {product?.desc || product?.description || product?.short_description || 'No description available.'}
 </div>
 </div>
@@ -305,21 +306,17 @@ function ProductInfoAndBreakup({ product, metal }) {
         boxShadow: '0 1px 12px rgba(0,0,0,0.06)',
         border: '1px solid rgba(0,0,0,0.05)',
       }}>
-        <div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 40, marginBottom: 28, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ color: '#7c2d12', fontWeight: 700, fontSize: 40, marginBottom: 28, display: 'flex', alignItems: 'center', gap: 12, fontFamily: '"Playfair Display", Georgia, serif' }}>
           Price Breakup
           {!liveRate && <span style={{ fontSize: 12, color: '#94a3b8', fontWeight: 400 }}>Loading rates...</span>}
         </div>
 
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 18 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 18, fontFamily: '"Montserrat", sans-serif' }}>
           <thead>
             <tr style={{ borderBottom: '1.5px solid rgba(120,53,15,0.15)' }}>
-              {['Component', 'Rate', 'Weight', 'Value', 'Discount', 'Final Value'].map((h, i) => (
-                <th key={h} style={{
-                  textAlign: 'left', padding: '10px 16px',
-                  color: '#78350f', fontWeight: 600, fontSize: 20,
-                  minWidth: i === 0 ? 200 : 110,
-                }}>{h}</th>
-              ))}
+{['Component', 'Rate', 'Weight', 'Value', 'Discount', 'Final Value'].map((h, i) => (
+  <th key={h} style={{ textAlign: 'left', padding: '10px 16px', color: '#78350f', fontWeight: 600, fontSize: 20, minWidth: i === 0 ? 200 : 110, fontFamily: '"Montserrat", sans-serif' }}>{h}</th>
+))}
             </tr>
           </thead>
           <tbody>
@@ -723,8 +720,16 @@ export default function ProductDisplay() {
 
 
   if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#FDF5EE', color: text, display: 'grid', placeItems: 'center', fontFamily: '"Inter",system-ui,sans-serif' }}>
+ return (
+  <div style={{
+    minHeight: '100vh',
+    background: bg,
+    color: text,
+    fontFamily: '"Montserrat", sans-serif',
+    position: 'relative',
+    overflow: 'hidden',
+    transition: 'background 0.8s ease, color 0.4s ease',
+  }}>
         <div style={{ textAlign: 'center' }}>
           <div
             style={{
@@ -800,6 +805,8 @@ export default function ProductDisplay() {
       }}
     >
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
         @keyframes float-orb {
           0% { transform: translate(0,0) scale(1); }
           33% { transform: translate(30px,-50px) scale(1.1); }
@@ -1168,19 +1175,9 @@ export default function ProductDisplay() {
               </button>
             </div>
 
-            <h1
-              className="pd-title"
-              style={{
-                margin: '0 0 10px',
-                fontSize: 32,
-                lineHeight: 1.1,
-                fontWeight: 950,
-                letterSpacing: '-0.02em',
-                color: text,
-              }}
-            >
-              {productName}
-            </h1>
+<h1 className="pd-title" style={{ margin: '0 0 10px', fontSize: 32, lineHeight: 1.1, fontWeight: 950, letterSpacing: '-0.02em', color: text, fontFamily: '"Playfair Display", Georgia, serif' }}>
+  {productName}
+</h1>
 
             {/* <p
               style={{
@@ -1525,12 +1522,12 @@ export default function ProductDisplay() {
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
               {item.svg}
             </div>
-            <div style={{ color: '#92400e', fontWeight: 800, fontSize: 15, marginBottom: 8 }}>
-              {item.label}
-            </div>
-            <div style={{ color: '#78350f', fontSize: 13, lineHeight: 1.6, opacity: 0.75, maxWidth: 180, margin: '0 auto' }}>
-              {item.sub}
-            </div>
+<div style={{ color: '#92400e', fontWeight: 800, fontSize: 15, marginBottom: 8, fontFamily: '"Playfair Display", Georgia, serif' }}>
+  {item.label}
+</div>
+<div style={{ color: '#78350f', fontSize: 13, lineHeight: 1.6, opacity: 0.75, maxWidth: 180, margin: '0 auto', fontFamily: '"Montserrat", sans-serif' }}>
+  {item.sub}
+</div>
           </div>
         ))}
       </div>
@@ -1597,6 +1594,9 @@ export default function ProductDisplay() {
         </div>
       )}
 
+
+        {/* ── FOOTER ── */}
+        <CustomerFooter />
     </div>
 
   )

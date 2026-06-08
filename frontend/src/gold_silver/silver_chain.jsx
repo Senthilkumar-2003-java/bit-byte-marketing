@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { addToCart } from '../collection/card_section'
 import CustomerNavbar from '../collection/CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const WEIGHTS = [
   { label: 'All Weights', grams: null },
@@ -87,8 +88,10 @@ useEffect(() => {
   const tagStyle = tag => TAG_COLORS[tag] || { bg: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.2)', color: '#fff' }
 
 return (
-  <div style={{ minHeight:'100vh', background:bg, color:text, fontFamily:'"Inter",system-ui,sans-serif', position:'relative', overflow:'hidden' }}>
+<div style={{ minHeight:'100vh', background:bg, color:text, fontFamily:'"Montserrat", sans-serif', position:'relative', overflow:'hidden' }}>
     <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
       @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
       @keyframes silverShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
       @keyframes glow-pulse { 0%,100%{box-shadow:0 0 20px rgba(192,192,192,0.1)} 50%{box-shadow:0 0 40px rgba(192,192,192,0.35)} }
@@ -112,12 +115,16 @@ return (
               <span style={{ color: silverColor, fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Premium Silver Collection</span>
             </div>
 
-            <h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px' }}>
-              🥈{' '}
-              <span style={{ background: 'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'silverShimmer 3s linear infinite' }}>
-                Silver Chain
-              </span>
-            </h1>
+<h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px', fontFamily: '"Playfair Display", Georgia, serif', display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <svg width="36" height="36" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <ellipse cx="10" cy="10" rx="4" ry="2.5" transform="rotate(-45 10 10)"/>
+    <ellipse cx="16" cy="16" rx="4" ry="2.5" transform="rotate(-45 16 16)"/>
+    <ellipse cx="22" cy="22" rx="4" ry="2.5" transform="rotate(-45 22 22)"/>
+  </svg>
+  <span style={{ background: 'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'silverShimmer 3s linear infinite' }}>
+    Silver Chain
+  </span>
+</h1>
 
             <p style={{ color: subtext, fontSize: '13px', margin: '8px 0 0', fontWeight: 500 }}>5 exclusive designs · Handcrafted Silver 999</p>
           </div>
@@ -187,21 +194,23 @@ return (
 
 <div style={{ padding: '12px 14px' }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-    <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
+    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
       {parseFloat(item.price) > 0 ? `₹${parseFloat(item.price).toLocaleString('en-IN')}` : '—'}
     </span>
     {parseFloat(item.wastage_charge) > 0 && parseFloat(item.original_price) > parseFloat(item.price) && (
-      <span style={{ fontSize: 12, color: '#999', textDecoration: 'line-through' }}>
+      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
         ₹{parseFloat(item.original_price).toLocaleString('en-IN')}
       </span>
     )}
   </div>
   {parseFloat(item.wastage_charge) > 0 && parseFloat(item.original_price) > parseFloat(item.price) && (
-    <div style={{ fontSize: 12, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
+    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
       {item.wastage_charge}% Off
     </div>
   )}
-  <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{item.name}</div>
+  <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
+    fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{item.name}
+  </div>
 </div>
               </div>
             )
@@ -231,7 +240,7 @@ return (
             </div>
 
             <div style={{ padding: '28px 32px' }}>
-              <div style={{ color: silverColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px' }}>{selectedItem.name}</div>
+              <div style={{ color: silverColor, fontWeight: 900, fontSize: '24px', marginBottom: '6px', fontFamily: '"Playfair Display", Georgia, serif' }}>{selectedItem.name}</div>
               <div style={{ color: subtext, fontSize: '13px', lineHeight: '1.6', marginBottom: '24px' }}>{selectedItem.description}</div>
 
 
@@ -292,6 +301,9 @@ return (
           </div>
         </div>
       )}
+
+                    {/* ── FOOTER ── */}
+              <CustomerFooter />
     </div>
   )
 }

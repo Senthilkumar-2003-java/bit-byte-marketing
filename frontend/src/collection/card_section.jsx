@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
 import CustomerNavbar from './CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 export async function getCartFromDB() {
   try {
@@ -98,11 +99,11 @@ export default function CardSection() {
   const totalPrice = cart.reduce((acc, i) => acc + (Number(i.product_price) || 0) * (i.qty || 1), 0)
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#FAFAF8',
-      fontFamily: '"Cormorant Garamond", Georgia, serif',
-    }}>
+<div style={{
+  minHeight: '100vh',
+  background: '#FDF5EE',
+  fontFamily: '"Montserrat", sans-serif',
+}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
@@ -247,7 +248,7 @@ export default function CardSection() {
             color: '#C9A96E',
             marginBottom: 12,
           }}>
-            BitByte Jewellers
+            Bharathi Jewellers
           </div>
           <h1 style={{
             margin: 0,
@@ -569,10 +570,13 @@ export default function CardSection() {
             color: '#C9A96E',
             opacity: 0.6,
           }}>
-            BitByte Jewellers · Fine Jewellery Since 2024
+            Bharathi Jewellers · Fine Jewellery Since 2024
           </div>
         </div>
       </div>
+
+              {/* ── FOOTER ── */}
+        <CustomerFooter />
     </div>
   )
 }

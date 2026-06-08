@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import CustomerNavbar from './CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 
 
@@ -87,8 +88,11 @@ const collections = [
 ]
 
 return (
-  <div style={{ minHeight: '100vh', background: bg, color: text, fontFamily: '"Inter",system-ui,sans-serif', position: 'relative', overflow: 'hidden' }}>
+  <div style={{ minHeight: '100vh', background: bg, color: text, 
+  fontFamily: '"Montserrat", sans-serif', 
+  position: 'relative', overflow: 'hidden' }}>
     <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
       @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
       @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
       @keyframes pulse-ring { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.05)} }
@@ -124,7 +128,9 @@ return (
             <span className="sparkle-dot" style={{ fontSize: '12px', animationDelay: '1s' }}>✦</span>
           </div>
 
-          <h1 style={{ color: text, fontSize: '42px', fontWeight: 900, margin: '0 0 12px', letterSpacing: '-1px' }}>
+          <h1 style={{ color: text, fontSize: '42px', fontWeight: 900, 
+  margin: '0 0 12px', letterSpacing: '-1px',
+  fontFamily: '"Playfair Display", Georgia, serif' }}>
             💎 <span style={{ background: 'linear-gradient(90deg,#a78bfa,#fbbf24,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Earrings Collections</span>
           </h1>
 
@@ -168,7 +174,10 @@ return (
 
       {/* Content */}
       <div style={{ padding: '12px 14px' }}>
-        <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 700, marginBottom: 4 }}>{col.title}</div>
+        <div style={{ fontSize: 16, color: '#1a1a1a', fontWeight: 700, marginBottom: 4,
+  fontFamily: '"Cormorant Garamond", Georgia, serif' }}>
+  {col.title}
+</div>
         <div style={{ fontSize: 12, color: '#7c5c4a' }}>{col.subtitle}</div>
       </div>
     </div>
@@ -178,11 +187,14 @@ return (
         <div style={{ textAlign: 'center', marginTop: '60px', animation: 'fadeInUp 0.8s ease 0.4s both' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', color: subtext, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600 }}>
             <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,transparent,${subtext})` }} />
-            BitByte Jewellers • Premium Earrings
+            Bharathi Jewellers • Premium Earrings
             <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,${subtext},transparent)` }} />
           </div>
         </div>
       </div>
+
+              {/* ── FOOTER ── */}
+        <CustomerFooter />
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { addToCart } from '../collection/card_section'
 import CustomerNavbar from '../collection/CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const WEIGHTS = [
   { label: 'All Weights', grams: null },
@@ -91,8 +92,10 @@ useEffect(() => {
   const tagStyle  = (tag) => TAG_COLORS[tag] || { bg:'rgba(255,255,255,0.1)', border:'rgba(255,255,255,0.2)', color:'#fff' }
 
 return (
-  <div style={{ minHeight:'100vh', background:bg, color:text, fontFamily:'"Inter",system-ui,sans-serif', position:'relative', overflow:'hidden' }}>
+<div style={{ minHeight:'100vh', background:bg, color:text, fontFamily:'"Montserrat", sans-serif', position:'relative', overflow:'hidden' }}>
     <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
       @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
       @keyframes silverShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
       @keyframes glow-pulse { 0%,100%{box-shadow:0 0 20px rgba(192,192,192,0.1)} 50%{box-shadow:0 0 40px rgba(192,192,192,0.35)} }
@@ -117,12 +120,15 @@ return (
               <span className="sparkle-dot" style={{ color:silverColor, fontSize:'11px' }}>✦</span>
               <span style={{ color:silverColor, fontSize:'10px', fontWeight:800, letterSpacing:'2px', textTransform:'uppercase' }}>Premium Silver Collection</span>
             </div>
-            <h1 style={{ margin:0, fontSize:'36px', fontWeight:900, letterSpacing:'-0.5px' }}>
-              🥈{' '}
-              <span style={{ background:'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', animation:'silverShimmer 3s linear infinite' }}>
-                Silver Bangles
-              </span>
-            </h1>
+<h1 style={{ margin:0, fontSize:'36px', fontWeight:900, letterSpacing:'-0.5px', fontFamily:'"Playfair Display", Georgia, serif', display:'flex', alignItems:'center', gap:'10px' }}>
+  <svg width="36" height="36" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="16" cy="16" r="10"/>
+    <circle cx="16" cy="16" r="6.5"/>
+  </svg>
+  <span style={{ background:'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', animation:'silverShimmer 3s linear infinite' }}>
+    Silver Bangles
+  </span>
+</h1>
             <p style={{ color:subtext, fontSize:'13px', margin:'8px 0 0', fontWeight:500 }}>5 exclusive designs · Handcrafted Silver 999</p>
           </div>
 
@@ -192,21 +198,23 @@ return (
 
 <div style={{ padding: '12px 14px' }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-    <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
+    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
       {parseFloat(bangle.price) > 0 ? `₹${parseFloat(bangle.price).toLocaleString('en-IN')}` : '—'}
     </span>
     {parseFloat(bangle.wastage_charge) > 0 && parseFloat(bangle.original_price) > parseFloat(bangle.price) && (
-      <span style={{ fontSize: 12, color: '#999', textDecoration: 'line-through' }}>
+      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
         ₹{parseFloat(bangle.original_price).toLocaleString('en-IN')}
       </span>
     )}
   </div>
   {parseFloat(bangle.wastage_charge) > 0 && parseFloat(bangle.original_price) > parseFloat(bangle.price) && (
-    <div style={{ fontSize: 12, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
+    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
       {bangle.wastage_charge}% Off
     </div>
   )}
-  <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{bangle.name}</div>
+  <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
+    fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{bangle.name}
+  </div>
 </div>
               </div>
             )
@@ -217,7 +225,7 @@ return (
         <div style={{ marginTop:'48px', textAlign:'center', animation:'fadeInUp 0.6s ease 0.4s both' }}>
           <div style={{ display:'inline-flex', alignItems:'center', gap:'16px', color:subtext, fontSize:'11px', letterSpacing:'2px', textTransform:'uppercase', fontWeight:600 }}>
             <div style={{ width:'40px', height:'1px', background:`linear-gradient(90deg,transparent,${silverColor})` }} />
-            BitByte Jewellers • Silver Bangle Collection
+            Bharathi Jewellers • Silver Bangle Collection
             <div style={{ width:'40px', height:'1px', background:`linear-gradient(90deg,${silverColor},transparent)` }} />
           </div>
         </div>
@@ -299,6 +307,9 @@ return (
           </div>
         </div>
       )}
+
+                    {/* ── FOOTER ── */}
+              <CustomerFooter />
     </div>
   )
 }

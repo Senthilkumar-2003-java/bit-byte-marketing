@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import CustomerNavbar from './CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 export default function BanglesCollection() {
   const navigate = useNavigate()
@@ -84,8 +85,10 @@ const collections = [
 ]
 
 return (
-  <div style={{ minHeight: '100vh', background: bg, color: text, fontFamily: '"Inter",system-ui,sans-serif', position: 'relative', overflow: 'hidden' }}>
+<div style={{ minHeight: '100vh', background: bg, color: text, fontFamily: '"Montserrat", sans-serif', position: 'relative', overflow: 'hidden' }}>
     <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
       @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
       @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
       @keyframes pulse-ring { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.05)} }
@@ -123,9 +126,13 @@ return (
           <span style={{ fontSize: '12px' }}>✦</span>
         </div>
 
-        <h1 style={{ color: text, fontSize: '42px', fontWeight: 900, margin: '0 0 12px', letterSpacing: '-1px' }}>
-          💎 <span style={{ background: 'linear-gradient(90deg,#fbbf24,#34d399,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Bangle Collections</span>
-        </h1>
+<h1 style={{ color: text, fontSize: '42px', fontWeight: 900, margin: '0 0 12px', letterSpacing: '-1px', fontFamily: '"Playfair Display", Georgia, serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+  <svg width="42" height="42" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="16" cy="16" r="10"/>
+    <circle cx="16" cy="16" r="6.5"/>
+  </svg>
+  <span style={{ background: 'linear-gradient(90deg,#fbbf24,#34d399,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Bangle Collections</span>
+</h1>
 
         <p style={{ color: subtext, fontSize: '15px', margin: 0, maxWidth: '480px', marginInline: 'auto', lineHeight: '1.6' }}>
           Explore our curated selection of handcrafted gold, silver, diamond and platinum bangles.
@@ -167,22 +174,15 @@ onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.0
 
       {/* Content */}
       <div style={{ padding: '12px 14px' }}>
-        <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 700, marginBottom: 4 }}>{col.title}</div>
-        <div style={{ fontSize: 12, color: '#7c5c4a' }}>{col.subtitle}</div>
+        <div style={{ fontSize: 16, color: '#1a1a1a', fontWeight: 700, marginBottom: 4, fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{col.title}</div>
+        <div style={{ fontSize: 14, color: '#7c5c4a' }}>{col.subtitle}</div>
       </div>
     </div>
   ))}
 </div>
-
-      {/* Footer */}
-      <div style={{ textAlign: 'center', marginTop: '60px', animation: 'fadeInUp 0.8s ease 0.4s both' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', color: subtext, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600 }}>
-          <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,transparent,${subtext})` }} />
-          BitByte Jewellers • Premium Collections
-          <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,${subtext},transparent)` }} />
-        </div>
-      </div>
     </div>
+        {/* ── FOOTER ── */}
+        <CustomerFooter />
   </div>
 )
 }

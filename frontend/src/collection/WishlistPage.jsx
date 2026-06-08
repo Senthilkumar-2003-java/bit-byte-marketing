@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
 import CustomerNavbar from './CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -28,11 +29,12 @@ export default function WishlistPage() {
     } catch {}
   }
 
-  return (
-    <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Inter",system-ui,sans-serif' }}>
-
-      {/* Navbar */}
-     <CustomerNavbar />
+return (
+  <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Montserrat", sans-serif' }}>
+    <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+    `}</style>
+    <CustomerNavbar />
 
       <div style={{ maxWidth: '100%', margin: '0 auto', padding: '40px' }}>
 
@@ -112,13 +114,15 @@ export default function WishlistPage() {
 <div style={{ padding: '12px 14px' }}>
   {item.product_price && (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-      <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
+      <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
         ₹{Number(item.product_price).toLocaleString('en-IN')}
       </span>
     </div>
   )}
-  <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{item.product_name}</div>
-  <div style={{ fontSize: 11, color: '#7c5c4a', marginTop: 3, textTransform: 'capitalize' }}>
+  <div style={{ fontSize: 20, color: '#1a1a1a', fontWeight: 600,
+    fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{item.product_name}
+  </div>
+  <div style={{ fontSize: 13, color: '#7c5c4a', marginTop: 3, textTransform: 'capitalize' }}>
     {item.product_metal} · {item.product_category}
   </div>
 </div>
@@ -127,6 +131,9 @@ export default function WishlistPage() {
           </div>
         )}
       </div>
+
+              {/* ── FOOTER ── */}
+        <CustomerFooter />
     </div>
   )
 }

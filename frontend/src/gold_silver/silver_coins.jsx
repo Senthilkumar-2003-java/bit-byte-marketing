@@ -4,6 +4,7 @@ import logo from '../assets/logo.png'
 import silverCoin from '../assets/silver-coin-transparent.png'
 import { addToCart } from '../collection/card_section'
 import CustomerNavbar from '../collection/CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -97,8 +98,10 @@ const silverColor = '#c0c0c0'
   }
 
 return (
-  <div style={{ minHeight:'100vh', background:bg, color:text, fontFamily:'"Inter",system-ui,sans-serif', position:'relative', overflow:'hidden' }}>
+<div style={{ minHeight:'100vh', background:bg, color:text, fontFamily:'"Montserrat", sans-serif', position:'relative', overflow:'hidden' }}>
     <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
       @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
       @keyframes silverShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
       @keyframes coinFloat { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-8px) rotate(-5deg)} }
@@ -124,12 +127,17 @@ return (
               <span className="sparkle-dot" style={{ color:silverColor, fontSize:'11px' }}>✦</span>
               <span style={{ color:silverColor, fontSize:'10px', fontWeight:800, letterSpacing:'2px', textTransform:'uppercase' }}>Premium Silver Coins</span>
             </div>
-            <h1 style={{ margin:0, fontSize:'36px', fontWeight:900, letterSpacing:'-0.5px' }}>
-              🥈{' '}
-              <span style={{ background:'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', animation:'silverShimmer 3s linear infinite' }}>
-                Silver Coins {weightFilter ? `— ${weightFilter}` : ''}
-              </span>
-            </h1>
+<h1 style={{ margin:0, fontSize:'36px', fontWeight:900, letterSpacing:'-0.5px', fontFamily:'"Playfair Display", Georgia, serif', display:'flex', alignItems:'center', gap:'10px' }}>
+  <svg width="36" height="36" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="16" cy="16" r="11"/>
+    <circle cx="16" cy="16" r="7"/>
+    <path d="M16 9v2"/><path d="M16 21v2"/>
+    <path d="M9 16h2"/><path d="M21 16h2"/>
+  </svg>
+  <span style={{ background:'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', animation:'silverShimmer 3s linear infinite' }}>
+    Silver Coins {weightFilter ? `— ${weightFilter}` : ''}
+  </span>
+</h1>
             <p style={{ color:subtext, fontSize:'13px', margin:'8px 0 0', fontWeight:500 }}>{loading ? 'Loading...' : `${products.length} coins available`} · Silver 999</p>
           </div>
 
@@ -251,11 +259,11 @@ return (
 
   {/* Price row */}
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-    <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
+    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
       {displayPrice ? `₹${displayPrice.toLocaleString('en-IN')}` : '—'}
     </span>
     {parseFloat(p.original_price) > displayPrice && displayPrice > 0 && (
-      <span style={{ fontSize: 12, color: '#999', textDecoration: 'line-through' }}>
+      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
         ₹{parseFloat(p.original_price).toLocaleString('en-IN')}
       </span>
     )}
@@ -263,17 +271,17 @@ return (
 
   {/* Discount */}
   {parseFloat(p.wastage_charge) > 0 && parseFloat(p.original_price) > displayPrice && (
-    <div style={{ fontSize: 12, color: '#2ecc71', fontWeight: 700, marginBottom: 4 }}>
+    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 4 }}>
       {p.wastage_charge}% Off
     </div>
   )}
 
   {/* Name */}
-  <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{p.name}</div>
+  <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600 }}>{p.name}</div>
 
   {/* Live rate */}
   {silverPrice && p.net_weight && (
-    <div style={{ fontSize: 10, color: '#999', marginTop: 3 }}>
+    <div style={{ fontSize: 13, color: '#999', marginTop: 3 }}>
       ₹{silverPrice.toFixed(0)}/gm · incl. 3% GST
     </div>
   )}
@@ -284,15 +292,11 @@ return (
           </div>
         )}
 
-        {/* Footer */}
-        <div style={{ marginTop:'48px', textAlign:'center' }}>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:'16px', color:subtext, fontSize:'11px', letterSpacing:'2px', textTransform:'uppercase', fontWeight:600 }}>
-            <div style={{ width:'40px', height:'1px', background:`linear-gradient(90deg,transparent,${silverColor})` }} />
-            BitByte Jewellers • Silver Coins
-            <div style={{ width:'40px', height:'1px', background:`linear-gradient(90deg,${silverColor},transparent)` }} />
-          </div>
-        </div>
+
       </div>
+
+                    {/* ── FOOTER ── */}
+              <CustomerFooter />
     </div>
   )
 }

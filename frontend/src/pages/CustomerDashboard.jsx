@@ -5,6 +5,7 @@ import CustomerNavbar from '../collection/CustomerNavbar'
 import goldCoin from '../assets/gold-coin-transparent.png'
 import silverCoin from '../assets/silver-coin-transparent.png'
 import coinPromote2 from '../assets/coin_promote2.png'
+import CustomerFooter from '../collection/CustomerFooter'
 
 
 // ── BANNER SLIDER COMPONENT ──
@@ -107,6 +108,9 @@ h1, h2, h3 {
           <div key={i} onClick={() => setCurrent(i)}
             style={{ width: i === current ? '24px' : '8px', height: '8px', borderRadius: '20px', background: i === current ? '#8B1A1A' : 'rgba(255,255,255,0.6)', cursor: 'pointer', transition: 'all 0.3s ease' }} />
         ))}
+
+   
+
       </div>
     </div>
   )
@@ -466,7 +470,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 
   body {
     background: #FDF5EE;
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
     color: #3d2b1f;
     -webkit-font-smoothing: antialiased;
   }
@@ -475,6 +479,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   h1, h2, h3, h4, h5, h6 {
     color: #1a0a0a;
     font-weight: 700;
+    font-family: 'Playfair Display', Georgia, serif;
     letter-spacing: -0.01em;
     line-height: 1.3;
   }
@@ -2198,6 +2203,9 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
           />
         </div>
       )}
+
+                {/* ── FOOTER ── */}
+      <CustomerFooter />
 
     </div>
 

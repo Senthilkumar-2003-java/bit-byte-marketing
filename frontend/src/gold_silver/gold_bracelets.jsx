@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { addToCart } from '../collection/card_section'
 import CustomerNavbar from '../collection/CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   id: i, size: Math.random() * 50 + 8, x: Math.random() * 100,
@@ -96,8 +97,10 @@ const inpBorder = '#d1d5db'
   const tagStyle = (tag) => TAG_COLORS[tag] || { bg: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.2)', color: '#fff' }
 
   return (
-    <div style={{ minHeight: '100vh', background: bg, color: text, fontFamily: '"Inter",system-ui,sans-serif', position: 'relative', overflow: 'hidden', transition: 'background 0.8s ease, color 0.4s ease' }}>
+<div style={{ minHeight: '100vh', background: bg, color: text, fontFamily: '"Montserrat", sans-serif', position: 'relative', overflow: 'hidden', transition: 'background 0.8s ease, color 0.4s ease' }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
         @keyframes float-orb { 0%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-50px) scale(1.1)} 66%{transform:translate(-20px,20px) scale(0.9)} 100%{transform:translate(0,0) scale(1)} }
         @keyframes antigravity { 0%{transform:translateY(110vh) rotate(0deg);opacity:0} 10%{opacity:var(--op)} 90%{opacity:var(--op)} 100%{transform:translateY(-20vh) rotate(360deg);opacity:0} }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
@@ -133,35 +136,19 @@ const inpBorder = '#d1d5db'
               <span className="sparkle-dot" style={{ color: goldColor, fontSize: '11px' }}>✦</span>
               <span style={{ color: goldColor, fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Premium Gold Collection</span>
             </div>
-            <h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px' }}>
-              🏅 <span style={{ background: `linear-gradient(90deg,#f59e0b,#fbbf24,#ffd700)`, backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'goldShimmer 3s linear infinite' }}>Gold Bracelets</span>
-            </h1>
+<h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px', fontFamily: '"Playfair Display", Georgia, serif', display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <svg width="36" height="36" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M8 12c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+    <path d="M8 20c0 4.4 3.6 8 8 8s8-3.6 8-8"/>
+    <rect x="5" y="12" width="6" height="8" rx="2"/>
+    <rect x="21" y="12" width="6" height="8" rx="2"/>
+  </svg>
+  <span style={{ background: `linear-gradient(90deg,#f59e0b,#fbbf24,#ffd700)`, backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'goldShimmer 3s linear infinite' }}>Gold Bracelets</span>
+</h1>
             <p style={{ color: subtext, fontSize: '13px', margin: '8px 0 0', fontWeight: 500 }}>{goldBracelets.length} exclusive designs · Handcrafted excellence</p>
           </div>
 
-          {/* Metal Type Toggle + Rate */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
-            <div style={{ display: 'flex', background: inpBg, border: `1px solid ${inpBorder}`, borderRadius: '12px', overflow: 'hidden' }}>
-              {[{ val: '22k', label: '🏅 22K' }, { val: '24k', label: '🥇 24K' }].map(({ val, label }) => (
-                <button
-                  key={val}
-                  onClick={() => setMetalType(val)}
-                  style={{
-                    padding: '9px 20px', border: 'none',
-                    background: metalType === val ? (val === '22k' ? 'linear-gradient(90deg,#f59e0b,#fbbf24)' : 'linear-gradient(90deg,#d97706,#ffd700)') : 'transparent',
-                    color: metalType === val ? '#000' : subtext,
-                    fontWeight: 800, fontSize: '12px', cursor: 'pointer', transition: 'all 0.25s ease',
-                  }}
-                >{label}</button>
-              ))}
-            </div>
-            {currentRate && (
-              <div style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '10px', padding: '8px 16px', textAlign: 'right' }}>
-                <div style={{ color: subtext, fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Live Rate ({metalType.toUpperCase()})</div>
-                <div style={{ color: goldColor, fontWeight: 900, fontSize: '16px', fontFamily: 'monospace' }}>₹{currentRate.toFixed(2)}/gm</div>
-              </div>
-            )}
-          </div>
+
         </div>
 
         {/* Bracelet Cards Grid */}
@@ -218,24 +205,26 @@ const inpBorder = '#d1d5db'
         }
         <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 16, color: '#999', zIndex: 2 }}>🔗</div>
       </div>
-      <div style={{ padding: '12px 14px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
-            {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
-          </span>
-          {hasDiscount && (
-            <span style={{ fontSize: 12, color: '#999', textDecoration: 'line-through' }}>
-              ₹{originalAmt.toLocaleString('en-IN')}
-            </span>
-          )}
-        </div>
-        {hasDiscount && (
-          <div style={{ fontSize: 12, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
-            {discountPct}% Off
-          </div>
-        )}
-        <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{product.name}</div>
-      </div>
+<div style={{ padding: '12px 14px' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
+      {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
+    </span>
+    {hasDiscount && (
+      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
+        ₹{originalAmt.toLocaleString('en-IN')}
+      </span>
+    )}
+  </div>
+  {hasDiscount && (
+    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
+      {discountPct}% Off
+    </div>
+  )}
+  <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
+    fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{product.name}
+  </div>
+</div>
     </div>
   )
 })
@@ -246,11 +235,14 @@ const inpBorder = '#d1d5db'
         <div style={{ marginTop: '48px', textAlign: 'center', animation: 'fadeInUp 0.6s ease 0.4s both' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', color: subtext, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600 }}>
             <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,transparent,${goldColor})` }} />
-            BitByte Jewellers • Gold Bracelet Collection
+            Bharathi  Jewellers • Gold Bracelet Collection
             <div style={{ width: '40px', height: '1px', background: `linear-gradient(90deg,${goldColor},transparent)` }} />
           </div>
         </div>
       </div>
+
+              {/* ── FOOTER ── */}
+              <CustomerFooter />
     </div>
   )
 }

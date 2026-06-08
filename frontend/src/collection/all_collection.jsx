@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import CustomerNavbar from './CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 
 function ProductCard({ p, navigate }) {
@@ -60,24 +61,26 @@ function ProductCard({ p, navigate }) {
         <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 16, color: '#999', zIndex: 2 }}>🔗</div>
       </div>
 
-      <div style={{ padding: '12px 14px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
-            {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
-          </span>
-          {hasDiscount && (
-            <span style={{ fontSize: 12, color: '#999', textDecoration: 'line-through' }}>
-              ₹{originalAmt.toLocaleString('en-IN')}
-            </span>
-          )}
-        </div>
-        {hasDiscount && (
-          <div style={{ fontSize: 12, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
-            {discountPct}% Off
-          </div>
-        )}
-        <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{p.name}</div>
-      </div>
+<div style={{ padding: '12px 14px' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
+      {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
+    </span>
+    {hasDiscount && (
+      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
+        ₹{originalAmt.toLocaleString('en-IN')}
+      </span>
+    )}
+  </div>
+  {hasDiscount && (
+    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
+      {discountPct}% Off
+    </div>
+  )}
+  <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
+    fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{p.name}
+  </div>
+</div>
     </div>
   )
 }
@@ -227,8 +230,12 @@ useEffect(() => {
 }, [priceFilter, metalFilter, genderFilter, occasionFilter, weddingCategoryFilter, isWedding, isDailywear, searchFilter])
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Inter",system-ui,sans-serif' }}>
-      <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}\@keyframes fadeImg{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:scale(1)}}`}</style>
+    <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Montserrat", sans-serif' }}>
+      <style>{`
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeImg{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:scale(1)}}
+`}</style>
 
 <CustomerNavbar />
 
@@ -237,17 +244,55 @@ useEffect(() => {
   <div style={{ fontSize: 13, fontWeight: 700, color: '#8B1A1A', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
     {isWedding ? 'WEDDING COLLECTION' : isDailywear ? 'DAILYWEAR COLLECTION' : searchFilter ? `SEARCH RESULTS` : metalFilter ? `${metalFilter.toUpperCase()} JEWELLERY` : occasionFilter ? `${occasionFilter.toUpperCase()} COLLECTION` : 'ALL JEWELLERY'}
   </div>
-  <div style={{ fontSize: 28, fontWeight: 800, color: '#1a0a0a', marginBottom: 6 }}>
-{isWedding
-  ? '💒 Wedding Jewellery'
-  : isDailywear ? '👗 Dailywear Collection'
-  : metalFilter === 'diamond' ? '💎 Diamond Jewellery'
-  : metalFilter === 'gold' ? '🥇 Gold Jewellery'
-  : metalFilter === 'silver' ? '🥈 Silver Jewellery'
-  : occasionFilter ? `✨ ${occasionFilter.replace('+', ' ')} Collection`
-  : priceFilter ? PRICE_LABELS[priceFilter]
-  : 'All Products'}
-  </div>
+<div style={{ fontSize: 28, fontWeight: 800, color: '#1a0a0a', marginBottom: 6, fontFamily: '"Playfair Display", Georgia, serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+  {isWedding ? (
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 27s-11-7-11-14a7 7 0 0111-5.7A7 7 0 0127 13c0 7-11 14-11 14z"/>
+    </svg>
+  ) : isDailywear ? (
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4l-5 6h20l-5-6"/><rect x="6" y="10" width="20" height="18" rx="2"/>
+      <path d="M16 10v18"/>
+    </svg>
+  ) : metalFilter === 'diamond' ? (
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 4l10 8-10 16L6 12z"/><path d="M6 12h20"/>
+      <path d="M11 12l5 16"/><path d="M21 12l-5 16"/>
+      <path d="M6 12l5-8"/><path d="M26 12l-5-8"/>
+    </svg>
+  ) : metalFilter === 'gold' ? (
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="16,4 19.5,12.5 28,13.5 22,19.5 23.5,28 16,24 8.5,28 10,19.5 4,13.5 12.5,12.5"/>
+    </svg>
+  ) : metalFilter === 'silver' ? (
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="7"/>
+      <path d="M16 9v2"/><path d="M16 21v2"/>
+      <path d="M9 16h2"/><path d="M21 16h2"/>
+    </svg>
+  ) : occasionFilter ? (
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 4l10 8-10 16L6 12z"/><path d="M6 12h20"/>
+    </svg>
+  ) : priceFilter ? (
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="16" cy="16" r="11"/><path d="M16 9v14"/><path d="M11 12h7a3 3 0 010 6h-7"/>
+    </svg>
+  ) : (
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 12l10-6 10 6v10l-10 6-10-6z"/>
+      <path d="M6 12l10 6 10-6"/><line x1="16" y1="18" x2="16" y2="28"/>
+    </svg>
+  )}
+  {isWedding ? 'Wedding Jewellery'
+    : isDailywear ? 'Dailywear Collection'
+    : metalFilter === 'diamond' ? 'Diamond Jewellery'
+    : metalFilter === 'gold' ? 'Gold Jewellery'
+    : metalFilter === 'silver' ? 'Silver Jewellery'
+    : occasionFilter ? `${occasionFilter.replace('+', ' ')} Collection`
+    : priceFilter ? PRICE_LABELS[priceFilter]
+    : 'All Products'}
+</div>
   <div style={{ fontSize: 14, color: '#7c5c4a' }}>
     {loading ? 'Loading...' : `${displayProducts.length} products found`}
   </div>
@@ -255,20 +300,32 @@ useEffect(() => {
         {/* Filter badges */}
         <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
           {priceFilter && (
-            <span style={{ background: '#fce8e8', color: '#8B1A1A', border: '1px solid #f3a0a0', borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700 }}>
-              💰 {PRICE_LABELS[priceFilter]}
-            </span>
+  <span style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#fce8e8', color: '#8B1A1A', border: '1px solid #f3a0a0', borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700 }}>
+  <svg width="12" height="12" viewBox="0 0 32 32" fill="none" stroke="#8B1A1A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="16" cy="16" r="11"/><path d="M16 9v14"/><path d="M11 12h7a3 3 0 010 6h-7"/>
+  </svg>
+  {PRICE_LABELS[priceFilter]}
+</span>
           )}
 
           {genderFilter && (
-  <span style={{ background: 'rgba(139,26,26,0.1)', color: '#8B1A1A', border: '1px solid #8B1A1A', borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700 }}>
-    👤 {genderFilter.charAt(0).toUpperCase() + genderFilter.slice(1)}
-  </span>
+<span style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(139,26,26,0.1)', color: '#8B1A1A', border: '1px solid #8B1A1A', borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700 }}>
+  <svg width="12" height="12" viewBox="0 0 32 32" fill="none" stroke="#8B1A1A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="16" cy="10" r="5"/><path d="M4 28c0-6.6 5.4-12 12-12s12 5.4 12 12"/>
+  </svg>
+  {genderFilter.charAt(0).toUpperCase() + genderFilter.slice(1)}
+</span>
 )}
           {metalFilter && (
-            <span style={{ background: metalFilter === 'gold' ? 'rgba(251,191,36,0.15)' : 'rgba(192,192,192,0.15)', color: metalFilter === 'gold' ? '#b8860b' : '#9ca3af', border: `1px solid ${metalFilter === 'gold' ? '#fbbf24' : '#c0c0c0'}`, borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700 }}>
-              {metalFilter === 'gold' ? '🥇' : '🥈'} {metalFilter.toUpperCase()}
-            </span>
+<span style={{ display: 'flex', alignItems: 'center', gap: 5, background: metalFilter === 'gold' ? 'rgba(251,191,36,0.15)' : 'rgba(192,192,192,0.15)', color: metalFilter === 'gold' ? '#b8860b' : '#9ca3af', border: `1px solid ${metalFilter === 'gold' ? '#fbbf24' : '#c0c0c0'}`, borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700 }}>
+  <svg width="12" height="12" viewBox="0 0 32 32" fill="none" stroke={metalFilter === 'gold' ? '#b8860b' : '#9ca3af'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    {metalFilter === 'gold'
+      ? <polygon points="16,4 19.5,12.5 28,13.5 22,19.5 23.5,28 16,24 8.5,28 10,19.5 4,13.5 12.5,12.5"/>
+      : <><circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="7"/></>
+    }
+  </svg>
+  {metalFilter.toUpperCase()}
+</span>
           )}
           <button onClick={() => navigate('/collection/all')}
             style={{ background: 'transparent', color: '#8B1A1A', border: '1px solid #8B1A1A', borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
@@ -288,13 +345,13 @@ useEffect(() => {
     justifyContent: 'center', flexWrap: 'wrap'
   }}>
     {[
-      { key: 'all',               label: 'All Wedding',       emoji: '💒' },
-      { key: 'Wedding Ring',      label: 'Wedding Ring',      emoji: '💍' },
-      { key: 'Wedding Necklaces', label: 'Wedding Necklaces', emoji: '📿' },
-      { key: 'Wedding Chain',     label: 'Wedding Chain',     emoji: '⛓️' },
-      { key: 'Wedding Bangles',   label: 'Wedding Bangles',   emoji: '⭕' },
-      { key: 'Wedding Earring',   label: 'Wedding Earring',   emoji: '✨' },
-    ].map(tab => {
+  { key: 'all', label: 'All Wedding', svg: <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 27s-11-7-11-14a7 7 0 0111-5.7A7 7 0 0127 13c0 7-11 14-11 14z"/></svg> },
+  { key: 'Wedding Ring', label: 'Wedding Ring', svg: <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="19" r="8"/><circle cx="16" cy="19" r="4.5"/><path d="M13 11l-2-4h10l-2 4"/></svg> },
+  { key: 'Wedding Necklaces', label: 'Wedding Necklaces', svg: <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6c0 10 4 16 10 18 6-2 10-8 10-18"/><circle cx="16" cy="26" r="2.5"/></svg> },
+  { key: 'Wedding Chain', label: 'Wedding Chain', svg: <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="11" y="2" width="10" height="7" rx="3.5"/><rect x="11" y="12" width="10" height="7" rx="3.5"/><rect x="11" y="22" width="10" height="7" rx="3.5"/><line x1="16" y1="9" x2="16" y2="12"/><line x1="16" y1="19" x2="16" y2="22"/></svg> },
+  { key: 'Wedding Bangles', label: 'Wedding Bangles', svg: <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="6.5"/></svg> },
+  { key: 'Wedding Earring', label: 'Wedding Earring', svg: <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="7" r="2.5"/><path d="M11 9.5v4"/><path d="M8.5 13.5h5l-1.2 6-1.3 3-1.3-3-1.2-6z"/><circle cx="21" cy="7" r="2.5"/><path d="M21 9.5v4"/><path d="M18.5 13.5h5l-1.2 6-1.3 3-1.3-3-1.2-6z"/></svg> },
+].map(tab => {
       const count = tab.key === 'all'
         ? products.length
         : products.filter(p => p.wedding_category === tab.key).length
@@ -313,7 +370,9 @@ useEffect(() => {
             boxShadow: weddingTab === tab.key ? '0 4px 12px rgba(139,26,26,0.3)' : 'none'
           }}
         >
-          {tab.emoji} {tab.label}
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+  {tab.svg} {tab.label}
+</span>
           <span style={{
             marginLeft: 6, fontSize: 10, fontWeight: 800,
             background: weddingTab === tab.key ? 'rgba(255,255,255,0.25)' : 'rgba(139,26,26,0.1)',
@@ -336,7 +395,11 @@ useEffect(() => {
           </div>
         ) : products.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
-            <div style={{ fontSize: 52, marginBottom: 16 }}>🔍</div>
+            <div style={{ marginBottom: 16 }}>
+  <svg width="52" height="52" viewBox="0 0 32 32" fill="none" stroke="#8B1A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.3">
+    <circle cx="14" cy="14" r="9"/><path d="M21 21l7 7"/>
+  </svg>
+</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: '#1a0a0a', marginBottom: 8 }}>No products found</div>
             <div style={{ fontSize: 14, color: '#7c5c4a', marginBottom: 24 }}>
               {priceFilter ? `${PRICE_LABELS[priceFilter]} range la products illai` : 'No products available'}
@@ -355,6 +418,11 @@ useEffect(() => {
          
         )}
       </div>
+
+        {/* ── FOOTER ── */}
+        <CustomerFooter />
     </div>
   )
+
+
 }

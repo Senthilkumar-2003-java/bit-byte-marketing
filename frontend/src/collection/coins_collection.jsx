@@ -4,6 +4,7 @@ import logo from '../assets/logo.png'
 import goldCoin from '../assets/gold-coin-transparent.png'
 import silverCoin from '../assets/silver-coin-transparent.png'
 import CustomerNavbar from './CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -64,8 +65,10 @@ export default function CoinsCollection() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Inter",system-ui,sans-serif' }}>
+   <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Montserrat", sans-serif' }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
         @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
         @keyframes spin { to{transform:rotate(360deg)} }
         @keyframes goldShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
@@ -105,17 +108,25 @@ export default function CoinsCollection() {
             marginBottom: 16,
           }} />
           <div style={{
-            fontSize: 36, fontWeight: 900, letterSpacing: -1,
-            background: isGold
-              ? 'linear-gradient(90deg,#f59e0b,#fbbf24,#ffd700,#fbbf24)'
-              : 'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)',
-            backgroundSize: '200% auto',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            animation: 'goldShimmer 3s linear infinite',
-            marginBottom: 8,
-          }}>
-            {isGold ? '🥇 Gold Coins' : '🥈 Silver Coins'}
-          </div>
+  fontSize: 36, fontWeight: 900, letterSpacing: -1,
+  background: isGold
+    ? 'linear-gradient(90deg,#f59e0b,#fbbf24,#ffd700,#fbbf24)'
+    : 'linear-gradient(90deg,#9ca3af,#c0c0c0,#e2e8f0,#c0c0c0)',
+  backgroundSize: '200% auto',
+  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+  animation: 'goldShimmer 3s linear infinite',
+  marginBottom: 8,
+  fontFamily: '"Playfair Display", Georgia, serif',
+  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+}}>
+  <svg width="36" height="36" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="16" cy="16" r="11"/>
+    <circle cx="16" cy="16" r="7"/>
+    <path d="M16 9v2"/><path d="M16 21v2"/>
+    <path d="M9 16h2"/><path d="M21 16h2"/>
+  </svg>
+  {isGold ? 'Gold Coins' : 'Silver Coins'}
+</div>
           <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
             {loading ? 'Loading...' : `${products.length} products`}
             {weightFilter && <span style={{ color: accentColor, fontWeight: 700, marginLeft: 8 }}>• {weightFilter}</span>}
@@ -252,23 +263,28 @@ export default function CoinsCollection() {
   </div>
 
   {/* Info */}
-  <div style={{ padding: '12px 14px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-      <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
-        {price > 0 ? `₹${price.toLocaleString('en-IN')}` : livePrice ? `₹${Number(livePrice).toLocaleString('en-IN')}` : '—'}
-      </span>
-    </div>
-    <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{p.name}</div>
-    {p.net_weight && (
-      <div style={{ fontSize: 11, color: '#999', marginTop: 3 }}>⚖️ {p.net_weight}g · incl. 3% GST</div>
-    )}
+<div style={{ padding: '12px 14px' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
+      {price > 0 ? `₹${price.toLocaleString('en-IN')}` : livePrice ? `₹${Number(livePrice).toLocaleString('en-IN')}` : '—'}
+    </span>
   </div>
+  <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
+    fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{p.name}
+  </div>
+  {p.net_weight && (
+    <div style={{ fontSize: 11, color: '#999', marginTop: 3 }}>⚖️ {p.net_weight}g · incl. 3% GST</div>
+  )}
+</div>
 </div>
               )
             })}
           </div>
         )}
       </div>
+
+              {/* ── FOOTER ── */}
+        <CustomerFooter />
     </div>
   )
 }

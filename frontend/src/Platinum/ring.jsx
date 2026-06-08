@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CustomerNavbar from '../collection/CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -68,8 +69,10 @@ export default function PlatinumRings() {
   const GRADES = ['all', '92']
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Inter",system-ui,sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Montserrat", sans-serif' }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
         @keyframes fadeInUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
         @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
         @keyframes shine { 0%{left:-80%} 100%{left:120%} }
@@ -92,25 +95,29 @@ export default function PlatinumRings() {
               <span style={{ color: ACCENT, fontSize: '11px' }}>✦</span>
               <span style={{ color: ACCENT, fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Premium Platinum Collection</span>
             </div>
-            <h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px', color: '#020617' }}>
-              ⬡{' '}
-              <span style={{ background: 'linear-gradient(90deg,#e2e8f0,#fff,#e2e8f0)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'shimmer 3s linear infinite' }}>
-                Platinum Rings
-              </span>
-            </h1>
+<h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px', color: '#020617', fontFamily: '"Playfair Display", Georgia, serif', display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <svg width="36" height="36" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="16" cy="19" r="8"/>
+    <circle cx="16" cy="19" r="4.5"/>
+    <path d="M13 11l-2-4h10l-2 4"/>
+  </svg>
+  <span style={{ background: 'linear-gradient(90deg,#e2e8f0,#fff,#e2e8f0)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'shimmer 3s linear infinite' }}>
+    Platinum Rings
+  </span>
+</h1>
             <p style={{ color: '#64748b', fontSize: '13px', margin: '8px 0 0', fontWeight: 500 }}>
               {filteredProducts.length} exclusive designs
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '8px' }}>
+          {/* <div style={{ display: 'flex', gap: '8px' }}>
             {GRADES.map(g => (
               <button key={g} onClick={() => setGradeFilter(g)}
                 style={{ padding: '7px 18px', borderRadius: '20px', border: `1px solid ${gradeFilter === g ? ACCENT : 'rgba(226,232,240,0.3)'}`, background: gradeFilter === g ? 'rgba(226,232,240,0.15)' : 'transparent', color: gradeFilter === g ? ACCENT : '#64748b', fontWeight: 800, fontSize: '12px', cursor: 'pointer', transition: 'all 0.2s ease' }}>
                 {g === 'all' ? 'All' : g.toUpperCase()}
               </button>
             ))}
-          </div>
+          </div> */}
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '20px' }}>
@@ -156,29 +163,34 @@ return (
     }
     <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 16, color: '#999', zIndex: 2 }}>🔗</div>
   </div>
-  <div style={{ padding: '12px 14px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-      <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
-        {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
-      </span>
-      {hasDiscount && (
-        <span style={{ fontSize: 12, color: '#999', textDecoration: 'line-through' }}>
-          ₹{originalAmt.toLocaleString('en-IN')}
-        </span>
-      )}
-    </div>
+<div style={{ padding: '12px 14px' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
+      {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
+    </span>
     {hasDiscount && (
-      <div style={{ fontSize: 12, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
-        {discountPct}% Off
-      </div>
+      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
+        ₹{originalAmt.toLocaleString('en-IN')}
+      </span>
     )}
-    <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{product.name}</div>
   </div>
+  {hasDiscount && (
+    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
+      {discountPct}% Off
+    </div>
+  )}
+  <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
+    fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{product.name}
+  </div>
+</div>
 </div>
   )
 })}
         </div>
       </div>
+
+              {/* ── FOOTER ── */}
+              <CustomerFooter />
     </div>
   )
 }

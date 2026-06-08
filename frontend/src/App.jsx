@@ -37,6 +37,7 @@ import GoldCoins from './gold_silver/gold_coins'
 import SilverCoins from './gold_silver/silver_coins'
 import WishlistPage from './collection/WishlistPage'
 import CustomerNavbar from './collection/CustomerNavbar'
+import CustomerFooter from './collection/CustomerFooter'
 // ── DIAMOND IMPORTS ──         ← ADD ALL 6
 import DiamondRings from './Diamond/ring'
 import DiamondNecklaces from './Diamond/necklaces'

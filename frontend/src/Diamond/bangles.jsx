@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CustomerNavbar from '../collection/CustomerNavbar'
+import CustomerFooter from '../collection/CustomerFooter'
 
 const API_BASE = 'https://bitbyte-backend-f66f.onrender.com'
 
@@ -69,8 +70,10 @@ export default function DiamondBangles() {
     : products.filter(p => p.grade === gradeFilter)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Inter",system-ui,sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#FDF5EE', fontFamily: '"Montserrat", sans-serif' }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
         @keyframes fadeInUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
         @keyframes diamondShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
         @keyframes glow-pulse { 0%,100%{box-shadow:0 0 20px rgba(103,232,249,0.1)} 50%{box-shadow:0 0 40px rgba(103,232,249,0.4)} }
@@ -96,26 +99,29 @@ export default function DiamondBangles() {
               <span style={{ color: DIAMOND_COLOR, fontSize: '11px' }}>✦</span>
               <span style={{ color: DIAMOND_COLOR, fontSize: '10px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>Premium Diamond Collection</span>
             </div>
-            <h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px', color: '#020617' }}>
-              💎{' '}
-              <span style={{ background: 'linear-gradient(90deg,#67e8f9,#a5f3fc,#67e8f9)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'diamondShimmer 3s linear infinite' }}>
-                Diamond Bangles
-              </span>
-            </h1>
+<h1 style={{ margin: 0, fontSize: '36px', fontWeight: 900, letterSpacing: '-0.5px', color: '#020617', fontFamily: '"Playfair Display", Georgia, serif', display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <svg width="36" height="36" viewBox="0 0 32 32" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="16" cy="16" r="10"/>
+    <circle cx="16" cy="16" r="6.5"/>
+  </svg>
+  <span style={{ background: 'linear-gradient(90deg,#67e8f9,#a5f3fc,#67e8f9)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'diamondShimmer 3s linear infinite' }}>
+    Diamond Bangles
+  </span>
+</h1>
             <p style={{ color: '#64748b', fontSize: '13px', margin: '8px 0 0', fontWeight: 500 }}>
               {filteredProducts.length} exclusive designs · Premium 18K & 22K Diamond
             </p>
           </div>
 
           {/* Grade Filter */}
-          <div style={{ display: 'flex', gap: '8px' }}>
+          {/* <div style={{ display: 'flex', gap: '8px' }}>
             {[{ key: 'all', label: 'All' }, { key: '18k', label: '18K' }, { key: '22k', label: '22K' }].map(g => (
               <button key={g.key} onClick={() => setGradeFilter(g.key)}
                 style={{ padding: '7px 18px', borderRadius: '20px', border: `1px solid ${gradeFilter === g.key ? DIAMOND_COLOR : 'rgba(103,232,249,0.3)'}`, background: gradeFilter === g.key ? 'rgba(103,232,249,0.15)' : 'transparent', color: gradeFilter === g.key ? DIAMOND_COLOR : '#64748b', fontWeight: 800, fontSize: '12px', cursor: 'pointer', transition: 'all 0.2s ease' }}>
                 {g.label}
               </button>
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Product Grid */}
@@ -163,29 +169,34 @@ filteredProducts.map((product) => {
         }
         <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 16, color: '#999', zIndex: 2 }}>🔗</div>
       </div>
-      <div style={{ padding: '12px 14px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 15, fontWeight: 800, color: '#1a1a1a' }}>
-            {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
-          </span>
-          {hasDiscount && (
-            <span style={{ fontSize: 12, color: '#999', textDecoration: 'line-through' }}>
-              ₹{originalAmt.toLocaleString('en-IN')}
-            </span>
-          )}
-        </div>
-        {hasDiscount && (
-          <div style={{ fontSize: 12, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
-            {discountPct}% Off
-          </div>
-        )}
-        <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: 600 }}>{product.name}</div>
-      </div>
+<div style={{ padding: '12px 14px' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
+      {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
+    </span>
+    {hasDiscount && (
+      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
+        ₹{originalAmt.toLocaleString('en-IN')}
+      </span>
+    )}
+  </div>
+  {hasDiscount && (
+    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
+      {discountPct}% Off
+    </div>
+  )}
+  <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
+    fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{product.name}
+  </div>
+</div>
     </div>
   )
 })}
         </div>
       </div>
+
+              {/* ── FOOTER ── */}
+              <CustomerFooter />
     </div>
   )
 }
