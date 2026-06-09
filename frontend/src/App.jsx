@@ -55,8 +55,8 @@ import PlatinumBracelets from './Platinum/bracelets'
 import PlatinumBangles from './Platinum/bangles'
 
 import OrderConfirm from './Orders/Orderconfirm'
-import OrderSummary from './Orders/OrderSummary'
-import AdminOrdersPage from './Orders/AdminOrdersPage'
+import OrderSummary from './Orders/Ordersummary'
+import AdminOrdersPage from './Orders/Adminorderspage'
 
 
 
