@@ -168,9 +168,9 @@ useEffect(() => {
 <CustomerNavbar />
 
 {/* ── Category Banner ── */}
-<div style={{ width:'100%', height:'460px', position:'relative', overflow:'hidden', }}>
+<div style={{ width:'100%', height:'100%', position:'relative', overflow:'hidden', }}>
   <img
-src="/banners/sample2.png"
+src="/banners/sample7.jpeg"
 alt="Chain Banner"
     style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
   />

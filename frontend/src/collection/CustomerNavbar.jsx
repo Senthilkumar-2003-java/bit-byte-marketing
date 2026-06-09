@@ -30,7 +30,7 @@ useEffect(() => {
 <button style={{
   background: 'linear-gradient(90deg,#b8860b,#d4a017)', color: '#fff',
   border: 'none', borderRadius: 22, padding: '10px 20px',
-  fontSize: 13, fontWeight: 700, cursor: 'pointer',
+  fontSize: 11, fontWeight: 700, cursor: 'pointer',
   display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap',
   boxShadow: '0 2px 8px rgba(184,134,11,0.3)',
   fontFamily: '"Montserrat", sans-serif', letterSpacing: '0.3px',
@@ -190,9 +190,10 @@ useEffect(() => {
         alignItems: 'center',
         justifyContent: 'space-between',
         position: 'sticky',
-        top: 0,
+        top: '-20px',
         zIndex: 300,
-        height: '100px',
+       height: '80px',
+padding: '0 24px',
         boxShadow: '0 2px 12px rgba(139,26,26,0.06)',
         gap: '20px',
       }}>
@@ -215,16 +216,17 @@ useEffect(() => {
     src="/BJ-logo.png"
     alt="Bharathi Jewellers"
     style={{ 
-      height: '180px',      
-      width: '195px',       
+      height: '150px',      
+      width: '175px',       
       objectFit: 'contain',
       display: 'block',
       marginBottom: '-30px',
+      
     }}
   />
   <span style={{
     color: '#b8860b', 
-    fontSize: '10px',
+    fontSize: '9px',
     fontWeight: 600,
     letterSpacing: '2.5px', 
     textTransform: 'uppercase',
@@ -350,7 +352,7 @@ useEffect(() => {
             style={{
               background: 'linear-gradient(90deg,#8B1A1A,#b91c1c)', color: '#fff',
               border: 'none', borderRadius: 22, padding: '8px 16px',
-              fontSize: 12, fontWeight: 700, cursor: 'pointer',
+              fontSize: 11, fontWeight: 700, cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap',
               boxShadow: '0 2px 8px rgba(139,26,26,0.25)', transition: 'transform 0.2s, box-shadow 0.2s',
             }}
@@ -423,7 +425,7 @@ useEffect(() => {
       </div>
 
       {/* ── CATEGORY NAV ── */}
-      <div style={{ position: 'sticky', top: '100px', zIndex: 250, background: '#fff' }} onMouseLeave={() => setShowDropdown(false)}>
+      <div style={{ position: 'sticky', marginTop: '-15px', zIndex: 250, background: '#fff' }} onMouseLeave={() => setShowDropdown(false)}>
         <div style={{
           borderBottom: '1px solid #f0e8e0', padding: '0 40px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
