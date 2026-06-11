@@ -170,7 +170,7 @@ useEffect(() => {
 {/* ── Category Banner ── */}
 <div style={{ width:'100%', height:'100%', position:'relative', overflow:'hidden', }}>
   <img
-src="/banners/sample7.jpeg"
+src="/banners/sample8.jpeg"
 alt="Chain Banner"
     style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
   />
@@ -223,7 +223,7 @@ alt="Chain Banner"
         borderRadius: 10, overflow: 'hidden', cursor: 'pointer', position: 'relative',
         border: '1px solid #e8e8e8', background: '#fff',
         boxShadow: isHovered ? '0 8px 24px rgba(0,0,0,0.12)' : '0 2px 8px rgba(0,0,0,0.06)',
-        transition: 'all 0.25s ease',
+        transition: 'all 0.25s ease', marginBottom: '75px',
       }}>
       <div style={{ height: 320, background: '#f0f0f0', position: 'relative', overflow: 'hidden', marginBottom: 10 }}>
         {product.tag && (
@@ -268,107 +268,7 @@ alt="Chain Banner"
 })}
 
         </div>
-
-        {/* footer line */}
-        <div style={{ marginTop:'48px', textAlign:'center', animation:'fadeInUp 0.6s ease 0.4s both' }}>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:'16px', color:subtext, fontSize:'11px', letterSpacing:'2px', textTransform:'uppercase', fontWeight:600 }}>
-            <div style={{ width:'40px', height:'1px', background:`linear-gradient(90deg,transparent,${goldColor})` }} />
-            Bharathi Jewellers • Gold Bangle Collection
-            <div style={{ width:'40px', height:'1px', background:`linear-gradient(90deg,${goldColor},transparent)` }} />
-          </div>
-        </div>
       </div>
-
-      {/* ── Detail Modal ── */}
-      {selectedBangle && (
-        <div onClick={() => setSelectedBangle(null)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.9)', backdropFilter:'blur(14px)', zIndex:2000, display:'flex', alignItems:'center', justifyContent:'center' }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: '#f8fafc', border:'1px solid rgba(251,191,36,0.35)', borderRadius:'28px', width:'95%', maxWidth:'560px', overflow:'hidden', boxShadow:'0 40px 100px rgba(0,0,0,0.8)', animation:'fadeInUp 0.3s ease' }}>
-
-            {/* image */}
-            <div style={{ position:'relative', height:'180px', overflow:'hidden' }}>
-              <img
-  src={getImageUrl(selectedBangle.images?.[0]?.image)}
-  alt={selectedBangle.name}
-  onError={(e) => { e.currentTarget.src = '/img/gold/gold-bangles-1.png' }}
-  style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
-/>
-              <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(2,6,23,0.9) 0%,transparent 60%)' }} />
-              <button onClick={() => setSelectedBangle(null)} style={{ position:'absolute', top:'16px', right:'16px', background:'rgba(239,68,68,0.15)', border:'1px solid rgba(239,68,68,0.4)', color:'#f87171', borderRadius:'10px', padding:'6px 14px', cursor:'pointer', fontSize:'12px', backdropFilter:'blur(8px)' }}>✕ Close</button>
-              <div style={{ position:'absolute', top:'16px', left:'16px', background:tagStyle(selectedBangle.tag).bg, border:`1px solid ${tagStyle(selectedBangle.tag).border}`, borderRadius:'20px', padding:'5px 14px', color:tagStyle(selectedBangle.tag).color, fontSize:'11px', fontWeight:800, backdropFilter:'blur(8px)' }}>{selectedBangle.tag}</div>
-            </div>
-
-            {/* details */}
-            <div style={{ padding:'28px 32px' }}>
-              <div style={{ color:goldColor, fontWeight:900, fontSize:'24px', marginBottom:'6px', fontFamily:'"Playfair Display", Georgia, serif' }}>{selectedBangle.name}</div>
-              <div style={{ color:subtext, fontSize:'13px', lineHeight:'1.6', marginBottom:'24px' }}>{selectedBangle.description}</div>
-
-              {/* Metal type toggle in modal */}
-              <div style={{ display:'flex', gap:'8px', marginBottom:'16px' }}>
-                {[{key:'gold_22k', label:'Gold 22K'}, {key:'gold_24k', label:'Gold 24K'}].map(m => (
-                  <button key={m.key} onClick={() => setMetalType(m.key)}
-                    style={{ flex:1, padding:'8px', borderRadius:'10px', border:`1px solid ${metalType===m.key ? goldColor : border}`, background: metalType===m.key ? 'rgba(251,191,36,0.15)' : 'transparent', color: metalType===m.key ? goldColor : subtext, fontWeight:800, fontSize:'12px', cursor:'pointer', transition:'all 0.2s ease' }}>
-                    🏅 {m.label}
-                  </button>
-                ))}
-              </div>
-
-
-           <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
-  <button
-    onClick={() => {
-      addToCart({
-        id: selectedBangle.id,
-        name: selectedBangle.name,
-       desc: selectedBangle.description,
-       img: getImageUrl(selectedBangle.images?.[0]?.image),
-        tag: selectedBangle.tag,
-        metal: metalType,
-        metalLabel: metalType === 'gold_24k' ? 'Gold 24K' : 'Gold 22K',
-        ringType: 'Gold Bangle',
-      })
-
-      setSelectedBangle(null)
-      navigate('/cart')
-    }}
-    style={{
-      width:'100%',
-      padding:'14px',
-      background:'linear-gradient(90deg,#f59e0b,#fbbf24)',
-      border:'none',
-      borderRadius:'14px',
-      color:'#000',
-      fontWeight:900,
-      fontSize:'14px',
-      cursor:'pointer'
-    }}
-  >
-    🛒 Add to Cart
-  </button>
-
-  <button
-    onClick={() => {
-      setSelectedBangle(null)
-      navigate('/customer')
-    }}
-    style={{
-      width:'100%',
-      padding:'12px',
-      background:'rgba(251,191,36,0.08)',
-      border:'1px solid rgba(251,191,36,0.3)',
-      borderRadius:'14px',
-      color:'#fbbf24',
-      fontWeight:700,
-      fontSize:'13px',
-      cursor:'pointer'
-    }}
-  >
-    ⚡ Place Order on Dashboard
-  </button>
-</div>
-            </div>
-          </div>
-        </div>
-      )}
 
               {/* ── FOOTER ── */}
               <CustomerFooter />

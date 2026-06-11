@@ -726,17 +726,16 @@ class MetalOrderSummaryView(APIView):
 class JewelryProductView(APIView):
     def get_permissions(self):
         if self.request.method == 'GET':
-            return [AllowAny()]       # GET = anyone can view
-        return [IsAuthenticated()] 
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def post(self, request):
         if request.user.role != 'super_admin':
             return Response({'error': 'Permission denied'}, status=403)
-        
-        # Handle multipart form data
+
         data = request.data.dict() if hasattr(request.data, 'dict') else dict(request.data)
         images = request.FILES.getlist('uploaded_images')
-        
+
         serializer = JewelryProductSerializer(
             data={**data, 'uploaded_images': images},
             context={'request': request}
@@ -747,30 +746,71 @@ class JewelryProductView(APIView):
         return Response(serializer.errors, status=400)
 
     def get(self, request):
-        category = request.query_params.get('category')
-        metal = request.query_params.get('metal')
-        
         qs = JewelryProduct.objects.filter(is_active=True).prefetch_related('images')
+
+        # ── Existing filters (உன்னோட பழைய code — same) ──
+        category = request.query_params.get('category')
         if category:
-           qs = qs.filter(category=category)
+            qs = qs.filter(category=category)
+
+        metal = request.query_params.get('metal')
         if metal:
-           qs = qs.filter(metal=metal)
+            qs = qs.filter(metal__iexact=metal)
 
         gender = request.query_params.get('gender')
-        occasion = request.query_params.get('occasion')
         if gender and gender != 'all':
-           qs = qs.filter(gender=gender)
+            qs = qs.filter(gender=gender)
+
+        occasion = request.query_params.get('occasion')
         if occasion:
-           qs = qs.filter(occasion=occasion)
+            qs = qs.filter(occasion__icontains=occasion)
+
         wedding_category = request.query_params.get('wedding_category')
         if wedding_category:
-           qs = qs.filter(wedding_category=wedding_category)   
+            qs = qs.filter(wedding_category__icontains=wedding_category)
+
         grade = request.query_params.get('grade')
         if grade:
-           qs = qs.filter(grade=grade)
+            qs = qs.filter(grade=grade)
+
+        # ── Price filter (NEW) ──
+        price = request.query_params.get('price')
+        if price == 'below25k':
+            qs = qs.filter(price__lt=25000)
+        elif price == '25k-50k':
+            qs = qs.filter(price__gte=25000, price__lt=50000)
+        elif price == '50k-1L':
+            qs = qs.filter(price__gte=50000, price__lt=100000)
+        elif price == 'above1L':
+            qs = qs.filter(price__gte=100000)
+
+        # ── Search filter (NEW) ──
+        search = request.query_params.get('search', '').strip()
+        if search:
+            from django.db.models import Q
+            try:
+                # Number type பண்ணா — weight search
+                num = float(search)
+                qs = qs.filter(
+                    Q(net_weight=num) |
+                    Q(cross_weight=num)
+                )
+            except ValueError:
+                # Text type பண்ணா — name, metal, category எல்லாத்திலயும் search
+                qs = qs.filter(
+                    Q(name__icontains=search) |
+                    Q(metal__icontains=search) |
+                    Q(category__icontains=search) |
+                    Q(grade__icontains=search) |
+                    Q(description__icontains=search) |
+                    Q(tag__icontains=search) |
+                    Q(occasion__icontains=search) |
+                    Q(gender__icontains=search) |
+                    Q(wedding_category__icontains=search)
+                )
+
         serializer = JewelryProductSerializer(qs, many=True, context={'request': request})
         return Response(serializer.data)
-
 
 class JewelryProductDetailView(APIView):
     def get_permissions(self):

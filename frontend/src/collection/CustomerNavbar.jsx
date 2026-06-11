@@ -132,7 +132,7 @@ useEffect(() => {
       try {
         const token = localStorage.getItem('token')
         const res = await fetch(
-          `https://bitbyte-backend-f66f.onrender.com/api/jewelry-products/?search=${encodeURIComponent(searchQuery)}`,
+          `https://bitbyte-backend-f66f.onrender.com/api/jewelry-products/?search=${encodeURIComponent(searchQuery.trim())}`,
           { headers: token ? { Authorization: `Bearer ${token}` } : {} }
         )
         const data = await res.json()
@@ -168,7 +168,7 @@ useEffect(() => {
           width: 100%; left: 0;
         }
         .cat-item:hover .cat-icon {
-          transform: translateY(-3px) scale(1.18);
+          transform: translateY(-1px) scale(1.18);
           filter: drop-shadow(0 4px 8px rgba(139,26,26,0.35));
         }
         .cat-item:hover .cat-label {
@@ -202,39 +202,44 @@ padding: '0 24px',
   onClick={() => navigate('/')}
   style={{ 
     display: 'flex', 
-    flexDirection: 'column', 
-    alignItems: 'flex-start', 
+    flexDirection: 'row',        // ← column → row
+    alignItems: 'center',        // ← flex-start → center
     cursor: 'pointer', 
     flexShrink: 0,
     minWidth: 200,
-    gap: 0,
-    paddingTop: '10px',
-    paddingBottom: '50px',
+    gap: 8,                      // ← 0 → 8
+    paddingTop: '0px',           // ← 10px → 0
+    paddingBottom: '0px',        // ← 50px → 0
   }}
 >
   <img
     src="/BJ-logo.png"
     alt="Bharathi Jewellers"
     style={{ 
-      height: '150px',      
-      width: '175px',       
+      height: '170px',            // ← 150px → 70px
+      width: '150px',             // ← 175px → 70px
       objectFit: 'contain',
       display: 'block',
-      marginBottom: '-30px',
-      
+      marginLeft: '-40px',
+      marginBottom: '-10px',       // ← -30px → 0
     }}
   />
-  <span style={{
-    color: '#b8860b', 
-    fontSize: '9px',
-    fontWeight: 600,
-    letterSpacing: '2.5px', 
-    textTransform: 'uppercase',
-    fontFamily: '"Montserrat", sans-serif', 
-    display: 'block',
-    marginTop: '-28px',
-    whiteSpace: 'nowrap',
-  }}>✦ Bharathi Jewellers ✦</span>
+<span style={{
+  color: '#b8860b',
+  fontFamily: '"Cormorant Garamond", Georgia, serif',  // ← elegant serif font
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '1px',
+  marginLeft:'-30px',
+  marginTop: '2px',
+  textAlign: 'center',
+}}>
+  {/* <span style={{ fontSize: '8px', letterSpacing: '4px', opacity: 0.7 }}>✦ ✦ ✦</span> */}
+  <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', lineHeight: 1.3 }}>Bharathi</span>
+  <span style={{ fontSize: '11px', fontWeight: 550, letterSpacing: '3px', textTransform: 'uppercase', lineHeight: 1.3 }}>Jewellers</span>
+  {/* <span style={{ fontSize: '8px', letterSpacing: '4px', opacity: 0.7 }}>✦ ✦ ✦</span> */}
+</span>
 </div>
 
         {/* Search */}
@@ -278,8 +283,15 @@ padding: '0 24px',
         transition: 'border-color 0.2s, box-shadow 0.2s',
         fontFamily: '"Cormorant Garamond", Georgia, serif',
       }}
-      onFocus={e => { e.target.style.borderColor = '#8B1A1A'; e.target.style.boxShadow = '0 0 0 3px rgba(139,26,26,0.08)' }}
-      onBlur={e => { e.target.style.borderColor = '#e8ddd5'; e.target.style.boxShadow = 'none' }}
+      onFocus={e => {
+  e.target.style.borderColor = '#8B1A1A'
+  e.target.style.boxShadow = '0 0 0 3px rgba(139,26,26,0.08)'
+  if (searchResults.length > 0) setShowSearchDrop(true)  // ← இந்த line மட்டும் add
+}}
+onBlur={e => {
+  e.target.style.borderColor = '#e8ddd5'
+  e.target.style.boxShadow = 'none'
+}}
     />
 
     {/* 🔍 DROPDOWN — NEW, input tag keezhla, div close aagura munnadi */}
@@ -462,7 +474,7 @@ padding: '0 24px',
                   width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   color: isActive ? '#8B1A1A' : '#6b5c4a',
                   transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
-                  transform: isActive ? 'translateY(-4px) scale(1.15)' : 'translateY(0) scale(1)',
+                  transform: isActive ? 'translateY(-2px) scale(1.15)' : 'translateY(2px) scale(1)',
                   filter: isActive ? 'drop-shadow(0 4px 8px rgba(139,26,26,0.3))' : 'none',
                 }}>{cat.svg}</div>
                 <span className="cat-label" style={{
