@@ -42,6 +42,7 @@ export default function SilverRings() {
   const [silverPrice, setSilverPrice]     = useState(null)
   const [silverRings, setSilverRings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [liveRate, setLiveRate] = useState(null)
   const [selectedRing, setSelectedRing] = useState(null)
   const [wishlistedIds, setWishlistedIds] = useState(new Set())
 
@@ -73,6 +74,17 @@ useEffect(() => {
       .catch(() => setLoading(false))
   })
 }, [])
+
+
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/metal-rates/').then(res => {
+      const d = res.data
+      setLiveRate({ silver_999: parseFloat(d.silver_999) || 0 })
+    }).catch(() => {})
+  })
+}, [])
+
 
 useEffect(() => {
     import('../api').then(({ default: api }) => {
@@ -254,14 +266,6 @@ return (
           })}
         </div>
 
-        {/* footer line */}
-        <div style={{ marginTop:'48px', textAlign:'center', animation:'fadeInUp 0.6s ease 0.4s both' }}>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:'16px', color:subtext, fontSize:'11px', letterSpacing:'2px', textTransform:'uppercase', fontWeight:600 }}>
-            <div style={{ width:'40px', height:'1px', background:`linear-gradient(90deg,transparent,${silverColor})` }} />
-            Bharathi Jewellers • Silver Ring Collection
-            <div style={{ width:'40px', height:'1px', background:`linear-gradient(90deg,${silverColor},transparent)` }} />
-          </div>
-        </div>
       </div>
 
       {/* ── Detail Modal ── */}

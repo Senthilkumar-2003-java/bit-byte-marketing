@@ -43,6 +43,7 @@ export default function GoldBangles() {
   const [selectedBangle, setSelectedBangle] = useState(null)
   const [goldBangles, setGoldBangles] = useState([])
 const [loading, setLoading] = useState(true)
+const [liveRate, setLiveRate] = useState(null)
   const [metalType, setMetalType]           = useState('gold_22k') // '22k' | '24k'
   const [wishlistedIds, setWishlistedIds] = useState(new Set())
  
@@ -76,6 +77,17 @@ useEffect(() => {
   })
 }, [])
 
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/metal-rates/').then(res => {
+      const d = res.data
+      setLiveRate({
+        diamond_18k: parseFloat(d.diamond_18k) || 0,
+        diamond_22k: parseFloat(d.diamond_22k) || 0,
+      })
+    }).catch(() => {})
+  })
+}, [])
 
 useEffect(() => {
     import('../api').then(({ default: api }) => {
@@ -209,10 +221,35 @@ alt="Chain Banner"
   }).filter(Boolean) || []
   const isHovered = hoveredBangle === product.id
   const displayIndex = isHovered && images.length > 1 ? 1 : 0
-  const price = parseFloat(product.price) || 0
-  const discountPct = parseFloat(product.wastage_charge) || 0
-  const originalAmt = parseFloat(product.original_price) || 0
-  const hasDiscount = discountPct > 0 && originalAmt > price && price > 0
+const calcPrice = (p) => {
+  const netWt = parseFloat(p.net_weight) || 0
+  const makingPct = parseFloat(p.making_charge) || 0
+  const discPct = parseFloat(p.wastage_charge) || 0
+  const stoneVal = parseFloat(p.stone_value) || 0
+const rate = p.grade === '24k'
+  ? (liveRate?.gold_24k || 0)
+  : (liveRate?.gold_22k || 0)
+  if (!rate || !netWt) return parseFloat(p.price) || 0
+  const making = rate * (makingPct / 100)
+  const rateWithMaking = rate + making
+  const disc = rateWithMaking * (discPct / 100)
+  return Math.round(((netWt * (rateWithMaking - disc)) + stoneVal) * 1.03)
+}
+const calcOriginal = (p) => {
+  const netWt = parseFloat(p.net_weight) || 0
+  const makingPct = parseFloat(p.making_charge) || 0
+  const stoneVal = parseFloat(p.stone_value) || 0
+const rate = p.grade === '24k'
+  ? (liveRate?.gold_24k || 0)
+  : (liveRate?.gold_22k || 0)
+  if (!rate || !netWt) return parseFloat(p.original_price) || 0
+  const making = rate * (makingPct / 100)
+  return Math.round(((netWt * (rate + making)) + stoneVal) * 1.03)
+}
+const price = calcPrice(product)
+const originalAmt = calcOriginal(product)
+const discountPct = parseFloat(product.wastage_charge) || 0
+const hasDiscount = discountPct > 0 && originalAmt > price && price > 0
 
   return (
     <div key={product.id} className="gb-card"

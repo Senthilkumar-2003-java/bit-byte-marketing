@@ -47,18 +47,18 @@ export default function CustomerFooter() {
   width: 80, height: 80, objectFit: 'contain', 
   filter: 'drop-shadow(0 0 8px rgba(180,140,60,0.2))',
   transform: 'scale(2.6)',   // ← இதை மட்டும் adjust பண்ணு
-  transformOrigin: 'center center',
+  transformOrigin: 'center center', marginTop:'10px',
 }} />
   <div style={{ paddingTop: 8 }}>   {/* ← text vertical center */}
-    <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 700, color: '#7a4e10', letterSpacing: 1.5, fontStyle: 'italic', lineHeight: 1 }}>Bharathi</div>
+    <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 700,  marginTop:'7px', color: '#7a4e10', letterSpacing: 1.5, fontStyle: 'italic', lineHeight: 1 }}>Bharathi</div>
     <div style={{ fontSize: 8, fontWeight: 600, color: '#b89050', letterSpacing: 3.5, textTransform: 'uppercase', marginTop: 4 }}>✦ Jewellers ✦</div>
   </div>
 </div>
 
         {/* Trust Badges */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 38, flexWrap: 'wrap' }}>
           {[
-            { icon: <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="#a07030" strokeWidth="1.6"><polygon points="16,3 20,11 29,12 23,18 24.5,27 16,23 7.5,27 9,18 3,12 12,11"/></svg>, label: 'BIS Hallmark', sub: 'Certified' },
+            { icon: <svg width="30" height="16" viewBox="0 0 32 32" fill="none" stroke="#a07030" strokeWidth="1.6"><polygon points="16,3 20,11 29,12 23,18 24.5,27 16,23 7.5,27 9,18 3,12 12,11"/></svg>, label: 'BIS Hallmark', sub: 'Certified' },
             { icon: <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="#a07030" strokeWidth="1.6"><rect x="2" y="10" width="28" height="16" rx="2"/><path d="M2 16h28"/><path d="M8 4l-2 6"/><path d="M24 4l2 6"/></svg>, label: 'Free Shipping', sub: 'Insured Delivery' },
             { icon: <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="#a07030" strokeWidth="1.6"><path d="M6 6l4 20h12l4-20"/><path d="M4 10h24"/><path d="M12 10v16"/><path d="M20 10v16"/></svg>, label: '15-Day Returns', sub: 'Easy Exchange' },
             { icon: <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="#a07030" strokeWidth="1.6"><rect x="4" y="13" width="24" height="15" rx="2"/><path d="M10 13V9a6 6 0 0112 0v4"/><circle cx="16" cy="20" r="2" fill="#a07030"/></svg>, label: 'Secure Pay', sub: '100% Safe' },

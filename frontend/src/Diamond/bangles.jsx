@@ -24,6 +24,7 @@ export default function DiamondBangles() {
   const [hovered, setHovered] = useState(null)
   const [wishlistedIds, setWishlistedIds] = useState(new Set())
   const [gradeFilter, setGradeFilter] = useState('all') // 'all' | '18k' | '22k'
+  const [liveRate, setLiveRate] = useState(null)
 
   const getImageUrl = (img) => {
     if (!img) return null
@@ -43,9 +44,21 @@ export default function DiamondBangles() {
     })
   }, [])
 
-  useEffect(() => {
-    import('../api').then(({ default: api }) => {
-      api.get('/wishlist/').then(res => {
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/metal-rates/').then(res => {
+      const d = res.data
+      setLiveRate({
+        diamond_18k: parseFloat(d.diamond_18k) || 0,
+        diamond_22k: parseFloat(d.diamond_22k) || 0,
+      })
+    }).catch(() => {})
+  })
+}, [])
+
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/wishlist/').then(res => {
         setWishlistedIds(new Set(res.data.items.map(i => i.product_id)))
       }).catch(() => {})
     })
@@ -141,10 +154,35 @@ filteredProducts.map((product) => {
   const images = product.images?.map(img => getImageUrl(img)).filter(Boolean) || []
   const isHovered = hovered === product.id
   const displayIndex = isHovered && images.length > 1 ? 1 : 0
-  const price = parseFloat(product.price) || 0
-  const discountPct = parseFloat(product.wastage_charge) || 0
-  const originalAmt = parseFloat(product.original_price) || 0
-  const hasDiscount = discountPct > 0 && originalAmt > price && price > 0
+const calcPrice = (p) => {
+  const netWt = parseFloat(p.net_weight) || 0
+  const makingPct = parseFloat(p.making_charge) || 0
+  const discPct = parseFloat(p.wastage_charge) || 0
+  const stoneVal = parseFloat(p.stone_value) || 0
+  const rate = p.grade === '18k'
+    ? (liveRate?.diamond_18k || 0)
+    : (liveRate?.diamond_22k || 0)
+  if (!rate || !netWt) return parseFloat(p.price) || 0
+  const making = rate * (makingPct / 100)
+  const rateWithMaking = rate + making
+  const disc = rateWithMaking * (discPct / 100)
+  return Math.round(((netWt * (rateWithMaking - disc)) + stoneVal) * 1.03)
+}
+const calcOriginal = (p) => {
+  const netWt = parseFloat(p.net_weight) || 0
+  const makingPct = parseFloat(p.making_charge) || 0
+  const stoneVal = parseFloat(p.stone_value) || 0
+  const rate = p.grade === '18k'
+    ? (liveRate?.diamond_18k || 0)
+    : (liveRate?.diamond_22k || 0)
+  if (!rate || !netWt) return parseFloat(p.original_price) || 0
+  const making = rate * (makingPct / 100)
+  return Math.round(((netWt * (rate + making)) + stoneVal) * 1.03)
+}
+const price = calcPrice(product)
+const originalAmt = calcOriginal(product)
+const discountPct = parseFloat(product.wastage_charge) || 0
+const hasDiscount = discountPct > 0 && originalAmt > price && price > 0
 
   return (
     <div key={product.id} className="dm-card"
