@@ -204,14 +204,26 @@ const handlePlaceOrder = async () => {
     const { razorpay_order_id, amount, currency, key } = orderRes.data
 
     // ── STEP 3: Razorpay Popup Options ──
-    const options = {
-      key: key,
-      amount: parseInt(amount) * 100,
-      currency: currency,
-      name: "BitByte Jewels",
-      description: product.name,
-      image: firstImage || '',
-      order_id: razorpay_order_id,
+const options = {
+  key: key,
+  amount: parseInt(amount) * 100,
+  currency: currency,
+  name: "BitByte Jewels",
+  description: product.name,
+  image: firstImage?.startsWith('http') && !firstImage?.includes('localhost') ? firstImage : '',
+  order_id: razorpay_order_id,
+  config: {
+    display: {
+      blocks: {
+        international: {
+          name: "International Cards",
+          instruments: [{ method: "card" }]
+        }
+      },
+      sequence: ["block.international"],
+      preferences: { show_default_blocks: true }
+    }
+  },
 
       // ✅ Payment Success Handler
       handler: async function (response) {
