@@ -181,7 +181,7 @@ const hasDiscount = discountPct > 0 && originalAmt > price && price > 0
 
   return (
     <div key={product.id} className="dm-card"
-      onClick={() => navigate(`/product-display?category=chains&metal=diamond&id=${product.id}`)}
+      onClick={() => navigate(`/product-display?category=necklaces&metal=diamond&id=${product.id}`)}
       onMouseEnter={() => setHovered(product.id)}
       onMouseLeave={() => setHovered(null)}
       style={{

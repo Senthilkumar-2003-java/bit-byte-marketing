@@ -208,21 +208,28 @@ return (
 </div>
 
 <div style={{ padding: '12px 14px' }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
-      {parseFloat(bracelet.price) > 0 ? `₹${parseFloat(bracelet.price).toLocaleString('en-IN')}` : '—'}
-    </span>
-    {parseFloat(bracelet.wastage_charge) > 0 && parseFloat(bracelet.original_price) > parseFloat(bracelet.price) && (
-      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
-        ₹{parseFloat(bracelet.original_price).toLocaleString('en-IN')}
-      </span>
-    )}
-  </div>
-  {parseFloat(bracelet.wastage_charge) > 0 && parseFloat(bracelet.original_price) > parseFloat(bracelet.price) && (
-    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
-      {bracelet.wastage_charge}% Off
-    </div>
-  )}
+  {(() => {
+    const rate = silverPrice || 0
+    const netWt = parseFloat(bracelet.net_weight) || 0
+    const makingPct = parseFloat(bracelet.making_charge) || 0
+    const discPct = parseFloat(bracelet.wastage_charge) || 0
+    const stoneVal = parseFloat(bracelet.stone_value) || 0
+    const making = rate * (makingPct / 100)
+    const rateWithMaking = rate + making
+    const disc = rateWithMaking * (discPct / 100)
+    const price = (rate && netWt) ? Math.round(((netWt * (rateWithMaking - disc)) + stoneVal) * 1.03) : parseFloat(bracelet.price) || 0
+    const originalAmt = (rate && netWt) ? Math.round(((netWt * (rate + making)) + stoneVal) * 1.03) : parseFloat(bracelet.original_price) || 0
+    const hasDiscount = discPct > 0 && originalAmt > price && price > 0
+    return <>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+        <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
+          {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
+        </span>
+        {hasDiscount && <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>₹{originalAmt.toLocaleString('en-IN')}</span>}
+      </div>
+      {hasDiscount && <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>{discPct}% Off</div>}
+    </>
+  })()}
   <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
     fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{bracelet.name}
   </div>

@@ -34,6 +34,7 @@ export default function SilverChain() {
   const [selectedItem, setSelectedItem] = useState(null)
   const [silverChains, setSilverChains] = useState([])
 const [loading, setLoading] = useState(true)
+const [liveRate, setLiveRate] = useState(null)
 const [wishlistedIds, setWishlistedIds] = useState(new Set())
 
 const bg        = '#FDF5EE'
@@ -57,6 +58,15 @@ useEffect(() => {
     api.get('/jewelry-products/?category=chains&metal=silver')
       .then(res => { setSilverChains(res.data); setLoading(false) })
       .catch(() => setLoading(false))
+  })
+}, [])
+
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/metal-rates/').then(res => {
+      const d = res.data
+      setLiveRate({ silver_999: parseFloat(d.silver_999) || 0 })
+    }).catch(() => {})
   })
 }, [])
 
@@ -210,21 +220,28 @@ return (
 </div>
 
 <div style={{ padding: '12px 14px' }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
-      {parseFloat(item.price) > 0 ? `₹${parseFloat(item.price).toLocaleString('en-IN')}` : '—'}
-    </span>
-    {parseFloat(item.wastage_charge) > 0 && parseFloat(item.original_price) > parseFloat(item.price) && (
-      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
-        ₹{parseFloat(item.original_price).toLocaleString('en-IN')}
-      </span>
-    )}
-  </div>
-  {parseFloat(item.wastage_charge) > 0 && parseFloat(item.original_price) > parseFloat(item.price) && (
-    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
-      {item.wastage_charge}% Off
-    </div>
-  )}
+  {(() => {
+    const rate = liveRate?.silver_999 || 0
+    const netWt = parseFloat(item.net_weight) || 0
+    const makingPct = parseFloat(item.making_charge) || 0
+    const discPct = parseFloat(item.wastage_charge) || 0
+    const stoneVal = parseFloat(item.stone_value) || 0
+    const making = rate * (makingPct / 100)
+    const rateWithMaking = rate + making
+    const disc = rateWithMaking * (discPct / 100)
+    const price = (rate && netWt) ? Math.round(((netWt * (rateWithMaking - disc)) + stoneVal) * 1.03) : parseFloat(item.price) || 0
+    const originalAmt = (rate && netWt) ? Math.round(((netWt * (rate + making)) + stoneVal) * 1.03) : parseFloat(item.original_price) || 0
+    const hasDiscount = discPct > 0 && originalAmt > price && price > 0
+    return <>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+        <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
+          {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
+        </span>
+        {hasDiscount && <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>₹{originalAmt.toLocaleString('en-IN')}</span>}
+      </div>
+      {hasDiscount && <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>{discPct}% Off</div>}
+    </>
+  })()}
   <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
     fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{item.name}
   </div>

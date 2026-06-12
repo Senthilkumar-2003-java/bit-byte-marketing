@@ -223,10 +223,17 @@ const [hoveredId, setHoveredId] = useState(null)
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, animation: 'fadeIn 0.4s ease' }}>
             {products.map(p => {
               const firstImg = p.images?.[0] ? getImageUrl(p.images[0]) : null
-              const price = parseFloat(p.price) || 0
               const rate = getRate(p.grade)
-              const netW = parseFloat(p.net_weight) || 0
-              const livePrice = rate && netW ? (netW * rate * 1.03).toFixed(2) : null
+const netWt = parseFloat(p.net_weight) || 0
+const makingPct = parseFloat(p.making_charge) || 0
+const discPct = parseFloat(p.wastage_charge) || 0
+const stoneVal = parseFloat(p.stone_value) || 0
+const making = rate * (makingPct / 100)
+const rateWithMaking = rate + making
+const disc = rateWithMaking * (discPct / 100)
+const price = (rate && netWt)
+  ? Math.round(((netWt * (rateWithMaking - disc)) + stoneVal) * 1.03)
+  : parseFloat(p.price) || 0
               const isHovered = hoveredId === p.id
 
               return (
@@ -267,7 +274,7 @@ const [hoveredId, setHoveredId] = useState(null)
 <div style={{ padding: '12px 14px' }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
     <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
-      {price > 0 ? `₹${price.toLocaleString('en-IN')}` : livePrice ? `₹${Number(livePrice).toLocaleString('en-IN')}` : '—'}
+      {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
     </span>
   </div>
   <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,

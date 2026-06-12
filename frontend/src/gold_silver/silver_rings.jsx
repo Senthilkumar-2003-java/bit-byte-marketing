@@ -242,21 +242,50 @@ return (
 </div>
 
 <div style={{ padding: '12px 14px' }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-    <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
-      {parseFloat(ring.price) > 0 ? `₹${parseFloat(ring.price).toLocaleString('en-IN')}` : '—'}
-    </span>
-    {parseFloat(ring.wastage_charge) > 0 && parseFloat(ring.original_price) > parseFloat(ring.price) && (
-      <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
-        ₹{parseFloat(ring.original_price).toLocaleString('en-IN')}
-      </span>
-    )}
-  </div>
-  {parseFloat(ring.wastage_charge) > 0 && parseFloat(ring.original_price) > parseFloat(ring.price) && (
-    <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
-      {ring.wastage_charge}% Off
-    </div>
-  )}
+  {(() => {
+    const calcPrice = (p) => {
+      const netWt = parseFloat(p.net_weight) || 0
+      const makingPct = parseFloat(p.making_charge) || 0
+      const discPct = parseFloat(p.wastage_charge) || 0
+      const stoneVal = parseFloat(p.stone_value) || 0
+      const rate = liveRate?.silver_999 || 0
+      if (!rate || !netWt) return parseFloat(p.price) || 0
+      const making = rate * (makingPct / 100)
+      const rateWithMaking = rate + making
+      const disc = rateWithMaking * (discPct / 100)
+      return Math.round(((netWt * (rateWithMaking - disc)) + stoneVal) * 1.03)
+    }
+    const calcOriginal = (p) => {
+      const netWt = parseFloat(p.net_weight) || 0
+      const makingPct = parseFloat(p.making_charge) || 0
+      const stoneVal = parseFloat(p.stone_value) || 0
+      const rate = liveRate?.silver_999 || 0
+      if (!rate || !netWt) return parseFloat(p.original_price) || 0
+      const making = rate * (makingPct / 100)
+      return Math.round(((netWt * (rate + making)) + stoneVal) * 1.03)
+    }
+    const price = calcPrice(ring)
+    const originalAmt = calcOriginal(ring)
+    const discountPct = parseFloat(ring.wastage_charge) || 0
+    const hasDiscount = discountPct > 0 && originalAmt > price && price > 0
+    return <>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+        <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a' }}>
+          {price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—'}
+        </span>
+        {hasDiscount && (
+          <span style={{ fontSize: 15, color: '#999', textDecoration: 'line-through' }}>
+            ₹{originalAmt.toLocaleString('en-IN')}
+          </span>
+        )}
+      </div>
+      {hasDiscount && (
+        <div style={{ fontSize: 13, color: '#2ecc71', fontWeight: 700, marginBottom: 6 }}>
+          {discountPct}% Off
+        </div>
+      )}
+    </>
+  })()}
   <div style={{ fontSize: 18, color: '#1a1a1a', fontWeight: 600,
     fontFamily: '"Cormorant Garamond", Georgia, serif' }}>{ring.name}
   </div>

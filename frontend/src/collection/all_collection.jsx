@@ -5,13 +5,30 @@ import CustomerNavbar from './CustomerNavbar'
 import CustomerFooter from '../collection/CustomerFooter'
 
 
-function ProductCard({ p, navigate }) {
+function ProductCard({ p, navigate, liveRates = {} }) {
   const images = p.images?.map(img => getImageUrl(img)).filter(Boolean) || []
   const [imgIndex, setImgIndex] = useState(0)
   const [hovered, setHovered] = useState(false)
-  const price = parseFloat(p.price) || 0
+
+  const getRate = () => {
+    const metal = p.metal?.toLowerCase()
+    const grade = p.grade?.toLowerCase()
+    if (metal === 'gold') return grade === '24k' ? (liveRates.gold_24k || 0) : (liveRates.gold_22k || 0)
+    if (metal === 'silver') return liveRates.silver_999 || 0
+    if (metal === 'diamond') return grade === '18k' ? (liveRates.diamond_18k || 0) : (liveRates.diamond_22k || 0)
+    if (metal === 'platinum') return liveRates.platinum_92 || 0
+    return 0
+  }
+  const rate = getRate()
+  const netWt = parseFloat(p.net_weight) || 0
+  const makingPct = parseFloat(p.making_charge) || 0
   const discountPct = parseFloat(p.wastage_charge) || 0
-  const originalAmt = parseFloat(p.original_price) || 0
+  const stoneVal = parseFloat(p.stone_value) || 0
+  const making = rate * (makingPct / 100)
+  const rateWithMaking = rate + making
+  const disc = rateWithMaking * (discountPct / 100)
+  const price = (rate && netWt) ? Math.round(((netWt * (rateWithMaking - disc)) + stoneVal) * 1.03) : parseFloat(p.price) || 0
+  const originalAmt = (rate && netWt) ? Math.round(((netWt * (rate + making)) + stoneVal) * 1.03) : parseFloat(p.original_price) || 0
   const hasDiscount = discountPct > 0 && originalAmt > price && price > 0
   const displayIndex = hovered && images.length > 1 ? 1 : imgIndex
 
@@ -122,6 +139,7 @@ export default function AllCollection() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [weddingTab, setWeddingTab] = useState('all')
+  const [liveRates, setLiveRates] = useState({})
 
   // Diamond la coins vendam — filter out
 const displayProducts = (() => {
@@ -141,6 +159,23 @@ const displayProducts = (() => {
 
   return list
 })()
+
+
+useEffect(() => {
+  import('../api').then(({ default: api }) => {
+    api.get('/metal-rates/').then(res => {
+      const d = res.data
+      setLiveRates({
+        gold_22k: parseFloat(d.gold_22k) || 0,
+        gold_24k: parseFloat(d.gold_24k) || 0,
+        silver_999: parseFloat(d.silver_999) || 0,
+        diamond_18k: parseFloat(d.diamond_18k) || 0,
+        diamond_22k: parseFloat(d.diamond_22k) || 0,
+        platinum_92: parseFloat(d.platinum_92) || 0,
+      })
+    }).catch(() => {})
+  })
+}, [])
 
 useEffect(() => {
   setWeddingTab('all')
@@ -416,7 +451,7 @@ useEffect(() => {
         ) : (
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 20, animation: 'fadeIn 0.4s ease' }}>
 {displayProducts.map(p => (
-  <ProductCard key={p.id} p={p} navigate={navigate} />
+  <ProductCard key={p.id} p={p} navigate={navigate} liveRates={liveRates} />
 ))}
 </div>
          
